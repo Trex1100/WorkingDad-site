@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome - WorkingDad</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background: linear-gradient(to right, #6dd5fa, #2980b9);
+      color: white;
+      text-align: center;
+    }
+    img {
+      width: 120px;
+      margin-bottom: 20px;
+    }
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+    select {
+      padding: 10px;
+      font-size: 1em;
+      border-radius: 5px;
+      border: none;
+      margin-top: 20px;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      font-size: 1em;
+      border: none;
+      border-radius: 5px;
+      background-color: #ffcc00;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover {
+      background-color: #e6b800;
+    }
+  </style>
+</head>
+<body>
+  <img src="logo.png.png" alt="HI THERE Logo">
+  <img src="logo.png" alt="WorkingDad Logo">
+
+  <h1>Welcome to WorkingDad</h1>
+  <p>Please select your language to continue:</p>
+
+  <select id="language">
+    <option value="english">English</option>
+    <option value="hindi">हिन्दी (Hindi)</option>
+    <option value="urdu">اردو (Urdu)</option>
+    <option value="korean">한국어 (Korean)</option>
+    <option value="spanish">Español (Spanish)</option>
+  </select>
+
+  <button onclick="goNext()">Continue</button>
+
+  <script>
+    function goNext() {
+      let lang = document.getElementById("language").value;
+      // For now, redirect all to home page (index2.html)
+      // Later you can create separate pages for each language
+      window.location.href = "home.html?lang=" + lang;
+    }
+  </script>
+</body>
+</html>
