@@ -7,49 +7,55 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
       margin: 0;
-      background: linear-gradient(to right, #6dd5fa, #2980b9);
-      color: white;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%);
+      color: #333;
       text-align: center;
     }
     img {
-      width: 120px;
+      width: 150px;
       margin-bottom: 20px;
     }
     h1 {
-      font-size: 2.5em;
+      font-size: 2.5rem;
       margin-bottom: 10px;
+      color: #222;
+    }
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
     }
     select {
-      padding: 10px;
-      font-size: 1em;
-      border-radius: 5px;
-      border: none;
-      margin-top: 20px;
+      padding: 12px 15px;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-bottom: 15px;
     }
     button {
-      margin-top: 15px;
-      padding: 10px 20px;
-      font-size: 1em;
-      border: none;
-      border-radius: 5px;
-      background-color: #ffcc00;
-      cursor: pointer;
+      padding: 12px 25px;
+      font-size: 1rem;
       font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s;
     }
     button:hover {
-      background-color: #e6b800;
+      background-color: #45a049;
     }
   </style>
 </head>
 <body>
   <img src="logo.png.png" alt="HI THERE Logo">
-
   <h1>Welcome to WorkingDad</h1>
   <p>Please select your language to continue:</p>
 
@@ -60,14 +66,13 @@
     <option value="korean">한국어 (Korean)</option>
     <option value="spanish">Español (Spanish)</option>
   </select>
-
+  <br>
   <button onclick="goNext()">Continue</button>
 
   <script>
     function goNext() {
       let lang = document.getElementById("language").value;
-      // For now, redirect all to home page (index2.html)
-      // Later you can create separate pages for each language
+      // Redirect to another page (for now just home.html)
       window.location.href = "home.html?lang=" + lang;
     }
   </script>
