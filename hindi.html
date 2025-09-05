@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <title>हिंदी पेज</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    body {
+      background: url('interface.png') no-repeat center center/cover;
+      background-size: cover;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      gap: 30px;
+      color: white;
+      text-align: center;
+    }
+
+    h1, h2 {
+      font-family: 'Press Start 2P', cursive;
+      font-weight: bold;
+      background: linear-gradient(to bottom, red, blue);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 
+        0px 0px 10px rgba(255,0,0,0.8), 
+        0px 0px 20px rgba(0,0,255,0.8);
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    h1 {
+      font-size: 28px;
+    }
+
+    p {
+      font-family: 'Press Start 2P', cursive;
+      font-size: 20px;
+      color: yellow;
+      -webkit-text-fill-color: yellow;
+      text-shadow: 0px 0px 10px rgba(255,255,0,0.8);
+    }
+
+    .back-button {
+      display: inline-block;
+      margin-top: 40px;
+      padding: 15px 40px;
+      background-color: red;
+      color: white;
+      font-family: 'Press Start 2P', cursive;
+      font-weight: bold;
+      font-size: 18px;
+      text-decoration: none;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .back-button:hover {
+      background-color: darkred;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 1);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>
+    इस प्रणाली का अपना दृष्टिकोण है, यहां तक ​​कि इस वेबसाइट के डेवलपर की आभा भी कम है, 
+    इसलिए सावधान रहें और अपनी आवश्यक फाइलों के लिए ठीक से जवाब दें।<br><br>
+    देखिए, डेवलपर ने हिंदी भाषा की सुविधा आगे प्रदान नहीं की है इसलिए कृपया वापस जाएं और अंग्रेजी भाषा का चयन करें।
+  </h1>
+
+  <p>
+    Please back and select the English Language as the developer has not given the appropriate coding for language setup.
+  </p>
+
+  <a href="index.html" class="back-button">BACK</a>
+
+</body>
+</html>
