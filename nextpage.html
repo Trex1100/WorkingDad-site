@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Next Page</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    body {
+      background-color: black;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      gap: 30px;
+      color: white;
+    }
+
+    h1, h2 {
+      font-family: 'Press Start 2P', cursive;
+      font-weight: bold;
+      text-align: center;
+      background: linear-gradient(to bottom, red, blue);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 
+        0px 0px 10px rgba(255,0,0,0.8), 
+        0px 0px 20px rgba(0,0,255,0.8);
+      margin: 0;
+    }
+
+    h1 {
+      font-size: 60px;
+    }
+
+    h2 {
+      font-size: 28px;
+    }
+
+    input, select {
+      font-family: 'Press Start 2P', cursive;
+      font-size: 18px;
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: none;
+      margin-top: 20px;
+      background: linear-gradient(to right, red, blue);
+      color: white;
+      text-shadow: 1px 1px 3px black;
+    }
+
+    .warning-message {
+      font-family: 'Press Start 2P', cursive;
+      font-size: 24px;
+      color: yellow;
+      text-align: center;
+      margin-top: 20px;
+      display: none;
+    }
+
+    .continue-button {
+      display: inline-block;
+      margin-top: 40px;
+      padding: 15px 40px;
+      background-color: red;
+      color: white;
+      font-family: 'Press Start 2P', cursive;
+      font-weight: bold;
+      font-size: 18px;
+      text-decoration: none;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .continue-button:hover {
+      background-color: darkred;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 1);
+    }
+  </style>
+</head>
+<body>
+  <h1>Next Step in the Process</h1>
+  <h2>Please enter your details below.</h2>
+
+  <!-- Age input -->
+  <input type="number" id="age" placeholder="Enter your age (1-100)" min="1" max="100" />
+
+  <!-- Option for Prefer Not to Say -->
+  <select id="age-option">
+    <option value="select">Prefer not to say</option>
+    <option value="age">Enter your age</option>
+  </select>
+
+  <!-- Warning message -->
+  <div class="warning-message" id="warning-message">
+    Bol na bsdk sharma kya raha hai
+  </div>
+
+  <!-- Continue Button -->
+  <a href="index.html" class="continue-button">BACK TO HOMEPAGE</a>
+
+  <script>
+    const ageSelect = document.getElementById('age-option');
+    const warningMessage = document.getElementById('warning-message');
+
+    ageSelect.addEventListener('change', () => {
+      if (ageSelect.value === 'select') {
+        warningMessage.style.display = 'block'; // Show the warning message
+      } else {
+        warningMessage.style.display = 'none'; // Hide the warning message
+      }
+    });
+  </script>
+</body>
+</html>
