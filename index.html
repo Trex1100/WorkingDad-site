@@ -8,7 +8,6 @@
 
     body {
       background: 
-        /* Glow overlay */
         radial-gradient(rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.9)),
         url('interface.png') no-repeat center center/cover;
       display: flex;
@@ -20,6 +19,12 @@
       gap: 30px;
       color: white;
       overflow: hidden;
+      animation: moveBackground 20s infinite alternate ease-in-out;
+    }
+
+    @keyframes moveBackground {
+      0% { background-position: center; }
+      100% { background-position: top left; }
     }
 
     h1, h2 {
@@ -36,16 +41,16 @@
     }
 
     h1 {
-      font-size: 60px; /* smaller */
+      font-size: 6vw; /* Responsive */
     }
 
     h2 {
-      font-size: 28px; /* smaller */
+      font-size: 3vw; /* Responsive */
     }
 
     select {
       font-family: 'Press Start 2P', cursive;
-      font-size: 18px;
+      font-size: 1.2vw;
       padding: 10px 20px;
       border-radius: 8px;
       border: none;
@@ -68,7 +73,7 @@
       color: white;
       font-family: 'Press Start 2P', cursive;
       font-weight: bold;
-      font-size: 18px;
+      font-size: 1.2vw;
       text-decoration: none;
       border-radius: 8px;
       box-shadow: 0 0 15px rgba(255, 0, 0, 0.9);
@@ -85,7 +90,7 @@
   <h1>WELCOME PLAYERS</h1>
   <h2>PLEASE SELECT WISELY</h2>
 
-  <select>
+  <select id="language">
     <option>English</option>
     <option>Hindi</option>
     <option>Urdu</option>
@@ -93,6 +98,16 @@
     <option>Spanish</option>
   </select>
 
-  <a href="nextpage.html" class="continue-button">CONTINUE</a>
+  <a href="#" class="continue-button">CONTINUE</a>
+
+  <script>
+    document.querySelector(".continue-button").addEventListener("click", function(e) {
+      e.preventDefault();
+      const lang = document.querySelector("#language").value.toLowerCase();
+      window.location.href = lang + ".html"; 
+      // Example: English -> english.html
+      // Create these separate HTML files for each language
+    });
+  </script>
 </body>
 </html>
