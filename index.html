@@ -9,7 +9,9 @@
     body {
       background: 
         radial-gradient(rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.9)),
-        url('interface.png') no-repeat center center/cover;
+        url('interface.png') no-repeat center center;
+      background-size: contain; /* Default for larger screens */
+      background-color: black;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -28,9 +30,14 @@
       background: linear-gradient(to bottom, red, blue);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      /* Black stroke for readability */
       text-shadow: 
-        0px 0px 10px rgba(255,0,0,0.8), 
-        0px 0px 20px rgba(0,0,255,0.8);
+        2px 2px 0px black,
+        -2px -2px 0px black,
+        2px -2px 0px black,
+        -2px 2px 0px black,
+        0px 0px 15px rgba(255,0,0,0.7),
+        0px 0px 25px rgba(0,0,255,0.7);
       margin: 0;
     }
 
@@ -78,6 +85,23 @@
     .continue-button:hover {
       background-color: darkred;
       box-shadow: 0 0 25px rgba(255, 0, 0, 1);
+    }
+
+    /* 📱 Mobile Responsive Adjustments */
+    @media (max-width: 768px) {
+      body {
+        background-size: cover; /* Fill screen for mobile */
+      }
+      h1 {
+        font-size: 40px;
+      }
+      h2 {
+        font-size: 20px;
+      }
+      select, .continue-button {
+        font-size: 14px;
+        padding: 10px 20px;
+      }
     }
   </style>
 </head>
