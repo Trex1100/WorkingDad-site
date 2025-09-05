@@ -19,12 +19,6 @@
       gap: 30px;
       color: white;
       overflow: hidden;
-      animation: moveBackground 20s infinite alternate ease-in-out;
-    }
-
-    @keyframes moveBackground {
-      0% { background-position: center; }
-      100% { background-position: top left; }
     }
 
     h1, h2 {
@@ -41,16 +35,16 @@
     }
 
     h1 {
-      font-size: 6vw; /* Responsive */
+      font-size: 60px;
     }
 
     h2 {
-      font-size: 3vw; /* Responsive */
+      font-size: 28px;
     }
 
     select {
       font-family: 'Press Start 2P', cursive;
-      font-size: 1.2vw;
+      font-size: 18px;
       padding: 10px 20px;
       border-radius: 8px;
       border: none;
@@ -73,11 +67,12 @@
       color: white;
       font-family: 'Press Start 2P', cursive;
       font-weight: bold;
-      font-size: 1.2vw;
+      font-size: 18px;
       text-decoration: none;
       border-radius: 8px;
       box-shadow: 0 0 15px rgba(255, 0, 0, 0.9);
       transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
     }
 
     .continue-button:hover {
@@ -90,23 +85,23 @@
   <h1>WELCOME PLAYERS</h1>
   <h2>PLEASE SELECT WISELY</h2>
 
-  <select id="language">
-    <option>English</option>
-    <option>Hindi</option>
-    <option>Urdu</option>
-    <option>Korean</option>
-    <option>Spanish</option>
+  <select id="language-select">
+    <option value="english.html">English</option>
+    <option value="hindi.html">Hindi</option>
+    <option value="urdu.html">Urdu</option>
+    <option value="korean.html">Korean</option>
+    <option value="spanish.html">Spanish</option>
   </select>
 
-  <a href="#" class="continue-button">CONTINUE</a>
+  <button id="continue-btn" class="continue-button">CONTINUE</button>
 
   <script>
-    document.querySelector(".continue-button").addEventListener("click", function(e) {
-      e.preventDefault();
-      const lang = document.querySelector("#language").value.toLowerCase();
-      window.location.href = lang + ".html"; 
-      // Example: English -> english.html
-      // Create these separate HTML files for each language
+    const continueBtn = document.getElementById('continue-btn');
+    const languageSelect = document.getElementById('language-select');
+
+    continueBtn.addEventListener('click', () => {
+      const selectedPage = languageSelect.value;
+      window.location.href = selectedPage; // redirect to chosen language page
     });
   </script>
 </body>
