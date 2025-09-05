@@ -3,20 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <title>WorkingDad Site</title>
-
-  <!-- Preload custom font -->
-  <link rel="preload" href="fonts/Vademecum.ttf" as="font" type="font/ttf" crossorigin="anonymous">
-
   <style>
     @font-face {
       font-family: 'Vademecum';
-      src: url('fonts/Vademecum.ttf') format('truetype');
-      font-weight: normal;
-      font-style: normal;
-    }
-
-    * {
-      box-sizing: border-box;
+      src: url('fonts/Vademecum.otf') format('opentype');
     }
 
     body {
@@ -32,55 +22,45 @@
       gap: 30px;
       color: white;
       overflow: hidden;
-      font-family: 'Vademecum', serif;
-      padding: 0 20px;
-      text-align: center;
     }
 
     h1, h2 {
+      font-family: 'Vademecum', sans-serif;
       font-weight: bold;
-      background-color: rgba(0, 0, 0, 0.5); /* semi-transparent black bg */
-      padding: 8px 20px;
-      border-radius: 8px;
-      display: inline-block;
+      text-align: center;
+      background: linear-gradient(90deg, #ff4500 0%, #ff8c00 25%, #ffa500 50%, #ff4500 75%, #ff8c00 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 
+        0 0 10px #ff4500,
+        0 0 20px #ff4500,
+        0 0 30px #ff8c00,
+        0 0 40px #ffa500;
       margin: 0;
+      user-select: none;
     }
 
     h1 {
-      font-size: 64px;
-      background: linear-gradient(to right, #ff4500, #ffae42); /* Lava gradient */
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      -webkit-text-stroke: 3px black; /* thicker stroke */
-      text-shadow:
-        0 0 8px #ff4500,  /* glowing red */
-        0 0 12px #ffae42, /* glowing orange */
-        -3px -3px 0 black,
-         3px -3px 0 black,
-        -3px  3px 0 black,
-         3px  3px 0 black;
+      font-size: 70px;
+      -webkit-text-stroke: 1.5px #ff4500; /* outlines for better visibility */
     }
 
     h2 {
-      font-size: 24px;
-      background: none; /* no gradient on subheading */
-      color: white;
-      text-shadow:
-        0 0 5px black,
-        1px 1px 2px black;
+      font-size: 30px;
+      -webkit-text-stroke: 1px #ff4500;
     }
 
     select {
-      font-family: 'Vademecum', serif;
+      font-family: 'Vademecum', sans-serif;
       font-size: 18px;
-      padding: 12px 24px;
+      padding: 10px 20px;
       border-radius: 8px;
       border: none;
-      background: linear-gradient(to right, red, orange);
+      background: linear-gradient(to right, #ff4500, #ff8c00);
       color: white;
-      text-shadow: 1px 1px 2px black;
+      text-shadow: 1px 1px 3px black;
       cursor: pointer;
-      box-shadow: 0 0 12px rgba(255, 0, 0, 0.8);
+      user-select: none;
     }
 
     select option {
@@ -90,37 +70,24 @@
 
     .continue-button {
       display: inline-block;
-      margin-top: 20px;
+      margin-top: 40px;
       padding: 15px 40px;
-      background-color: red;
+      background-color: #ff4500;
       color: white;
-      font-family: 'Vademecum', serif;
+      font-family: 'Vademecum', sans-serif;
+      font-weight: bold;
       font-size: 18px;
       text-decoration: none;
       border-radius: 8px;
-      box-shadow: 0 0 15px rgba(255, 0, 0, 0.9);
+      box-shadow: 0 0 15px #ff4500;
       transition: background-color 0.3s ease, box-shadow 0.3s ease;
       cursor: pointer;
+      user-select: none;
     }
 
     .continue-button:hover {
-      background-color: darkred;
-      box-shadow: 0 0 25px rgba(255, 0, 0, 1);
-    }
-
-    @media (max-width: 600px) {
-      h1 {
-        font-size: 40px;
-      }
-
-      h2 {
-        font-size: 18px;
-      }
-
-      select, .continue-button {
-        font-size: 16px;
-        padding: 10px 20px;
-      }
+      background-color: #cc3700;
+      box-shadow: 0 0 25px #ff4500;
     }
   </style>
 </head>
@@ -144,9 +111,7 @@
 
     continueBtn.addEventListener('click', () => {
       const selectedPage = languageSelect.value;
-      if (selectedPage) {
-        window.location.href = selectedPage;
-      }
+      window.location.href = selectedPage; // redirect to chosen language page
     });
   </script>
 </body>
