@@ -3,8 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <title>WorkingDad Site</title>
+  
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+    /* Load your local Vademecum font */
+    @font-face {
+      font-family: 'Vademecum';
+      src: url('fonts/Vademecum.otf') format('opentype');
+      font-weight: normal;
+      font-style: normal;
+    }
 
     body {
       background: 
@@ -22,36 +29,38 @@
       overflow: hidden;
     }
 
-    h1, h2, select, .continue-button {
-      font-family: 'Press Start 2P', cursive;
-      font-weight: bold;
-      letter-spacing: 0.15em; /* Slight gap between letters */
-      -webkit-text-stroke: 2px black; /* Black stroke on all texts */
-      text-stroke: 2px black; /* Standard property for future-proofing */
-
-      /* 3D glow and shadow */
-      text-shadow:
-        0 0 5px rgba(0, 0, 0, 0.9),
-        2px 2px 2px rgba(0, 0, 0, 0.8),
-        0 0 10px rgba(255, 0, 0, 0.7),
-        0 0 15px rgba(0, 0, 255, 0.7);
-    }
-
     h1, h2 {
+      font-family: 'Vademecum', sans-serif;
+      font-weight: bold;
       text-align: center;
-      background: linear-gradient(to bottom, red, blue);
+
+      /* Lava gradient */
+      background: linear-gradient(to bottom, #ff4500, #ff8c00, #ffa500);
+
+      /* Clip text to show gradient */
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
       color: transparent;
 
+      /* Black stroke */
+      -webkit-text-stroke: 2px black;
+      text-stroke: 2px black; /* for non-webkit browsers */
+
+      /* Purple glow behind text */
+      text-shadow:
+        0 0 8px rgba(128, 0, 128, 0.9),
+        0 0 15px rgba(128, 0, 128, 0.7),
+        0 0 25px rgba(128, 0, 128, 0.5);
+
       margin: 0;
       padding: 10px 20px;
-
-      /* Slightly transparent black background behind text */
       background-color: rgba(0, 0, 0, 0.4);
       display: inline-block;
       border-radius: 10px;
+
+      /* Slight letter spacing for clarity */
+      letter-spacing: 0.15em;
     }
 
     h1 {
@@ -63,51 +72,48 @@
     }
 
     select {
+      font-family: 'Vademecum', sans-serif;
       font-size: 18px;
       padding: 10px 20px;
       border-radius: 8px;
       border: none;
-      background: linear-gradient(to right, red, blue);
+      background: linear-gradient(to right, #ff4500, #ff8c00);
       color: white;
+      text-shadow: 1px 1px 3px black;
       cursor: pointer;
-      text-shadow: none; /* Override previous to avoid clashing shadows */
-      -webkit-text-stroke: 1.5px black;
-      text-stroke: 1.5px black;
+      letter-spacing: 0.05em;
     }
 
     select option {
       background: black;
       color: white;
-      -webkit-text-stroke: 0.8px black;
-      text-stroke: 0.8px black;
-      letter-spacing: 0.1em;
     }
 
     .continue-button {
       display: inline-block;
       margin-top: 40px;
       padding: 15px 40px;
-      background-color: red;
+      background-color: #ff4500;
       color: white;
+      font-family: 'Vademecum', sans-serif;
+      font-weight: bold;
       font-size: 18px;
       text-decoration: none;
       border-radius: 8px;
-      box-shadow: 0 0 15px rgba(255, 0, 0, 0.9);
+      box-shadow: 0 0 15px rgba(255, 69, 0, 0.9);
       transition: background-color 0.3s ease, box-shadow 0.3s ease;
       cursor: pointer;
-      text-shadow: none; /* Clear previous text shadow */
-      -webkit-text-stroke: 1.8px black;
-      text-stroke: 1.8px black;
+      letter-spacing: 0.1em;
     }
 
     .continue-button:hover {
-      background-color: darkred;
-      box-shadow: 0 0 25px rgba(255, 0, 0, 1);
+      background-color: #b22222;
+      box-shadow: 0 0 25px rgba(178, 34, 34, 1);
     }
   </style>
 </head>
 <body>
-  <h1>WELCOME PLAYERS</h1>
+  <h1>WELCOME USERS</h1>
   <h2>PLEASE SELECT WISELY</h2>
 
   <select id="language-select">
@@ -126,7 +132,7 @@
 
     continueBtn.addEventListener('click', () => {
       const selectedPage = languageSelect.value;
-      window.location.href = selectedPage; // redirect to chosen language page
+      window.location.href = selectedPage;
     });
   </script>
 </body>
