@@ -3,14 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <title>WorkingDad Site</title>
+
+  <!-- Preload custom font -->
+  <link rel="preload" href="fonts/Vademecum.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+    @font-face {
+      font-family: 'Vademecum';
+      src: url('fonts/Vademecum.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       background: 
         radial-gradient(rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.9)),
-        url('interface.png') no-repeat center center;
-      background-size: cover;
+        url('interface.png') no-repeat center center/cover;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -20,51 +32,44 @@
       gap: 30px;
       color: white;
       overflow: hidden;
+      font-family: 'Vademecum', serif;
+      padding: 0 20px;
+      text-align: center;
     }
 
     h1, h2 {
-      font-family: 'Press Start 2P', cursive;
       font-weight: bold;
-      text-align: center;
-      background: linear-gradient(to bottom, red, blue);
+      background: linear-gradient(to right, red, orange); /* Lava gradient */
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-
-      /* Strong black outline */
-      -webkit-text-stroke: 3px black;
-
-      /* Softer glow */
-      text-shadow: 
-        0px 0px 6px rgba(255,0,0,0.6), 
-        0px 0px 12px rgba(0,0,255,0.6);
-
+      -webkit-text-stroke: 2px black;
+      text-shadow:
+        -2px -2px 0 black,
+         2px -2px 0 black,
+        -2px  2px 0 black,
+         2px  2px 0 black;
       margin: 0;
-      padding: 10px 20px;
-
-      /* Transparent background behind text */
-      background-color: rgba(0, 0, 0, 0.4);
-      display: inline-block;
-      border-radius: 10px;
     }
 
     h1 {
-      font-size: 60px;
+      font-size: 64px;
     }
 
     h2 {
-      font-size: 28px;
+      font-size: 24px;
     }
 
     select {
-      font-family: 'Press Start 2P', cursive;
+      font-family: 'Vademecum', serif;
       font-size: 18px;
-      padding: 10px 20px;
+      padding: 12px 24px;
       border-radius: 8px;
       border: none;
-      background: linear-gradient(to right, red, blue);
+      background: linear-gradient(to right, red, orange);
       color: white;
-      text-shadow: 1px 1px 3px black;
+      text-shadow: 1px 1px 2px black;
       cursor: pointer;
+      box-shadow: 0 0 12px rgba(255, 0, 0, 0.8);
     }
 
     select option {
@@ -74,12 +79,11 @@
 
     .continue-button {
       display: inline-block;
-      margin-top: 40px;
+      margin-top: 20px;
       padding: 15px 40px;
       background-color: red;
       color: white;
-      font-family: 'Press Start 2P', cursive;
-      font-weight: bold;
+      font-family: 'Vademecum', serif;
       font-size: 18px;
       text-decoration: none;
       border-radius: 8px;
@@ -92,10 +96,25 @@
       background-color: darkred;
       box-shadow: 0 0 25px rgba(255, 0, 0, 1);
     }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 40px;
+      }
+
+      h2 {
+        font-size: 18px;
+      }
+
+      select, .continue-button {
+        font-size: 16px;
+        padding: 10px 20px;
+      }
+    }
   </style>
 </head>
 <body>
-  <h1>WELCOME PLAYERS</h1>
+  <h1>WELCOME USERS</h1>
   <h2>PLEASE SELECT WISELY</h2>
 
   <select id="language-select">
@@ -114,7 +133,9 @@
 
     continueBtn.addEventListener('click', () => {
       const selectedPage = languageSelect.value;
-      window.location.href = selectedPage; // redirect to chosen language page
+      if (selectedPage) {
+        window.location.href = selectedPage;
+      }
     });
   </script>
 </body>
