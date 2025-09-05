@@ -10,7 +10,7 @@
       background: 
         radial-gradient(rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.9)),
         url('interface.png') no-repeat center center;
-      background-size: cover; /* makes sure it fits on all devices */
+      background-size: cover;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -30,14 +30,21 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
 
-      /* Black stroke outline */
-      -webkit-text-stroke: 2px black;
+      /* Strong black outline */
+      -webkit-text-stroke: 3px black;
 
-      /* Glow effect */
+      /* Softer glow */
       text-shadow: 
-        0px 0px 10px rgba(255,0,0,0.8), 
-        0px 0px 20px rgba(0,0,255,0.8);
+        0px 0px 6px rgba(255,0,0,0.6), 
+        0px 0px 12px rgba(0,0,255,0.6);
+
       margin: 0;
+      padding: 10px 20px;
+
+      /* Transparent background behind text */
+      background-color: rgba(0, 0, 0, 0.4);
+      display: inline-block;
+      border-radius: 10px;
     }
 
     h1 {
