@@ -89,6 +89,12 @@
       background-color: darkred;
       box-shadow: 0 0 20px rgba(255, 0, 0, 1);
     }
+
+    .continue-button:disabled {
+      background-color: grey;
+      cursor: not-allowed;
+    }
+
   </style>
 </head>
 <body>
@@ -97,8 +103,6 @@
   <div class="starting-message">
     This system has its own attitude, even the developer of this website has less aura, so BAWARE and answer properly for your required files.
   </div>
-
-  <!-- Removed the "Next Step" headers as per your request -->
 
   <!-- Age input -->
   <input type="number" id="age" placeholder="Enter your age (1-100)" min="1" max="100" />
@@ -111,25 +115,71 @@
 
   <!-- Warning message -->
   <div class="warning-message" id="warning-message">
-    Bol na bsdk sharma kya raha hai
+    You cannot proceed without entering your age.
   </div>
 
-  <!-- Continue Button -->
-  <a href="nextstep.html" class="continue-button">CONTINUE</a>
+  <!-- Age related message -->
+  <div class="warning-message" id="age-message">
+    <!-- This message will be dynamically changed based on the age entered -->
+  </div>
+
+  <!-- Continue Button (Initially disabled) -->
+  <a href="nextstep.html" id="continue-btn" class="continue-button" disabled>CONTINUE</a>
 
   <script>
     const ageSelect = document.getElementById('age-option');
     const warningMessage = document.getElementById('warning-message');
+    const ageMessage = document.getElementById('age-message');
+    const continueBtn = document.getElementById('continue-btn');
+    const ageInput = document.getElementById('age');
 
     // When the dropdown value changes
     ageSelect.addEventListener('change', () => {
-      // If "Prefer not to say" is selected
       if (ageSelect.value === 'select') {
         warningMessage.style.display = 'block'; // Show the warning message
+        ageMessage.style.display = 'none'; // Hide age-related message
+        continueBtn.disabled = true; // Disable the continue button
       } else {
         warningMessage.style.display = 'none'; // Hide the warning message
+        ageMessage.style.display = 'none'; // Hide age-related message
+        continueBtn.disabled = false; // Enable the continue button
+      }
+    });
+
+    // When the user enters their age
+    ageInput.addEventListener('input', () => {
+      const age = parseInt(ageInput.value, 10);
+
+      // Enable or disable based on the age
+      if (age < 1 || age > 100) {
+        ageMessage.style.display = 'none'; // Hide age-related message if out of range
+        continueBtn.disabled = true; // Disable the continue button
+      } else if (age >= 18 && age <= 69) {
+        ageMessage.style.display = 'none'; // Hide age-related message for valid range
+        continueBtn.disabled = false; // Enable the continue button
+      } else if (age >= 1 && age <= 10) {
+        ageMessage.style.display = 'block';
+        ageMessage.textContent = 'Chota Bacha hai kya tu'; // Message for 1-10 years
+        continueBtn.disabled = true; // Disable the continue button
+      } else if (age >= 50 && age <= 68) {
+        ageMessage.style.display = 'block';
+        ageMessage.textContent = 'Uncle Aap Yahan Kya kar Rahe Ho'; // Message for 50-68 years
+        continueBtn.disabled = true; // Disable the continue button
+      } else if (age === 69) {
+        ageMessage.style.display = 'block';
+        ageMessage.textContent = 'Han be sale maje lene ayay hai kya'; // Message for 69 years
+        continueBtn.disabled = true; // Disable the continue button
+      } else if (age >= 70 && age <= 90) {
+        ageMessage.style.display = 'block';
+        ageMessage.textContent = 'Kya majburi hai jo tune ye age select kia, mejanta hun fake age select kia hai tune'; // Message for 70-90 years
+        continueBtn.disabled = true; // Disable the continue button
+      } else if (age >= 91 && age <= 100) {
+        ageMessage.style.display = 'block';
+        ageMessage.textContent = 'Vai please kuch aur select karle nahi to marja iiss age me ya sab karega'; // Message for 91-100 years
+        continueBtn.disabled = true; // Disable the continue button
       }
     });
   </script>
+
 </body>
 </html>
