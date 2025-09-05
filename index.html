@@ -10,91 +10,112 @@
     }
 
     body {
-      margin: 0;
-      height: 100vh;
-      background: url('interface.png') no-repeat center center fixed;
+      background: 
+        radial-gradient(rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.9)),
+        url('interface.png') no-repeat center center;
       background-size: cover;
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
-      font-family: 'Vademecum', monospace;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      gap: 30px;
       color: white;
-      letter-spacing: 0.1em;
-      text-align: center;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+      overflow: hidden;
     }
 
     h1 {
-      font-size: 3rem;
-      color: #00bfff;
+      font-family: 'Vademecum', cursive;
+      font-weight: bold;
+      text-align: center;
+      font-size: 70px;
+      letter-spacing: 0.12em;
+      -webkit-text-stroke: 1.5px black;
+      color: #00aaff; /* blue neon base */
+      /* Stronger glow */
       text-shadow:
-        -1px -1px 0 #000,
-         1px -1px 0 #000,
-        -1px  1px 0 #000,
-         1px  1px 0 #000,
-         0 0 10px #00bfff;
-      margin-bottom: 10px;
-      letter-spacing: 0.2em;
+        0 0 10px #00aaff,
+        0 0 20px #00aaff,
+        0 0 30px #00aaff,
+        0 0 40px #00aaff,
+        0 0 50px #00aaff,
+        0 0 60px #00aaff,
+        0 0 70px #00aaff;
+      margin: 0;
     }
 
-    p {
-      font-size: 1.5rem;
-      color: #3399ff;
-      text-shadow: 1px 1px 2px black;
-      margin-bottom: 30px;
-      letter-spacing: 0.05em;
+    h2 {
+      font-family: 'Vademecum', cursive;
+      font-weight: bold;
+      text-align: center;
+      font-size: 32px;
+      letter-spacing: 0.1em;
+      color: #00aaff;
+      -webkit-text-stroke: 1px black;
+      text-shadow:
+        0 0 4px #00aaff,
+        0 0 8px #00aaff;
+      margin: 0;
     }
 
     select {
-      background: linear-gradient(90deg, red, blue);
-      color: white;
-      font-family: 'Vademecum', monospace;
-      font-size: 1.2rem;
-      font-weight: bold;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      letter-spacing: 0.15em;
-      text-align: center;
-      box-shadow: 0 0 15px rgba(0, 0, 255, 0.7);
-      margin-bottom: 30px;
-    }
-
-    button.continue-button {
-      background-color: red;
-      color: white;
-      font-family: 'Vademecum', monospace;
-      font-weight: bold;
-      font-size: 1.3rem;
-      padding: 15px 50px;
-      border: none;
+      font-family: 'Vademecum', cursive;
+      font-size: 18px;
+      padding: 12px 30px;
       border-radius: 8px;
+      border: none;
+      background-color: #007acc; /* solid blue */
+      color: white;
+      text-shadow: 1px 1px 3px black;
       cursor: pointer;
-      letter-spacing: 0.15em;
-      box-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
-      transition: box-shadow 0.3s ease;
+      letter-spacing: 0.05em;
+      -webkit-text-stroke: 0.8px black;
+      margin-top: 20px;
+      min-width: 250px;
+      box-shadow: 0 0 12px #005f99; /* subtle blue glow shadow */
+      transition: background-color 0.3s ease;
     }
 
-    button.continue-button:hover {
-      box-shadow: 0 0 30px rgba(255, 0, 0, 1);
+    select:hover {
+      background-color: #005f99;
+      box-shadow: 0 0 20px #003d66;
     }
 
+    .continue-button {
+      display: inline-block;
+      margin-top: 40px;
+      padding: 15px 50px;
+      background-color: #cc0000;
+      color: white;
+      font-family: 'Vademecum', cursive;
+      font-weight: bold;
+      font-size: 20px;
+      text-decoration: none;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(204, 0, 0, 0.9);
+      cursor: pointer;
+      letter-spacing: 0.1em;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      -webkit-text-stroke: 1px black;
+    }
+
+    .continue-button:hover {
+      background-color: #990000;
+      box-shadow: 0 0 25px rgba(204, 0, 0, 1);
+    }
   </style>
 </head>
 <body>
-
   <h1>WELCOME USERS</h1>
-  <p>PLEASE SELECT WISELY</p>
+  <h2>PLEASE SELECT WISELY</h2>
 
-  <select id="language-select">
-    <option value="english.html">English</option>
-    <option value="spanish.html">Spanish</option>
+  <select id="language-select" aria-label="Select language">
+    <option value="nextpage.html">English</option>
     <option value="hindi.html">Hindi</option>
-    <option value="korean.html">Korean</option>
     <option value="urdu.html">Urdu</option>
+    <option value="korean.html">Korean</option>
+    <option value="spanish.html">Spanish</option>
   </select>
 
   <button id="continue-btn" class="continue-button">CONTINUE</button>
@@ -104,12 +125,9 @@
     const languageSelect = document.getElementById('language-select');
 
     continueBtn.addEventListener('click', () => {
-      // Get selected language page URL
       const selectedPage = languageSelect.value;
-      // Navigate directly to next page (language selection page)
       window.location.href = selectedPage;
     });
   </script>
-
 </body>
 </html>
