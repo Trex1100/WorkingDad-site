@@ -1,85 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>WorkingDad Site</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-    /* Fullscreen Animated Background */
     body {
-      margin: 0;
-      padding: 0;
-      height: 100vh;
-      background-color: black;
-      font-family: 'Press Start 2P', cursive;
-      overflow: hidden;
-    }
-
-    .background {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: url('interface.png') no-repeat center center/cover;
-      z-index: -2;
-      animation: zoomIn 20s ease-in-out infinite alternate;
-      filter: brightness(0.4);
-    }
-
-    @keyframes zoomIn {
-      0% {
-        transform: scale(1);
-      }
-      100% {
-        transform: scale(1.05);
-      }
-    }
-
-    .overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.6);
-      z-index: -1;
-    }
-
-    .content {
-      position: relative;
-      z-index: 1;
+      background: 
+        /* Glow overlay */
+        radial-gradient(rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.9)),
+        url('interface.png') no-repeat center center/cover;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      gap: 30px;
       height: 100vh;
+      margin: 0;
+      gap: 30px;
       color: white;
-      text-align: center;
+      overflow: hidden;
     }
 
     h1, h2 {
+      font-family: 'Press Start 2P', cursive;
       font-weight: bold;
+      text-align: center;
       background: linear-gradient(to bottom, red, blue);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       text-shadow: 
         0px 0px 10px rgba(255,0,0,0.8), 
         0px 0px 20px rgba(0,0,255,0.8);
+      margin: 0;
     }
 
     h1 {
-      font-size: 90px;
+      font-size: 60px; /* smaller */
     }
 
     h2 {
-      font-size: 40px;
+      font-size: 28px; /* smaller */
     }
 
     select {
-      font-size: 20px;
+      font-family: 'Press Start 2P', cursive;
+      font-size: 18px;
       padding: 10px 20px;
       border-radius: 8px;
       border: none;
@@ -93,25 +59,40 @@
       background: black;
       color: white;
     }
+
+    .continue-button {
+      display: inline-block;
+      margin-top: 40px;
+      padding: 15px 40px;
+      background-color: red;
+      color: white;
+      font-family: 'Press Start 2P', cursive;
+      font-weight: bold;
+      font-size: 18px;
+      text-decoration: none;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(255, 0, 0, 0.9);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .continue-button:hover {
+      background-color: darkred;
+      box-shadow: 0 0 25px rgba(255, 0, 0, 1);
+    }
   </style>
 </head>
 <body>
-  <!-- Animated Background -->
-  <div class="background"></div>
-  <div class="overlay"></div>
+  <h1>WELCOME PLAYERS</h1>
+  <h2>PLEASE SELECT WISELY</h2>
 
-  <!-- Foreground Content -->
-  <div class="content">
-    <h1>WELCOME PLAYERS</h1>
-    <h2>PLEASE SELECT WISELY</h2>
+  <select>
+    <option>English</option>
+    <option>Hindi</option>
+    <option>Urdu</option>
+    <option>Korean</option>
+    <option>Spanish</option>
+  </select>
 
-    <select>
-      <option>English</option>
-      <option>Hindi</option>
-      <option>Urdu</option>
-      <option>Korean</option>
-      <option>Spanish</option>
-    </select>
-  </div>
+  <a href="nextpage.html" class="continue-button">CONTINUE</a>
 </body>
 </html>
