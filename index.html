@@ -33,7 +33,6 @@
       letter-spacing: 0.12em;
       -webkit-text-stroke: 1.5px black;
       color: #00aaff; /* blue neon base */
-      /* Stronger glow */
       text-shadow:
         0 0 10px #00aaff,
         0 0 20px #00aaff,
@@ -66,15 +65,15 @@
       border-radius: 8px;
       border: none;
       background-color: #007acc; /* solid blue */
-      color: white;
-      text-shadow: 1px 1px 3px black;
+      color: white;  /* white text, no stroke */
       cursor: pointer;
       letter-spacing: 0.05em;
-      -webkit-text-stroke: 0.8px black;
       margin-top: 20px;
       min-width: 250px;
-      box-shadow: 0 0 12px #005f99; /* subtle blue glow shadow */
+      box-shadow: 0 0 12px #005f99;
       transition: background-color 0.3s ease;
+      /* Removed text-stroke for clarity */
+      text-shadow: none;
     }
 
     select:hover {
@@ -87,7 +86,7 @@
       margin-top: 40px;
       padding: 15px 50px;
       background-color: #cc0000;
-      color: white;
+      color: white; /* white text, no stroke */
       font-family: 'Vademecum', cursive;
       font-weight: bold;
       font-size: 20px;
@@ -97,7 +96,8 @@
       cursor: pointer;
       letter-spacing: 0.1em;
       transition: background-color 0.3s ease, box-shadow 0.3s ease;
-      -webkit-text-stroke: 1px black;
+      /* Removed text-stroke for clarity */
+      text-shadow: none;
     }
 
     .continue-button:hover {
