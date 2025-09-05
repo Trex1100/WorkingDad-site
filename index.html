@@ -8,9 +8,9 @@
 
     body {
       background: 
-        /* Glow overlay */
         radial-gradient(rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.9)),
-        url('interface.png') no-repeat center center/cover;
+        url('interface.png') no-repeat center center;
+      background-size: cover;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -29,18 +29,30 @@
       background: linear-gradient(to bottom, red, blue);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+
+      /* Strong black outline */
+      -webkit-text-stroke: 3px black;
+
+      /* Softer glow */
       text-shadow: 
-        0px 0px 10px rgba(255,0,0,0.8), 
-        0px 0px 20px rgba(0,0,255,0.8);
+        0px 0px 6px rgba(255,0,0,0.6), 
+        0px 0px 12px rgba(0,0,255,0.6);
+
       margin: 0;
+      padding: 10px 20px;
+
+      /* Transparent background behind text */
+      background-color: rgba(0, 0, 0, 0.4);
+      display: inline-block;
+      border-radius: 10px;
     }
 
     h1 {
-      font-size: 60px; /* smaller */
+      font-size: 60px;
     }
 
     h2 {
-      font-size: 28px; /* smaller */
+      font-size: 28px;
     }
 
     select {
@@ -73,6 +85,7 @@
       border-radius: 8px;
       box-shadow: 0 0 15px rgba(255, 0, 0, 0.9);
       transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
     }
 
     .continue-button:hover {
@@ -85,14 +98,24 @@
   <h1>WELCOME PLAYERS</h1>
   <h2>PLEASE SELECT WISELY</h2>
 
-  <select>
-    <option>English</option>
-    <option>Hindi</option>
-    <option>Urdu</option>
-    <option>Korean</option>
-    <option>Spanish</option>
+  <select id="language-select">
+    <option value="english.html">English</option>
+    <option value="hindi.html">Hindi</option>
+    <option value="urdu.html">Urdu</option>
+    <option value="korean.html">Korean</option>
+    <option value="spanish.html">Spanish</option>
   </select>
 
-  <a href="nextpage.html" class="continue-button">CONTINUE</a>
+  <button id="continue-btn" class="continue-button">CONTINUE</button>
+
+  <script>
+    const continueBtn = document.getElementById('continue-btn');
+    const languageSelect = document.getElementById('language-select');
+
+    continueBtn.addEventListener('click', () => {
+      const selectedPage = languageSelect.value;
+      window.location.href = selectedPage; // redirect to chosen language page
+    });
+  </script>
 </body>
 </html>

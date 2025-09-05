@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Spanish Page</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    body {
+      background: url('interface.png') no-repeat center center/cover;
+      background-size: cover;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      gap: 30px;
+      color: white;
+      text-align: center;
+    }
+
+    h1 {
+      font-family: 'Press Start 2P', cursive;
+      font-weight: bold;
+      text-align: center;
+      font-size: 26px;
+      color: red; /* Solid red */
+      text-shadow: 
+        2px 2px 0 black,
+        -2px 2px 0 black,
+        2px -2px 0 black,
+        -2px -2px 0 black,
+        0 0 10px rgba(255, 0, 0, 0.8); /* Black stroke + glow */
+      max-width: 90%;
+      line-height: 1.6;
+    }
+
+    .back-button {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 15px 40px;
+      background-color: red;
+      color: white;
+      font-family: 'Press Start 2P', cursive;
+      font-weight: bold;
+      font-size: 18px;
+      text-decoration: none;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .back-button:hover {
+      background-color: darkred;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 1);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>
+    So you really know Spanish, You literally opened this website by reading it in English means you understand English, 
+    then why the f*ck do you still choose Spanish.<br><br>
+    If you are not gay then please go back and select English.
+  </h1>
+
+  <a href="index.html" class="back-button">BACK</a>
+
+</body>
+</html>
