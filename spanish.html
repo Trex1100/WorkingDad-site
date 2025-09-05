@@ -20,23 +20,25 @@
       text-align: center;
     }
 
-    .message {
+    h1 {
       font-family: 'Press Start 2P', cursive;
-      font-size: 20px;
       font-weight: bold;
-      background: linear-gradient(to bottom, red, blue);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow:
-        0px 0px 10px rgba(255,0,0,0.8),
-        0px 0px 20px rgba(0,0,255,0.8);
-      max-width: 900px;
-      line-height: 1.8;
+      text-align: center;
+      font-size: 26px;
+      color: red; /* Solid red */
+      text-shadow: 
+        2px 2px 0 black,
+        -2px 2px 0 black,
+        2px -2px 0 black,
+        -2px -2px 0 black,
+        0 0 10px rgba(255, 0, 0, 0.8); /* Black stroke + glow */
+      max-width: 90%;
+      line-height: 1.6;
     }
 
     .back-button {
       display: inline-block;
-      margin-top: 40px;
+      margin-top: 20px;
       padding: 15px 40px;
       background-color: red;
       color: white;
@@ -57,10 +59,11 @@
 </head>
 <body>
 
-  <div class="message">
+  <h1>
     So you really know Spanish, You literally opened this website by reading it in English means you understand English, 
-    then why the f*ck do you still choose Spanish. If you are not gay then please go back and select English.
-  </div>
+    then why the f*ck do you still choose Spanish.<br><br>
+    If you are not gay then please go back and select English.
+  </h1>
 
   <a href="index.html" class="back-button">BACK</a>
 
