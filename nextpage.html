@@ -113,8 +113,8 @@
     <option value="age">Enter your age</option>
   </select>
 
-  <!-- Warning message -->
-  <div class="warning-message" id="warning-message">
+  <!-- Warning message for "Prefer not to say" -->
+  <div class="warning-message" id="prefer-not-to-say-message">
     You cannot proceed without entering your age.
   </div>
 
@@ -124,23 +124,24 @@
   </div>
 
   <!-- Continue Button (Initially disabled) -->
-  <a href="nextstep.html" id="continue-btn" class="continue-button" disabled>CONTINUE</a>
+  <a href="nextstep.html" id="continue-btn" class="continue-button" disabled>CONTINUE TO NEXT STEP</a>
 
   <script>
     const ageSelect = document.getElementById('age-option');
     const warningMessage = document.getElementById('warning-message');
     const ageMessage = document.getElementById('age-message');
+    const preferNotToSayMessage = document.getElementById('prefer-not-to-say-message');
     const continueBtn = document.getElementById('continue-btn');
     const ageInput = document.getElementById('age');
 
     // When the dropdown value changes
     ageSelect.addEventListener('change', () => {
       if (ageSelect.value === 'select') {
-        warningMessage.style.display = 'block'; // Show the warning message
+        preferNotToSayMessage.style.display = 'block'; // Show the "Prefer not to say" message
         ageMessage.style.display = 'none'; // Hide age-related message
         continueBtn.disabled = true; // Disable the continue button
       } else {
-        warningMessage.style.display = 'none'; // Hide the warning message
+        preferNotToSayMessage.style.display = 'none'; // Hide the "Prefer not to say" message
         ageMessage.style.display = 'none'; // Hide age-related message
         continueBtn.disabled = false; // Enable the continue button
       }
