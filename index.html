@@ -28,91 +28,61 @@
       font-family: 'Vademecum', sans-serif;
       font-weight: bold;
       text-align: center;
-      background: linear-gradient(90deg, #ff4500 0%, #ff8c00 25%, #ffa500 50%, #ff4500 75%, #ff8c00 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 
-        0 0 10px #ff4500,
-        0 0 20px #ff4500,
-        0 0 30px #ff8c00,
-        0 0 40px #ffa500;
+      color: #FF4500; /* Lava-orange color */
       margin: 0;
-      user-select: none;
+      text-shadow:
+        /* Black stroke */
+        -2px -2px 0 #000,
+         2px -2px 0 #000,
+        -2px  2px 0 #000,
+         2px  2px 0 #000,
+        /* 3D shadow */
+        4px 4px 10px rgba(0,0,0,0.7),
+        0 0 15px #FF4500,
+        0 0 20px #FF4500;
     }
 
     h1 {
       font-size: 70px;
-      -webkit-text-stroke: 1.5px #ff4500; /* outlines for better visibility */
     }
 
     h2 {
       font-size: 30px;
-      -webkit-text-stroke: 1px #ff4500;
+      text-shadow:
+        -1px -1px 0 #000,
+         1px -1px 0 #000,
+        -1px  1px 0 #000,
+         1px  1px 0 #000,
+        0 0 10px #FF4500;
     }
 
-    select {
+    select, button {
       font-family: 'Vademecum', sans-serif;
+      font-weight: bold;
       font-size: 18px;
       padding: 10px 20px;
       border-radius: 8px;
       border: none;
-      background: linear-gradient(to right, #ff4500, #ff8c00);
-      color: white;
-      text-shadow: 1px 1px 3px black;
       cursor: pointer;
-      user-select: none;
-    }
-
-    select option {
-      background: black;
+      background: linear-gradient(45deg, #FF4500, #FF8C00);
       color: white;
+      box-shadow: 0 0 10px #FF4500;
+      transition: background 0.3s ease;
     }
 
-    .continue-button {
-      display: inline-block;
-      margin-top: 40px;
-      padding: 15px 40px;
-      background-color: #ff4500;
-      color: white;
-      font-family: 'Vademecum', sans-serif;
-      font-weight: bold;
-      font-size: 18px;
-      text-decoration: none;
-      border-radius: 8px;
-      box-shadow: 0 0 15px #ff4500;
-      transition: background-color 0.3s ease, box-shadow 0.3s ease;
-      cursor: pointer;
-      user-select: none;
-    }
-
-    .continue-button:hover {
-      background-color: #cc3700;
-      box-shadow: 0 0 25px #ff4500;
+    select:hover, button:hover {
+      background: linear-gradient(45deg, #FF8C00, #FF4500);
     }
   </style>
 </head>
 <body>
   <h1>WELCOME USERS</h1>
   <h2>PLEASE SELECT WISELY</h2>
-
-  <select id="language-select">
-    <option value="english.html">English</option>
-    <option value="hindi.html">Hindi</option>
-    <option value="urdu.html">Urdu</option>
-    <option value="korean.html">Korean</option>
-    <option value="spanish.html">Spanish</option>
+  <select>
+    <option>English</option>
+    <option>Spanish</option>
+    <option>French</option>
   </select>
-
-  <button id="continue-btn" class="continue-button">CONTINUE</button>
-
-  <script>
-    const continueBtn = document.getElementById('continue-btn');
-    const languageSelect = document.getElementById('language-select');
-
-    continueBtn.addEventListener('click', () => {
-      const selectedPage = languageSelect.value;
-      window.location.href = selectedPage; // redirect to chosen language page
-    });
-  </script>
+  <button>CONTINUE</button>
 </body>
 </html>
