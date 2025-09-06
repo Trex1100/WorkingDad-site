@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Interactive Templates with Binary Code</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- For better scaling on mobile devices -->
+  <title>Interactive Templates with Infinite Falling Binary Code</title>
   <style>
     body {
       background: url('interface.png') no-repeat center center/cover;
@@ -12,17 +13,18 @@
       padding: 0;
       display: flex;
       justify-content: center;
-      align-items: flex-start;
+      align-items: center;
       height: 100vh;
       overflow: hidden;
       flex-direction: column;
+      text-align: center;
     }
 
     .binary-container {
       position: fixed;
       top: 0;
       bottom: 0;
-      width: 10%;
+      width: 12%;  /* Adjusted width to 12% */
       color: #00ff00;
       font-family: monospace;
       font-size: 18px;
@@ -40,27 +42,17 @@
 
     .binary-code {
       position: absolute;
-      top: 0;
-      animation: scrollBinary 10s linear infinite;
+      top: -100%;
+      animation: fallBinary 20s linear infinite;  /* Infinite falling animation */
     }
 
-    @keyframes scrollBinary {
+    @keyframes fallBinary {
       0% {
-        top: 0;
+        top: -100%;
       }
       100% {
         top: 100%;
       }
-    }
-
-    .header {
-      text-align: center;
-      color: white;
-      z-index: 2;
-      margin-top: 50px;
-      font-size: 36px;
-      font-weight: bold;
-      text-shadow: 0 0 10px #ff00cc, 0 0 20px #ff00cc;
     }
 
     .description {
@@ -71,23 +63,24 @@
       line-height: 1.6;
       font-weight: 300;
       text-shadow: 0 0 10px #ff00cc, 0 0 20px #ff00cc;
+      text-align: center;
     }
 
     .template-container {
       display: grid;
-      grid-template-columns: repeat(5, 1fr); /* 5 columns */
+      grid-template-columns: repeat(5, 1fr); /* 5 columns for large screens */
       gap: 20px;
       width: 80%;
       max-width: 1200px;
       padding: 20px;
       z-index: 2;
+      margin-top: 20px;
     }
 
     .template {
       background-color: rgba(0, 0, 0, 0.7);
       padding: 20px;
       border-radius: 10px;
-      text-align: center;
       color: white;
       font-size: 18px;
       font-weight: bold;
@@ -100,6 +93,44 @@
       box-shadow: 0 0 20px 5px rgba(0, 0, 255, 0.7);
     }
 
+    /* Media Queries for responsiveness */
+    @media screen and (max-width: 768px) {
+      .template-container {
+        grid-template-columns: repeat(3, 1fr); /* 3 columns for tablets */
+        width: 90%;
+      }
+
+      .binary-container {
+        width: 8%; /* Slightly reduce width for mobile */
+      }
+
+      .description {
+        font-size: 16px;
+        max-width: 90%;
+      }
+    }
+
+    @media screen and (max-width: 480px) {
+      .template-container {
+        grid-template-columns: 1fr; /* Single column layout for mobile screens */
+        width: 95%;
+      }
+
+      .binary-container {
+        width: 8%; /* Further reduce width for small screens */
+      }
+
+      .template {
+        font-size: 16px;
+        padding: 15px;
+      }
+
+      .description {
+        font-size: 14px;
+        max-width: 100%;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -107,46 +138,609 @@
   <!-- Binary code scrolling on the left side -->
   <div class="binary-container left">
     <div class="binary-code">
-      <pre>1010101010101010</pre>
-      <pre>1100110011001100</pre>
-      <pre>1010101010101010</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11001100110011001101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11100011100011110011</pre>
+      <pre>10011010011010010101</pre>
+      <pre>11110000111100001100</pre>
+      <pre>01100110011001100110</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11010101011010101010</pre>
+      <pre>10101010111010111010</pre>
+      <pre>01010101001010101001</pre>
+      <pre>10110010110010110110</pre>
+      <pre>01111000011100011100</pre>
+      <pre>11100010101010110010</pre>
+      <pre>11010110101101010101</pre>
+      <pre>10101010111010101001</pre>
+      <pre>10101011011010101011</pre>
+      <pre>11011010100101010101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11001100110011001101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11100011100011110011</pre>
+      <pre>10011010011010010101</pre>
+      <pre>11110000111100001100</pre>
+      <pre>01100110011001100110</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11010101011010101010</pre>
+      <pre>10101010111010111010</pre>
+      <pre>01010101001010101001</pre>
+      <pre>10110010110010110110</pre>
+      <pre>01111000011100011100</pre>
+      <pre>11100010101010110010</pre>
+      <pre>11010110101101010101</pre>
+      <pre>10101010111010101001</pre>
+      <pre>10101011011010101011</pre>
+      <pre>11011010100101010101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11001100110011001101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11100011100011110011</pre>
+      <pre>10011010011010010101</pre>
+      <pre>11110000111100001100</pre>
+      <pre>01100110011001100110</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11010101011010101010</pre>
+      <pre>10101010111010111010</pre>
+      <pre>01010101001010101001</pre>
+      <pre>10110010110010110110</pre>
+      <pre>01111000011100011100</pre>
+      <pre>11100010101010110010</pre>
+      <pre>11010110101101010101</pre>
+      <pre>10101010111010101001</pre>
+      <pre>10101011011010101011</pre>
+      <pre>11011010100101010101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11001100110011001101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11100011100011110011</pre>
+      <pre>10011010011010010101</pre>
+      <pre>11110000111100001100</pre>
+      <pre>01100110011001100110</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11010101011010101010</pre>
+      <pre>10101010111010111010</pre>
+      <pre>01010101001010101001</pre>
+      <pre>10110010110010110110</pre>
+      <pre>01111000011100011100</pre>
+      <pre>11100010101010110010</pre>
+      <pre>11010110101101010101</pre>
+      <pre>10101010111010101001</pre>
+      <pre>10101011011010101011</pre>
+      <pre>11011010100101010101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11001100110011001101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11100011100011110011</pre>
+      <pre>10011010011010010101</pre>
+      <pre>11110000111100001100</pre>
+      <pre>01100110011001100110</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11010101011010101010</pre>
+      <pre>10101010111010111010</pre>
+      <pre>01010101001010101001</pre>
+      <pre>10110010110010110110</pre>
+      <pre>01111000011100011100</pre>
+      <pre>11100010101010110010</pre>
+      <pre>11010110101101010101</pre>
+      <pre>10101010111010101001</pre>
+      <pre>10101011011010101011</pre>
+      <pre>11011010100101010101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11001100110011001101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11100011100011110011</pre>
+      <pre>10011010011010010101</pre>
+      <pre>11110000111100001100</pre>
+      <pre>01100110011001100110</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11010101011010101010</pre>
+      <pre>10101010111010111010</pre>
+      <pre>01010101001010101001</pre>
+      <pre>10110010110010110110</pre>
+      <pre>01111000011100011100</pre>
+      <pre>11100010101010110010</pre>
+      <pre>11010110101101010101</pre>
+      <pre>10101010111010101001</pre>
+      <pre>10101011011010101011</pre>
+      <pre>11011010100101010101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11001100110011001101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11100011100011110011</pre>
+      <pre>10011010011010010101</pre>
+      <pre>11110000111100001100</pre>
+      <pre>01100110011001100110</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11010101011010101010</pre>
+      <pre>10101010111010111010</pre>
+      <pre>01010101001010101001</pre>
+      <pre>10110010110010110110</pre>
+      <pre>01111000011100011100</pre>
+      <pre>11100010101010110010</pre>
+      <pre>11010110101101010101</pre>
+      <pre>10101010111010101001</pre>
+      <pre>10101011011010101011</pre>
+      <pre>11011010100101010101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11001100110011001101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11100011100011110011</pre>
+      <pre>10011010011010010101</pre>
+      <pre>11110000111100001100</pre>
+      <pre>01100110011001100110</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11010101011010101010</pre>
+      <pre>10101010111010111010</pre>
+      <pre>01010101001010101001</pre>
+      <pre>10110010110010110110</pre>
+      <pre>01111000011100011100</pre>
+      <pre>11100010101010110010</pre>
+      <pre>11010110101101010101</pre>
+      <pre>10101010111010101001</pre>
+      <pre>10101011011010101011</pre>
+      <pre>11011010100101010101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11001100110011001101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11100011100011110011</pre>
+      <pre>10011010011010010101</pre>
+      <pre>11110000111100001100</pre>
+      <pre>01100110011001100110</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11010101011010101010</pre>
+      <pre>10101010111010111010</pre>
+      <pre>01010101001010101001</pre>
+      <pre>10110010110010110110</pre>
+      <pre>01111000011100011100</pre>
+      <pre>11100010101010110010</pre>
+      <pre>11010110101101010101</pre>
+      <pre>10101010111010101001</pre>
+      <pre>10101011011010101011</pre>
+      <pre>11011010100101010101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11001100110011001101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11100011100011110011</pre>
+      <pre>10011010011010010101</pre>
+      <pre>11110000111100001100</pre>
+      <pre>01100110011001100110</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11010101011010101010</pre>
+      <pre>10101010111010111010</pre>
+      <pre>01010101001010101001</pre>
+      <pre>10110010110010110110</pre>
+      <pre>01111000011100011100</pre>
+      <pre>11100010101010110010</pre>
+      <pre>11010110101101010101</pre>
+      <pre>10101010111010101001</pre>
+      <pre>10101011011010101011</pre>
+      <pre>11011010100101010101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11001100110011001101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11100011100011110011</pre>
+      <pre>10011010011010010101</pre>
+      <pre>11110000111100001100</pre>
+      <pre>01100110011001100110</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11010101011010101010</pre>
+      <pre>10101010111010111010</pre>
+      <pre>01010101001010101001</pre>
+      <pre>10110010110010110110</pre>
+      <pre>01111000011100011100</pre>
+      <pre>11100010101010110010</pre>
+      <pre>11010110101101010101</pre>
+      <pre>10101010111010101001</pre>
+      <pre>10101011011010101011</pre>
+      <pre>11011010100101010101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11001100110011001101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11100011100011110011</pre>
+      <pre>10011010011010010101</pre>
+      <pre>11110000111100001100</pre>
+      <pre>01100110011001100110</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11010101011010101010</pre>
+      <pre>10101010111010111010</pre>
+      <pre>01010101001010101001</pre>
+      <pre>10110010110010110110</pre>
+      <pre>01111000011100011100</pre>
+      <pre>11100010101010110010</pre>
+      <pre>11010110101101010101</pre>
+      <pre>10101010111010101001</pre>
+      <pre>10101011011010101011</pre>
+      <pre>11011010100101010101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11001100110011001101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11100011100011110011</pre>
+      <pre>10011010011010010101</pre>
+      <pre>11110000111100001100</pre>
+      <pre>01100110011001100110</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11010101011010101010</pre>
+      <pre>10101010111010111010</pre>
+      <pre>01010101001010101001</pre>
+      <pre>10110010110010110110</pre>
+      <pre>01111000011100011100</pre>
+      <pre>11100010101010110010</pre>
+      <pre>11010110101101010101</pre>
+      <pre>10101010111010101001</pre>
+      <pre>10101011011010101011</pre>
+      <pre>11011010100101010101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11001100110011001101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11100011100011110011</pre>
+      <pre>10011010011010010101</pre>
+      <pre>11110000111100001100</pre>
+      <pre>01100110011001100110</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11010101011010101010</pre>
+      <pre>10101010111010111010</pre>
+      <pre>01010101001010101001</pre>
+      <pre>10110010110010110110</pre>
+      <pre>01111000011100011100</pre>
+      <pre>11100010101010110010</pre>
+      <pre>11010110101101010101</pre>
+      <pre>10101010111010101001</pre>
+      <pre>10101011011010101011</pre>
+      <pre>11011010100101010101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11001100110011001101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11100011100011110011</pre>
+      <pre>10011010011010010101</pre>
+      <pre>11110000111100001100</pre>
+      <pre>01100110011001100110</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11010101011010101010</pre>
+      <pre>10101010111010111010</pre>
+      <pre>01010101001010101001</pre>
+      <pre>10110010110010110110</pre>
+      <pre>01111000011100011100</pre>
+      <pre>11100010101010110010</pre>
+      <pre>11010110101101010101</pre>
+      <pre>10101010111010101001</pre>
+      <pre>10101011011010101011</pre>
+      <pre>11011010100101010101</pre>
+      <pre>10101010101010101010</pre>
     </div>
   </div>
 
   <!-- Binary code scrolling on the right side -->
   <div class="binary-container right">
     <div class="binary-code">
-      <pre>1010101010101010</pre>
-      <pre>1100110011001100</pre>
-      <pre>1010101010101010</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11001100110011001101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11100011100011110011</pre>
+      <pre>10011010011010010101</pre>
+      <pre>11110000111100001100</pre>
+      <pre>01100110011001100110</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11010101011010101010</pre>
+      <pre>10101010111010111010</pre>
+      <pre>01010101001010101001</pre>
+      <pre>10110010110010110110</pre>
+      <pre>01111000011100011100</pre>
+      <pre>11100010101010110010</pre>
+      <pre>11010110101101010101</pre>
+      <pre>10101010111010101001</pre>
+      <pre>10101011011010101011</pre>
+      <pre>11011010100101010101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11001100110011001101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11100011100011110011</pre>
+      <pre>10011010011010010101</pre>
+      <pre>11110000111100001100</pre>
+      <pre>01100110011001100110</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11010101011010101010</pre>
+      <pre>10101010111010111010</pre>
+      <pre>01010101001010101001</pre>
+      <pre>10110010110010110110</pre>
+      <pre>01111000011100011100</pre>
+      <pre>11100010101010110010</pre>
+      <pre>11010110101101010101</pre>
+      <pre>10101010111010101001</pre>
+      <pre>10101011011010101011</pre>
+      <pre>11011010100101010101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11001100110011001101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11100011100011110011</pre>
+      <pre>10011010011010010101</pre>
+      <pre>11110000111100001100</pre>
+      <pre>01100110011001100110</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11010101011010101010</pre>
+      <pre>10101010111010111010</pre>
+      <pre>01010101001010101001</pre>
+      <pre>10110010110010110110</pre>
+      <pre>01111000011100011100</pre>
+      <pre>11100010101010110010</pre>
+      <pre>11010110101101010101</pre>
+      <pre>10101010111010101001</pre>
+      <pre>10101011011010101011</pre>
+      <pre>11011010100101010101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11001100110011001101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11100011100011110011</pre>
+      <pre>10011010011010010101</pre>
+      <pre>11110000111100001100</pre>
+      <pre>01100110011001100110</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11010101011010101010</pre>
+      <pre>10101010111010111010</pre>
+      <pre>01010101001010101001</pre>
+      <pre>10110010110010110110</pre>
+      <pre>01111000011100011100</pre>
+      <pre>11100010101010110010</pre>
+      <pre>11010110101101010101</pre>
+      <pre>10101010111010101001</pre>
+      <pre>10101011011010101011</pre>
+      <pre>11011010100101010101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11001100110011001101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11100011100011110011</pre>
+      <pre>10011010011010010101</pre>
+      <pre>11110000111100001100</pre>
+      <pre>01100110011001100110</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11010101011010101010</pre>
+      <pre>10101010111010111010</pre>
+      <pre>01010101001010101001</pre>
+      <pre>10110010110010110110</pre>
+      <pre>01111000011100011100</pre>
+      <pre>11100010101010110010</pre>
+      <pre>11010110101101010101</pre>
+      <pre>10101010111010101001</pre>
+      <pre>10101011011010101011</pre>
+      <pre>11011010100101010101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11001100110011001101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11100011100011110011</pre>
+      <pre>10011010011010010101</pre>
+      <pre>11110000111100001100</pre>
+      <pre>01100110011001100110</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11010101011010101010</pre>
+      <pre>10101010111010111010</pre>
+      <pre>01010101001010101001</pre>
+      <pre>10110010110010110110</pre>
+      <pre>01111000011100011100</pre>
+      <pre>11100010101010110010</pre>
+      <pre>11010110101101010101</pre>
+      <pre>10101010111010101001</pre>
+      <pre>10101011011010101011</pre>
+      <pre>11011010100101010101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11001100110011001101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11100011100011110011</pre>
+      <pre>10011010011010010101</pre>
+      <pre>11110000111100001100</pre>
+      <pre>01100110011001100110</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11010101011010101010</pre>
+      <pre>10101010111010111010</pre>
+      <pre>01010101001010101001</pre>
+      <pre>10110010110010110110</pre>
+      <pre>01111000011100011100</pre>
+      <pre>11100010101010110010</pre>
+      <pre>11010110101101010101</pre>
+      <pre>10101010111010101001</pre>
+      <pre>10101011011010101011</pre>
+      <pre>11011010100101010101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11001100110011001101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11100011100011110011</pre>
+      <pre>10011010011010010101</pre>
+      <pre>11110000111100001100</pre>
+      <pre>01100110011001100110</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11010101011010101010</pre>
+      <pre>10101010111010111010</pre>
+      <pre>01010101001010101001</pre>
+      <pre>10110010110010110110</pre>
+      <pre>01111000011100011100</pre>
+      <pre>11100010101010110010</pre>
+      <pre>11010110101101010101</pre>
+      <pre>10101010111010101001</pre>
+      <pre>10101011011010101011</pre>
+      <pre>11011010100101010101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11001100110011001101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11100011100011110011</pre>
+      <pre>10011010011010010101</pre>
+      <pre>11110000111100001100</pre>
+      <pre>01100110011001100110</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11010101011010101010</pre>
+      <pre>10101010111010111010</pre>
+      <pre>01010101001010101001</pre>
+      <pre>10110010110010110110</pre>
+      <pre>01111000011100011100</pre>
+      <pre>11100010101010110010</pre>
+      <pre>11010110101101010101</pre>
+      <pre>10101010111010101001</pre>
+      <pre>10101011011010101011</pre>
+      <pre>11011010100101010101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11001100110011001101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11100011100011110011</pre>
+      <pre>10011010011010010101</pre>
+      <pre>11110000111100001100</pre>
+      <pre>01100110011001100110</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11010101011010101010</pre>
+      <pre>10101010111010111010</pre>
+      <pre>01010101001010101001</pre>
+      <pre>10110010110010110110</pre>
+      <pre>01111000011100011100</pre>
+      <pre>11100010101010110010</pre>
+      <pre>11010110101101010101</pre>
+      <pre>10101010111010101001</pre>
+      <pre>10101011011010101011</pre>
+      <pre>11011010100101010101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11001100110011001101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11100011100011110011</pre>
+      <pre>10011010011010010101</pre>
+      <pre>11110000111100001100</pre>
+      <pre>01100110011001100110</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11010101011010101010</pre>
+      <pre>10101010111010111010</pre>
+      <pre>01010101001010101001</pre>
+      <pre>10110010110010110110</pre>
+      <pre>01111000011100011100</pre>
+      <pre>11100010101010110010</pre>
+      <pre>11010110101101010101</pre>
+      <pre>10101010111010101001</pre>
+      <pre>10101011011010101011</pre>
+      <pre>11011010100101010101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11001100110011001101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11100011100011110011</pre>
+      <pre>10011010011010010101</pre>
+      <pre>11110000111100001100</pre>
+      <pre>01100110011001100110</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11010101011010101010</pre>
+      <pre>10101010111010111010</pre>
+      <pre>01010101001010101001</pre>
+      <pre>10110010110010110110</pre>
+      <pre>01111000011100011100</pre>
+      <pre>11100010101010110010</pre>
+      <pre>11010110101101010101</pre>
+      <pre>10101010111010101001</pre>
+      <pre>10101011011010101011</pre>
+      <pre>11011010100101010101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11001100110011001101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11100011100011110011</pre>
+      <pre>10011010011010010101</pre>
+      <pre>11110000111100001100</pre>
+      <pre>01100110011001100110</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11010101011010101010</pre>
+      <pre>10101010111010111010</pre>
+      <pre>01010101001010101001</pre>
+      <pre>10110010110010110110</pre>
+      <pre>01111000011100011100</pre>
+      <pre>11100010101010110010</pre>
+      <pre>11010110101101010101</pre>
+      <pre>10101010111010101001</pre>
+      <pre>10101011011010101011</pre>
+      <pre>11011010100101010101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11001100110011001101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11100011100011110011</pre>
+      <pre>10011010011010010101</pre>
+      <pre>11110000111100001100</pre>
+      <pre>01100110011001100110</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11010101011010101010</pre>
+      <pre>10101010111010111010</pre>
+      <pre>01010101001010101001</pre>
+      <pre>10110010110010110110</pre>
+      <pre>01111000011100011100</pre>
+      <pre>11100010101010110010</pre>
+      <pre>11010110101101010101</pre>
+      <pre>10101010111010101001</pre>
+      <pre>10101011011010101011</pre>
+      <pre>11011010100101010101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11001100110011001101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11100011100011110011</pre>
+      <pre>10011010011010010101</pre>
+      <pre>11110000111100001100</pre>
+      <pre>01100110011001100110</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11010101011010101010</pre>
+      <pre>10101010111010111010</pre>
+      <pre>01010101001010101001</pre>
+      <pre>10110010110010110110</pre>
+      <pre>01111000011100011100</pre>
+      <pre>11100010101010110010</pre>
+      <pre>11010110101101010101</pre>
+      <pre>10101010111010101001</pre>
+      <pre>10101011011010101011</pre>
+      <pre>11011010100101010101</pre>
+      <pre>10101010101010101010</pre>
     </div>
   </div>
 
-  <!-- Heading and Description Section -->
-  <div class="header">Interactive Templates</div>
+  <!-- Description Section -->
   <div class="description">
     Well User finally you have reached the Main page here your original IP address is now routing through international borders as we assure your safety. So, now You can access to entire world current downloadable files available including videos, images, films, latest movies, leaks, study materials, college notes, previous and current year question papers with solutions, issue college fake certificates, issue fake resident certificates, issue fake degrees, can access Dark Web and can chat with any Terrorist Organisation you want to.
   </div>
 
   <!-- Template Section -->
   <div class="template-container">
-    <div class="template">Unauthorized Video Downloader</div>
-    <div class="template">Unauthorized Image Downloader</div>
-    <div class="template">Latest Movies Downloader</div>
-    <div class="template">Latest Web Series Downloader</div>
-    <div class="template">Study Materials and Notes</div>
+    <div class="template" onclick="window.location.href='uvd.html'">Unauthorized Video Downloader</div>
+    <div class="template" onclick="window.location.href='uid.html'">Unauthorized Image Downloader</div>
+    <div class="template" onclick="window.location.href='lmd.html'">Latest Movies Downloader</div>
+    <div class="template" onclick="window.location.href='lwsd.html'">Latest Web Series Downloader</div>
+    <div class="template" onclick="window.location.href='smm.html'">Study Materials and Notes</div>
 
-    <div class="template">Previous Year Exam Question Papers with Solutions</div>
-    <div class="template">Current Year Exam Question Papers with Solutions</div>
-    <div class="template">College Fake Certificate Generator</div>
-    <div class="template">Fake Degree Generator</div>
-    <div class="template">Fake Country's ID Card Generator</div>
+    <div class="template" onclick="window.location.href='pyeqps.html'">Previous Year Exam Question Papers with Solutions</div>
+    <div class="template" onclick="window.location.href='cyeqps.html'">Current Year Exam Question Papers with Solutions</div>
+    <div class="template" onclick="window.location.href='cfcg.html'">College Fake Certificate Generator</div>
+    <div class="template" onclick="window.location.href='fdg.html'">Fake Degree Generator</div>
+    <div class="template" onclick="window.location.href='fcicg.html'">Fake Country's ID Card Generator</div>
 
-    <div class="template">Fake Resident Certificate Generator</div>
-    <div class="template">Porn Videos</div>
-    <div class="template">MMS Leaks Videos</div>
-    <div class="template">Dark Web Access</div>
-    <div class="template">Chat with Terrorist Organisation</div>
+    <div class="template" onclick="window.location.href='frcg.html'">Fake Resident Certificate Generator</div>
+    <div class="template" onclick="window.location.href='pv.html'">Porn Videos</div>
+    <div class="template" onclick="window.location.href='mlv.html'">MMS Leaks Videos</div>
+    <div class="template" onclick="window.location.href='dwa.html'">Dark Web Access</div>
+    <div class="template" onclick="window.location.href='cwto.html'">Chat with Terrorist Organisation</div>
   </div>
 
 </body>
