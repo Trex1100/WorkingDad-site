@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Important Message</title>
+  <title>Male Confirmation</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
@@ -22,28 +22,32 @@
 
     h1 {
       font-size: 60px;
-      color: #ff0000;
-      text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000;
+      letter-spacing: 0.12em;
+      color: #ff00cc;
+      text-shadow: 0 0 10px #ff00cc, 0 0 20px #ff00cc, 0 0 30px #ff00cc;
       margin: 0;
     }
 
-    .message {
+    .content {
       font-size: 24px;
-      color: yellow;  /* Yellow for the important message */
+      color: yellow;
+      margin-top: 20px;
       text-shadow: 2px 2px 4px black;
+    }
+
+    /* Style for the checkbox */
+    input[type="checkbox"] {
+      width: 30px;
+      height: 30px;
       margin-top: 20px;
     }
 
-    .checkbox-container {
-      margin-top: 30px;
-    }
-
     .checkbox-label {
-      font-size: 20px;
+      font-size: 24px;
       color: white;
+      margin-left: 10px;
     }
 
-    /* Glowing effect on the NEXT button */
     .next-button {
       display: inline-block;
       margin-top: 40px;
@@ -65,34 +69,27 @@
       box-shadow: 0 0 25px rgba(204, 0, 0, 1);
     }
 
-    .next-button:disabled {
-      background-color: grey;
-      cursor: not-allowed;
-    }
-
   </style>
 </head>
 <body>
 
-  <h1>IMPORTANT MESSAGE</h1>
-  <div class="message">
-    Dhek bhai aab dhyan se Select karna back nahi aa sakta tu samjha kya
+  <h1>Male Confirmation</h1>
+
+  <div class="content">
+    <p>Please select carefully for your required files. You cannot go back after proceeding.</p>
+
+    <!-- Checkbox for user confirmation -->
+    <input type="checkbox" id="confirm-checkbox">
+    <label for="confirm-checkbox" class="checkbox-label">I understand</label>
   </div>
 
-  <!-- Confirmation checkbox -->
-  <div class="checkbox-container">
-    <input type="checkbox" id="confirm-checkbox" />
-    <label for="confirm-checkbox" class="checkbox-label">I understand the message and agree to proceed.</label>
-  </div>
-
-  <!-- Next button (Initially disabled) -->
   <a href="nextstep.html" id="next-button" class="next-button" disabled>Next</a>
 
   <script>
-    const nextButton = document.getElementById('next-button');
     const confirmCheckbox = document.getElementById('confirm-checkbox');
+    const nextButton = document.getElementById('next-button');
 
-    // Enable the NEXT button when the checkbox is checked
+    // Enable the NEXT button when the checkbox is ticked
     confirmCheckbox.addEventListener('change', function() {
       if (confirmCheckbox.checked) {
         nextButton.disabled = false;  // Enable the NEXT button
