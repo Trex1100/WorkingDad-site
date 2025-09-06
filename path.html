@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Interactive Staircase Selection</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    body {
+      background: url('https://raw.githubusercontent.com/your-username/your-repository/main/assets/images/bg2.jpg') no-repeat center center/cover;
+      background-size: cover;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      gap: 30px;
+      color: white;
+      font-family: 'Press Start 2P', cursive;
+      text-align: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    h1 {
+      font-size: 60px;
+      color: #00aaff;
+      text-shadow: 0 0 10px #00aaff, 0 0 20px #00aaff;
+      margin: 0;
+    }
+
+    .person {
+      position: absolute;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    /* Randomly position each person on the staircase */
+    .person {
+      animation: randomPosition 10s ease-in-out infinite;
+    }
+
+    /* Create the animation for random positioning */
+    @keyframes randomPosition {
+      0% { top: 20%; left: 30%; }
+      20% { top: 35%; left: 40%; }
+      40% { top: 50%; left: 50%; }
+      60% { top: 60%; left: 60%; }
+      80% { top: 70%; left: 70%; }
+      100% { top: 80%; left: 80%; }
+    }
+
+    /* Glowing effect when hovering */
+    .person:hover {
+      box-shadow: 0 0 20px 5px red;
+    }
+
+  </style>
+</head>
+<body>
+
+  <h1>Choose Your Option</h1>
+
+  <!-- 15 clickable options -->
+  <div class="person" style="top: 30%; left: 20%;">
+    <img src="https://raw.githubusercontent.com/your-username/your-repository/main/assets/images/bg1.jpg" alt="Person 1" onclick="window.location.href='nextstep.html';" />
+  </div>
+  <div class="person" style="top: 40%; left: 30%;">
+    <img src="https://raw.githubusercontent.com/your-username/your-repository/main/assets/images/bg1.jpg" alt="Person 2" onclick="window.location.href='nextstep.html';" />
+  </div>
+  <!-- Add remaining people similarly with random positioning -->
+
+</body>
+</html>
