@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Important Message</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    body {
+      background: url('interface.png') no-repeat center center/cover;
+      background-size: cover;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      color: white;
+      font-family: 'Press Start 2P', cursive;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 60px;
+      color: #ff0000;
+      text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000;
+      margin: 0;
+    }
+
+    .message {
+      font-size: 24px;
+      color: yellow;  /* Yellow for the important message */
+      text-shadow: 2px 2px 4px black;
+      margin-top: 20px;
+    }
+
+    .checkbox-container {
+      margin-top: 30px;
+    }
+
+    .checkbox-label {
+      font-size: 20px;
+      color: white;
+    }
+
+    /* Glowing effect on the NEXT button */
+    .next-button {
+      display: inline-block;
+      margin-top: 40px;
+      padding: 15px 50px;
+      background-color: #cc0000;
+      color: white;
+      font-weight: bold;
+      font-size: 20px;
+      text-decoration: none;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(204, 0, 0, 0.9);
+      cursor: pointer;
+      letter-spacing: 0.1em;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .next-button:hover {
+      background-color: #990000;
+      box-shadow: 0 0 25px rgba(204, 0, 0, 1);
+    }
+
+    .next-button:disabled {
+      background-color: grey;
+      cursor: not-allowed;
+    }
+
+  </style>
+</head>
+<body>
+
+  <h1>IMPORTANT MESSAGE</h1>
+  <div class="message">
+    Dhek bhai aab dhyan se Select karna back nahi aa sakta tu samjha kya
+  </div>
+
+  <!-- Confirmation checkbox -->
+  <div class="checkbox-container">
+    <input type="checkbox" id="confirm-checkbox" />
+    <label for="confirm-checkbox" class="checkbox-label">I understand the message and agree to proceed.</label>
+  </div>
+
+  <!-- Next button (Initially disabled) -->
+  <a href="nextstep.html" id="next-button" class="next-button" disabled>Next</a>
+
+  <script>
+    const nextButton = document.getElementById('next-button');
+    const confirmCheckbox = document.getElementById('confirm-checkbox');
+
+    // Enable the NEXT button when the checkbox is checked
+    confirmCheckbox.addEventListener('change', function() {
+      if (confirmCheckbox.checked) {
+        nextButton.disabled = false;  // Enable the NEXT button
+      } else {
+        nextButton.disabled = true;  // Disable the NEXT button if not checked
+      }
+    });
+
+    // Prevent going back to this page
+    window.history.pushState(null, "", window.location.href);
+    window.onpopstate = function () {
+      window.history.forward();  // Keep the user from going back
+    };
+  </script>
+
+</body>
+</html>
