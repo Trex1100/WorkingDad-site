@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Interactive Templates with Binary Code</title>
+  <style>
+    body {
+      background: url('interface.png') no-repeat center center/cover;
+      background-size: cover;
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      height: 100vh;
+      overflow: hidden;
+      flex-direction: column;
+    }
+
+    .binary-container {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      width: 10%;
+      color: #00ff00;
+      font-family: monospace;
+      font-size: 18px;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .left {
+      left: 0;
+    }
+
+    .right {
+      right: 0;
+    }
+
+    .binary-code {
+      position: absolute;
+      top: 0;
+      animation: scrollBinary 10s linear infinite;
+    }
+
+    @keyframes scrollBinary {
+      0% {
+        top: 0;
+      }
+      100% {
+        top: 100%;
+      }
+    }
+
+    .header {
+      text-align: center;
+      color: white;
+      z-index: 2;
+      margin-top: 50px;
+      font-size: 36px;
+      font-weight: bold;
+      text-shadow: 0 0 10px #ff00cc, 0 0 20px #ff00cc;
+    }
+
+    .description {
+      color: white;
+      font-size: 18px;
+      max-width: 800px;
+      margin: 20px auto;
+      line-height: 1.6;
+      font-weight: 300;
+      text-shadow: 0 0 10px #ff00cc, 0 0 20px #ff00cc;
+    }
+
+    .template-container {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr); /* 5 columns */
+      gap: 20px;
+      width: 80%;
+      max-width: 1200px;
+      padding: 20px;
+      z-index: 2;
+    }
+
+    .template {
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      transition: box-shadow 0.3s ease;
+    }
+
+    .template:hover {
+      box-shadow: 0 0 20px 5px rgba(0, 0, 255, 0.7);
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Binary code scrolling on the left side -->
+  <div class="binary-container left">
+    <div class="binary-code">
+      <pre>1010101010101010</pre>
+      <pre>1100110011001100</pre>
+      <pre>1010101010101010</pre>
+    </div>
+  </div>
+
+  <!-- Binary code scrolling on the right side -->
+  <div class="binary-container right">
+    <div class="binary-code">
+      <pre>1010101010101010</pre>
+      <pre>1100110011001100</pre>
+      <pre>1010101010101010</pre>
+    </div>
+  </div>
+
+  <!-- Heading and Description Section -->
+  <div class="header">Interactive Templates</div>
+  <div class="description">
+    Well User finally you have reached the Main page here your original IP address is now routing through international borders as we assure your safety. So, now You can access to entire world current downloadable files available including videos, images, films, latest movies, leaks, study materials, college notes, previous and current year question papers with solutions, issue college fake certificates, issue fake resident certificates, issue fake degrees, can access Dark Web and can chat with any Terrorist Organisation you want to.
+  </div>
+
+  <!-- Template Section -->
+  <div class="template-container">
+    <div class="template">Unauthorized Video Downloader</div>
+    <div class="template">Unauthorized Image Downloader</div>
+    <div class="template">Latest Movies Downloader</div>
+    <div class="template">Latest Web Series Downloader</div>
+    <div class="template">Study Materials and Notes</div>
+
+    <div class="template">Previous Year Exam Question Papers with Solutions</div>
+    <div class="template">Current Year Exam Question Papers with Solutions</div>
+    <div class="template">College Fake Certificate Generator</div>
+    <div class="template">Fake Degree Generator</div>
+    <div class="template">Fake Country's ID Card Generator</div>
+
+    <div class="template">Fake Resident Certificate Generator</div>
+    <div class="template">Porn Videos</div>
+    <div class="template">MMS Leaks Videos</div>
+    <div class="template">Dark Web Access</div>
+    <div class="template">Chat with Terrorist Organisation</div>
+  </div>
+
+</body>
+</html>
