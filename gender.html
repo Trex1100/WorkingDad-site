@@ -24,12 +24,11 @@
     h1 {
       font-size: 60px;
       letter-spacing: 0.12em;
-      color: #00aaff; /* blue neon base */
+      color: #00aaff;
       text-shadow:
         0 0 10px #00aaff,
         0 0 20px #00aaff,
-        0 0 30px #00aaff,
-        0 0 5px black; /* thin black stroke */
+        0 0 30px #00aaff;
       margin: 0;
     }
 
@@ -40,7 +39,6 @@
         0 0 4px #00aaff,
         0 0 8px #00aaff;
       margin: 0;
-      text-shadow: 1px 1px 3px black; /* thin black stroke */
     }
 
     select {
@@ -49,14 +47,14 @@
       border-radius: 8px;
       border: none;
       margin-top: 20px;
-      background-color: #007acc; /* solid blue */
-      color: white;  /* simple white text */
-      text-shadow: none;  /* No shadow or gradient effect */
+      background-color: #007acc;
+      color: white;
+      text-shadow: none;
       cursor: pointer;
       letter-spacing: 0.05em;
-      min-width: 400px; /* Make the dropdown wider */
-      max-width: 500px; /* Limit maximum width */
-      box-shadow: 0 0 12px #005f99; /* subtle blue glow shadow */
+      min-width: 400px;
+      max-width: 500px;
+      box-shadow: 0 0 12px #005f99;
       transition: background-color 0.3s ease;
     }
 
@@ -86,27 +84,6 @@
       box-shadow: 0 0 25px rgba(204, 0, 0, 1);
     }
 
-    /* Media query for mobile screens */
-    @media screen and (max-width: 768px) {
-      h1 {
-        font-size: 40px;
-      }
-
-      h2 {
-        font-size: 22px;
-      }
-
-      select {
-        font-size: 16px;
-        min-width: 90%; /* Makes dropdown more responsive on mobile */
-        max-width: 90%;
-      }
-
-      .next-button {
-        font-size: 18px;
-        padding: 12px 35px;
-      }
-    }
   </style>
 </head>
 <body>
@@ -144,11 +121,83 @@
     <option value="aliagender">Aliagender (A gender identity that doesn't fit within any of the known gender categories.)</option>
     <option value="quoigender">Quoigender (A gender experience defined by confusion or uncertainty.)</option>
     <option value="demiflux">Demiflux (A gender identity that shifts between some genders, but remains fixed in certain ways.)</option>
-    <!-- "Prefer not to say" option added at the bottom -->
-    <option value="prefer-not-to-say">Prefer not to say (Choose this if you don't want to specify your gender.)</option>
+    <option value="prefer-not-to-say">Prefer not to say (Choose this if you don't want to specify your gender.)</option> <!-- This is now last -->
   </select>
 
-  <a href="nextstep.html" class="next-button">NEXT</a>
+  <a href="nextstep.html" id="next-button" class="next-button" style="display: none;">NEXT</a>
+
+  <script>
+    const genderSelect = document.getElementById('gender-select');
+    const nextButton = document.getElementById('next-button');
+
+    // Event listener for gender selection
+    genderSelect.addEventListener('change', function() {
+      const selectedGender = genderSelect.value;
+
+      // Redirect to the respective page based on gender selection
+      if (selectedGender === "male") {
+        window.location.href = "male.html";  // Redirect to Male page
+      } else if (selectedGender === "female") {
+        window.location.href = "female.html";  // Redirect to Female page
+      } else if (selectedGender === "non-binary") {
+        window.location.href = "nonbinary.html";  // Redirect to Non-binary page
+      } else if (selectedGender === "genderqueer") {
+        window.location.href = "genderqueer.html";  // Redirect to Genderqueer page
+      } else if (selectedGender === "genderfluid") {
+        window.location.href = "genderfluid.html";  // Redirect to Genderfluid page
+      } else if (selectedGender === "agender") {
+        window.location.href = "agender.html";  // Redirect to Agender page
+      } else if (selectedGender === "bigender") {
+        window.location.href = "bigender.html";  // Redirect to Bigender page
+      } else if (selectedGender === "two-spirit") {
+        window.location.href = "twospirit.html";  // Redirect to Two-Spirit page
+      } else if (selectedGender === "demiboy") {
+        window.location.href = "demiboy.html";  // Redirect to Demiboy page
+      } else if (selectedGender === "demigirl") {
+        window.location.href = "demigirl.html";  // Redirect to Demigirl page
+      } else if (selectedGender === "pangender") {
+        window.location.href = "pangender.html";  // Redirect to Pangender page
+      } else if (selectedGender === "transgender-male") {
+        window.location.href = "transgendermale.html";  // Redirect to Transgender Male page
+      } else if (selectedGender === "transgender-female") {
+        window.location.href = "transgenderfemale.html";  // Redirect to Transgender Female page
+      } else if (selectedGender === "androgynous") {
+        window.location.href = "androgynous.html";  // Redirect to Androgynous page
+      } else if (selectedGender === "cisgender") {
+        window.location.href = "cisgender.html";  // Redirect to Cisgender page
+      } else if (selectedGender === "neutrois") {
+        window.location.href = "neutrois.html";  // Redirect to Neutrois page
+      } else if (selectedGender === "intergender") {
+        window.location.href = "intergender.html";  // Redirect to Intergender page
+      } else if (selectedGender === "kathoey") {
+        window.location.href = "kathoey.html";  // Redirect to Kathoey page
+      } else if (selectedGender === "hijra") {
+        window.location.href = "hijra.html";  // Redirect to Hijra page
+      } else if (selectedGender === "fa'afafine") {
+        window.location.href = "faafafine.html";  // Redirect to Fa'afafine page
+      } else if (selectedGender === "muxe") {
+        window.location.href = "muxe.html";  // Redirect to Muxe page
+      } else if (selectedGender === "autigender") {
+        window.location.href = "autigender.html";  // Redirect to Autigender page
+      } else if (selectedGender === "graygender") {
+        window.location.href = "graygender.html";  // Redirect to Graygender page
+      } else if (selectedGender === "gendervoid") {
+        window.location.href = "gendervoid.html";  // Redirect to Gendervoid page
+      } else if (selectedGender === "polygender") {
+        window.location.href = "polygender.html";  // Redirect to Polygender page
+      } else if (selectedGender === "third-gender") {
+        window.location.href = "thirdgender.html";  // Redirect to Third-gender page
+      } else if (selectedGender === "aliagender") {
+        window.location.href = "aliagender.html";  // Redirect to Aliagender page
+      } else if (selectedGender === "quoigender") {
+        window.location.href = "quoigender.html";  // Redirect to Quoigender page
+      } else if (selectedGender === "demiflux") {
+        window.location.href = "demiflux.html";  // Redirect to Demiflux page
+      } else if (selectedGender === "prefer-not-to-say") {
+        window.location.href = "prefernottosay.html";  // Redirect to Prefer not to say page
+      }
+    });
+  </script>
 
 </body>
 </html>
