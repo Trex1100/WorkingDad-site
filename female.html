@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Ensures proper scaling on mobile -->
   <title>Female Page</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
@@ -77,14 +78,6 @@
       box-shadow: 0 0 25px rgba(204, 0, 0, 1);
     }
 
-    /* Disable the back button functionality */
-    <script>
-      window.history.pushState(null, "", window.location.href);
-      window.onpopstate = function () {
-        window.history.forward();  // Keep the user from going back
-      };
-    </script>
-
   </style>
 </head>
 <body>
@@ -98,7 +91,8 @@
     <label for="confirm-checkbox" class="checkbox-label">I understand</label>
   </div>
 
-  <a href="nextstep.html" id="next-button" class="next-button" disabled>Next</a>
+  <!-- Next button linking to path.html -->
+  <a href="path.html" id="next-button" class="next-button" disabled>Next</a>
 
   <script>
     const confirmCheckbox = document.getElementById('confirm-checkbox');
