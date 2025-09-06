@@ -40,7 +40,7 @@
       font-size: 28px;
     }
 
-    input, select {
+    select {
       font-family: 'Press Start 2P', cursive;
       font-size: 18px;
       padding: 10px 20px;
@@ -104,13 +104,109 @@
     This system has its own attitude, even the developer of this website has no idea, so BEWARE and answer properly for your required files.
   </div>
 
-  <!-- Age input -->
-  <input type="number" id="age" placeholder="Enter your age (1-100)" min="1" max="100" />
-
-  <!-- Option for Prefer Not to Say -->
-  <select id="age-option">
-    <option value="select">Prefer not to say</option>
-    <option value="age">Enter your age</option>
+  <!-- Age dropdown selection -->
+  <select id="age-dropdown">
+    <option value="select">Select your age</option>
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+    <option value="6">6</option>
+    <option value="7">7</option>
+    <option value="8">8</option>
+    <option value="9">9</option>
+    <option value="10">10</option>
+    <option value="11">11</option>
+    <option value="12">12</option>
+    <option value="13">13</option>
+    <option value="14">14</option>
+    <option value="15">15</option>
+    <option value="16">16</option>
+    <option value="17">17</option>
+    <option value="18">18</option>
+    <option value="19">19</option>
+    <option value="20">20</option>
+    <option value="21">21</option>
+    <option value="22">22</option>
+    <option value="23">23</option>
+    <option value="24">24</option>
+    <option value="25">25</option>
+    <option value="26">26</option>
+    <option value="27">27</option>
+    <option value="28">28</option>
+    <option value="29">29</option>
+    <option value="30">30</option>
+    <option value="31">31</option>
+    <option value="32">32</option>
+    <option value="33">33</option>
+    <option value="34">34</option>
+    <option value="35">35</option>
+    <option value="36">36</option>
+    <option value="37">37</option>
+    <option value="38">38</option>
+    <option value="39">39</option>
+    <option value="40">40</option>
+    <option value="41">41</option>
+    <option value="42">42</option>
+    <option value="43">43</option>
+    <option value="44">44</option>
+    <option value="45">45</option>
+    <option value="46">46</option>
+    <option value="47">47</option>
+    <option value="48">48</option>
+    <option value="49">49</option>
+    <option value="50">50</option>
+    <option value="51">51</option>
+    <option value="52">52</option>
+    <option value="53">53</option>
+    <option value="54">54</option>
+    <option value="55">55</option>
+    <option value="56">56</option>
+    <option value="57">57</option>
+    <option value="58">58</option>
+    <option value="59">59</option>
+    <option value="60">60</option>
+    <option value="61">61</option>
+    <option value="62">62</option>
+    <option value="63">63</option>
+    <option value="64">64</option>
+    <option value="65">65</option>
+    <option value="66">66</option>
+    <option value="67">67</option>
+    <option value="68">68</option>
+    <option value="69">69</option>
+    <option value="70">70</option>
+    <option value="71">71</option>
+    <option value="72">72</option>
+    <option value="73">73</option>
+    <option value="74">74</option>
+    <option value="75">75</option>
+    <option value="76">76</option>
+    <option value="77">77</option>
+    <option value="78">78</option>
+    <option value="79">79</option>
+    <option value="80">80</option>
+    <option value="81">81</option>
+    <option value="82">82</option>
+    <option value="83">83</option>
+    <option value="84">84</option>
+    <option value="85">85</option>
+    <option value="86">86</option>
+    <option value="87">87</option>
+    <option value="88">88</option>
+    <option value="89">89</option>
+    <option value="90">90</option>
+    <option value="91">91</option>
+    <option value="92">92</option>
+    <option value="93">93</option>
+    <option value="94">94</option>
+    <option value="95">95</option>
+    <option value="96">96</option>
+    <option value="97">97</option>
+    <option value="98">98</option>
+    <option value="99">99</option>
+    <option value="100">100</option>
   </select>
 
   <!-- Warning message for "Prefer not to say" -->
@@ -127,57 +223,48 @@
   <a href="gender.html" id="continue-btn" class="continue-button" disabled>CONTINUE</a>
 
   <script>
-    const ageSelect = document.getElementById('age-option');
-    const warningMessage = document.getElementById('warning-message');
+    const ageSelect = document.getElementById('age-dropdown');
     const ageMessage = document.getElementById('age-message');
     const preferNotToSayMessage = document.getElementById('prefer-not-to-say-message');
     const continueBtn = document.getElementById('continue-btn');
-    const ageInput = document.getElementById('age');
 
     // When the dropdown value changes
     ageSelect.addEventListener('change', () => {
-      if (ageSelect.value === 'select') {
+      const selectedAge = ageSelect.value;
+
+      if (selectedAge === "select") {
         preferNotToSayMessage.style.display = 'block'; // Show the "Prefer not to say" message
         ageMessage.style.display = 'none'; // Hide age-related message
         continueBtn.disabled = true; // Disable the continue button
       } else {
         preferNotToSayMessage.style.display = 'none'; // Hide the "Prefer not to say" message
-        ageMessage.style.display = 'none'; // Hide age-related message
-        continueBtn.disabled = false; // Enable the continue button
-      }
-    });
 
-    // When the user enters their age
-    ageInput.addEventListener('input', () => {
-      const age = parseInt(ageInput.value, 10);
+        // Age-related messages based on age ranges
+        if (selectedAge >= 1 && selectedAge <= 10) {
+          ageMessage.style.display = 'block';
+          ageMessage.textContent = "Chota Bacha hai kya tu?";
+        } else if (selectedAge >= 11 && selectedAge <= 17) {
+          ageMessage.style.display = 'block';
+          ageMessage.textContent = "School khatam Krke Aana.";
+        } else if (selectedAge >= 50 && selectedAge <= 70) {
+          ageMessage.style.display = 'block';
+          ageMessage.textContent = "Uncle Aap yahan kya kar rahe ho?";
+        } else if (selectedAge >= 71 && selectedAge <= 90) {
+          ageMessage.style.display = 'block';
+          ageMessage.textContent = "Kya majburi hai jo tune ye age select kiya, mejanta hun fake age select kiya hai tune.";
+        } else if (selectedAge >= 91 && selectedAge <= 100) {
+          ageMessage.style.display = 'block';
+          ageMessage.textContent = "Vai please kuch aur select karle.";
+        } else {
+          ageMessage.style.display = 'none'; // Hide any message if valid age is selected
+        }
 
-      // Enable or disable based on the age
-      if (age < 1 || age > 100) {
-        ageMessage.style.display = 'none'; // Hide age-related message if out of range
-        continueBtn.disabled = true; // Disable the continue button
-      } else if (age >= 18 && age <= 69) {
-        ageMessage.style.display = 'none'; // Hide age-related message for valid range
-        continueBtn.disabled = false; // Enable the continue button
-      } else if (age >= 1 && age <= 10) {
-        ageMessage.style.display = 'block';
-        ageMessage.textContent = 'Chota Bacha hai kya tu'; // Message for 1-10 years
-        continueBtn.disabled = true; // Disable the continue button
-      } else if (age >= 50 && age <= 68) {
-        ageMessage.style.display = 'block';
-        ageMessage.textContent = 'Uncle Aap Yahan Kya kar Rahe Ho'; // Message for 50-68 years
-        continueBtn.disabled = true; // Disable the continue button
-      } else if (age === 69) {
-        ageMessage.style.display = 'block';
-        ageMessage.textContent = 'Han be sale maje lene ayay hai kya'; // Message for 69 years
-        continueBtn.disabled = true; // Disable the continue button
-      } else if (age >= 70 && age <= 90) {
-        ageMessage.style.display = 'block';
-        ageMessage.textContent = 'Kya majburi hai jo tune ye age select kia, mejanta hun fake age select kia hai tune'; // Message for 70-90 years
-        continueBtn.disabled = true; // Disable the continue button
-      } else if (age >= 91 && age <= 100) {
-        ageMessage.style.display = 'block';
-        ageMessage.textContent = 'Vai please kuch aur select karle nahi to marja iiss age me ya sab karega'; // Message for 91-100 years
-        continueBtn.disabled = true; // Disable the continue button
+        // Enable/Disable Continue button based on the age ranges
+        if (selectedAge >= 18 && selectedAge <= 69) {
+          continueBtn.disabled = false; // Enable the continue button
+        } else {
+          continueBtn.disabled = true; // Disable the continue button for other ages
+        }
       }
     });
   </script>
