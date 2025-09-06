@@ -43,6 +43,19 @@
         0 0 30px #ff00cc;
     }
 
+    /* Style for the checkbox */
+    input[type="checkbox"] {
+      width: 30px;
+      height: 30px;
+      margin-top: 20px;
+    }
+
+    .checkbox-label {
+      font-size: 24px;
+      color: white;
+      margin-left: 10px;
+    }
+
     .next-button {
       display: inline-block;
       margin-top: 40px;
@@ -79,11 +92,27 @@
   <div class="content">
     <p>Please select carefully for your required files. You cannot go back after proceeding.</p>
     <p class="glow-text">Sun be bhenki lodi iske baad se tu back nahi kar sakti to fhir mat bolna ki meri galti hai, har waqt justice mangne se nahi milta.</p>
+
+    <!-- Checkbox for user confirmation -->
+    <input type="checkbox" id="confirm-checkbox">
+    <label for="confirm-checkbox" class="checkbox-label">I understand</label>
   </div>
 
-  <a href="nextstep.html" class="next-button">Next</a>
+  <a href="nextstep.html" id="next-button" class="next-button" disabled>Next</a>
 
   <script>
+    const confirmCheckbox = document.getElementById('confirm-checkbox');
+    const nextButton = document.getElementById('next-button');
+
+    // Enable the NEXT button when the checkbox is ticked
+    confirmCheckbox.addEventListener('change', function() {
+      if (confirmCheckbox.checked) {
+        nextButton.disabled = false;  // Enable the NEXT button
+      } else {
+        nextButton.disabled = true;  // Disable the NEXT button if not checked
+      }
+    });
+
     // Prevent going back to this page
     window.history.pushState(null, "", window.location.href);
     window.onpopstate = function () {
