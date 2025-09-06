@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Female Page</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    body {
+      background: url('interface.png') no-repeat center center/cover;
+      background-size: cover;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      color: white;
+      font-family: 'Press Start 2P', cursive;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 60px;
+      letter-spacing: 0.12em;
+      color: #ff00cc;
+      text-shadow: 0 0 10px #ff00cc, 0 0 20px #ff00cc, 0 0 30px #ff00cc;
+      margin: 0;
+    }
+
+    .content {
+      font-size: 24px;
+      color: yellow;
+      margin-top: 20px;
+      text-shadow: 2px 2px 4px black;
+    }
+
+    .glow-text {
+      color: #ff00cc;
+      text-shadow: 
+        0 0 10px #ff00cc, 
+        0 0 20px #ff00cc, 
+        0 0 30px #ff00cc;
+    }
+
+    .next-button {
+      display: inline-block;
+      margin-top: 40px;
+      padding: 15px 50px;
+      background-color: #cc0000;
+      color: white;
+      font-weight: bold;
+      font-size: 20px;
+      text-decoration: none;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(204, 0, 0, 0.9);
+      cursor: pointer;
+      letter-spacing: 0.1em;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .next-button:hover {
+      background-color: #990000;
+      box-shadow: 0 0 25px rgba(204, 0, 0, 1);
+    }
+
+    /* Disable the back button functionality */
+    <script>
+      window.history.pushState(null, "", window.location.href);
+      window.onpopstate = function () {
+        window.history.forward();  // Keep the user from going back
+      };
+    </script>
+
+  </style>
+</head>
+<body>
+
+  <h1>Welcome, Female User!</h1>
+
+  <div class="content">
+    <p>Please select carefully for your required files. <span class="glow-text">[Sun be bhenki lodi iske baad se tu back nahi kar sakti to fhir mat bolna ki meri galti hai, har waqt justice mangne se nahi milta.]</span></p>
+  </div>
+
+  <a href="nextstep.html" class="next-button">Next</a>
+
+  <script>
+    // Prevent going back to this page
+    window.history.pushState(null, "", window.location.href);
+    window.onpopstate = function () {
+      window.history.forward();  // Keep the user from going back
+    };
+  </script>
+
+</body>
+</html>
