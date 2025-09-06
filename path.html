@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Interactive Templates with Binary Code</title>
+  <title>Interactive Templates with Infinite Falling Binary Code</title>
   <style>
     body {
       background: url('interface.png') no-repeat center center/cover;
@@ -23,7 +23,7 @@
       position: fixed;
       top: 0;
       bottom: 0;
-      width: 10%;
+      width: 5%;  /* Reduced width to minimize the gap */
       color: #00ff00;
       font-family: monospace;
       font-size: 18px;
@@ -41,16 +41,16 @@
 
     .binary-code {
       position: absolute;
-      top: 0;
-      animation: scrollBinary 10s linear infinite;
+      top: -100%;
+      animation: fallBinary 10s linear infinite;  /* Infinite falling animation */
     }
 
-    @keyframes scrollBinary {
+    @keyframes fallBinary {
       0% {
-        top: 0;
+        top: -100%;  /* Start above the screen */
       }
       100% {
-        top: 100%;
+        top: 100%;  /* End at the bottom of the screen */
       }
     }
 
