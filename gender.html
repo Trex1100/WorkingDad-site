@@ -51,7 +51,8 @@
       text-shadow: none;  /* No shadow or gradient effect */
       cursor: pointer;
       letter-spacing: 0.05em;
-      min-width: 250px;
+      min-width: 400px; /* Make the dropdown wider */
+      max-width: 500px; /* Limit maximum width */
       box-shadow: 0 0 12px #005f99; /* subtle blue glow shadow */
       transition: background-color 0.3s ease;
     }
@@ -82,14 +83,6 @@
       box-shadow: 0 0 25px rgba(204, 0, 0, 1);
     }
 
-    .description {
-      font-size: 16px;
-      color: white;
-      margin-top: 10px;
-      max-width: 600px;
-      text-align: center;
-    }
-
   </style>
 </head>
 <body>
@@ -98,68 +91,38 @@
   <h2>Please choose one of the following options:</h2>
 
   <select id="gender-select">
-    <option value="male">Male</option>
-    <option value="female">Female</option>
-    <option value="non-binary">Non-binary</option>
-    <option value="genderqueer">Genderqueer</option>
-    <option value="genderfluid">Genderfluid</option>
-    <option value="agender">Agender</option>
-    <option value="bigender">Bigender</option>
-    <option value="two-spirit">Two-Spirit</option>
-    <option value="demiboy">Demiboy</option>
-    <option value="demigirl">Demigirl</option>
-    <option value="pangender">Pangender</option>
-    <option value="transgender-male">Transgender Male</option>
-    <option value="transgender-female">Transgender Female</option>
-    <option value="androgynous">Androgynous</option>
-    <option value="cisgender">Cisgender</option>
-    <option value="neutrois">Neutrois</option>
-    <option value="intergender">Intergender</option>
-    <option value="kathoey">Kathoey</option>
-    <option value="hijra">Hijra</option>
-    <option value="fa'afafine">Fa'afafine</option>
-    <option value="muxe">Muxe</option>
-    <option value="autigender">Autigender</option>
-    <option value="graygender">Graygender</option>
-    <option value="gendervoid">Gendervoid</option>
-    <option value="polygender">Polygender</option>
-    <option value="third-gender">Third-gender</option>
-    <option value="aliagender">Aliagender</option>
-    <option value="quoigender">Quoigender</option>
-    <option value="demiflux">Demiflux</option>
+    <option value="male">Male (A person who identifies as a man.)</option>
+    <option value="female">Female (A person who identifies as a woman.)</option>
+    <option value="non-binary">Non-binary (A person who doesn't identify strictly as male or female.)</option>
+    <option value="genderqueer">Genderqueer (A non-conforming gender identity, often rejecting the traditional gender binary.)</option>
+    <option value="genderfluid">Genderfluid (A person whose gender identity shifts over time.)</option>
+    <option value="agender">Agender (A person who doesn't identify with any gender.)</option>
+    <option value="bigender">Bigender (A person who identifies with two genders, either simultaneously or alternately.)</option>
+    <option value="two-spirit">Two-Spirit (A term used by some Indigenous cultures to describe a person who embodies both masculine and feminine spirits.)</option>
+    <option value="demiboy">Demiboy (A person who partially identifies as male.)</option>
+    <option value="demigirl">Demigirl (A person who partially identifies as female.)</option>
+    <option value="pangender">Pangender (A person who identifies with many or all genders.)</option>
+    <option value="transgender-male">Transgender Male (A person assigned female at birth, but identifies as male.)</option>
+    <option value="transgender-female">Transgender Female (A person assigned male at birth, but identifies as female.)</option>
+    <option value="androgynous">Androgynous (A person who embodies both masculine and feminine characteristics.)</option>
+    <option value="cisgender">Cisgender (A person whose gender identity matches the sex they were assigned at birth.)</option>
+    <option value="neutrois">Neutrois (A person who feels neutral or lacks gender.)</option>
+    <option value="intergender">Intergender (A person who identifies as being in between male and female, or a mix of both.)</option>
+    <option value="kathoey">Kathoey (A term in Thailand often used for transgender women or effeminate men.)</option>
+    <option value="hijra">Hijra (A traditional third gender in South Asia, often recognized as neither male nor female.)</option>
+    <option value="fa'afafine">Fa'afafine (A gender identity in Samoa, often referring to someone who is raised as a male but embodies female gender roles.)</option>
+    <option value="muxe">Muxe (A gender identity in Zapotec cultures in Mexico, often assigned male at birth but adopting feminine gender roles.)</option>
+    <option value="autigender">Autigender (A gender identity that is specifically tied to the experience of being on the autism spectrum.)</option>
+    <option value="graygender">Graygender (A person whose gender identity feels faint or unclear.)</option>
+    <option value="gendervoid">Gendervoid (A gender experience that feels like an absence or lack of gender.)</option>
+    <option value="polygender">Polygender (A person who identifies with multiple genders, either simultaneously or at different times.)</option>
+    <option value="third-gender">Third-gender (A person who identifies as a gender outside the traditional male and female categories.)</option>
+    <option value="aliagender">Aliagender (A gender identity that doesn't fit within any of the known gender categories.)</option>
+    <option value="quoigender">Quoigender (A gender experience defined by confusion or uncertainty.)</option>
+    <option value="demiflux">Demiflux (A gender identity that shifts between some genders, but remains fixed in certain ways.)</option>
+    <!-- "Prefer not to say" option added at the bottom -->
+    <option value="prefer-not-to-say">Prefer not to say (Choose this if you don't want to specify your gender.)</option>
   </select>
-
-  <div class="description">
-    <p><strong>Male:</strong> A person who identifies as a man.</p>
-    <p><strong>Female:</strong> A person who identifies as a woman.</p>
-    <p><strong>Non-binary:</strong> A person who doesn't identify strictly as male or female.</p>
-    <p><strong>Genderqueer:</strong> A non-conforming gender identity, often rejecting the traditional gender binary.</p>
-    <p><strong>Genderfluid:</strong> A person whose gender identity shifts over time.</p>
-    <p><strong>Agender:</strong> A person who doesn't identify with any gender.</p>
-    <p><strong>Bigender:</strong> A person who identifies with two genders, either simultaneously or alternately.</p>
-    <p><strong>Two-Spirit:</strong> A term used by some Indigenous cultures to describe a person who embodies both masculine and feminine spirits.</p>
-    <p><strong>Demiboy:</strong> A person who partially identifies as male.</p>
-    <p><strong>Demigirl:</strong> A person who partially identifies as female.</p>
-    <p><strong>Pangender:</strong> A person who identifies with many or all genders.</p>
-    <p><strong>Transgender Male:</strong> A person assigned female at birth, but identifies as male.</p>
-    <p><strong>Transgender Female:</strong> A person assigned male at birth, but identifies as female.</p>
-    <p><strong>Androgynous:</strong> A person who embodies both masculine and feminine characteristics.</p>
-    <p><strong>Cisgender:</strong> A person whose gender identity matches the sex they were assigned at birth.</p>
-    <p><strong>Neutrois:</strong> A person who feels neutral or lacks gender.</p>
-    <p><strong>Intergender:</strong> A person who identifies as being in between male and female, or a mix of both.</p>
-    <p><strong>Kathoey:</strong> A term in Thailand often used for transgender women or effeminate men.</p>
-    <p><strong>Hijra:</strong> A traditional third gender in South Asia, often recognized as neither male nor female.</p>
-    <p><strong>Fa'afafine:</strong> A gender identity in Samoa, often referring to someone who is raised as a male but embodies female gender roles.</p>
-    <p><strong>Muxe:</strong> A gender identity in Zapotec cultures in Mexico, often assigned male at birth but adopting feminine gender roles.</p>
-    <p><strong>Autigender:</strong> A gender identity that is specifically tied to the experience of being on the autism spectrum.</p>
-    <p><strong>Graygender:</strong> A person whose gender identity feels faint or unclear.</p>
-    <p><strong>Gendervoid:</strong> A gender experience that feels like an absence or lack of gender.</p>
-    <p><strong>Polygender:</strong> A person who identifies with multiple genders, either simultaneously or at different times.</p>
-    <p><strong>Third-gender:</strong> A person who identifies as a gender outside the traditional male and female categories.</p>
-    <p><strong>Aliagender:</strong> A gender identity that doesn't fit within any of the known gender categories.</p>
-    <p><strong>Quoigender:</strong> A gender experience defined by confusion or uncertainty.</p>
-    <p><strong>Demiflux:</strong> A gender identity that shifts between some genders, but remains fixed in certain ways.</p>
-  </div>
 
   <a href="nextstep.html" class="next-button">NEXT</a>
 
