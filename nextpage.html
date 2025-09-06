@@ -224,60 +224,47 @@
     Bol na bsdk sharma kya raha hai.
   </div>
 
-  <!-- Age related message -->
-  <div class="warning-message" id="age-message">
-    <!-- This message will be dynamically changed based on the age entered -->
-  </div>
+  <!-- Age related message display -->
+  <div id="age-message" class="warning-message"></div>
 
-  <!-- Continue Button (Now directing to gender.html) -->
-  <a href="gender.html" id="continue-btn" class="continue-button" disabled>CONTINUE</a>
+  <!-- Continue button -->
+  <button id="continue-btn" class="continue-button" disabled>Continue</button>
 
   <script>
-    const ageSelect = document.getElementById('age-dropdown');
+    const ageDropdown = document.getElementById('age-dropdown');
+    const continueBtn = document.getElementById('continue-btn');
     const ageMessage = document.getElementById('age-message');
     const preferNotToSayMessage = document.getElementById('prefer-not-to-say-message');
-    const continueBtn = document.getElementById('continue-btn');
 
-    // When the dropdown value changes
-    ageSelect.addEventListener('change', () => {
-      const selectedAge = ageSelect.value;
+    ageDropdown.addEventListener('change', () => {
+      const age = parseInt(ageDropdown.value);
+      
+      // Reset messages
+      ageMessage.style.display = "none";
+      preferNotToSayMessage.style.display = "none";
+      continueBtn.disabled = true;
 
-      if (selectedAge === "select") {
-        preferNotToSayMessage.style.display = 'block'; // Show the "Prefer not to say" message
-        ageMessage.style.display = 'none'; // Hide age-related message
-        continueBtn.disabled = true; // Disable the continue button
-      } else {
-        preferNotToSayMessage.style.display = 'none'; // Hide the "Prefer not to say" message
-
-        // Age-related messages based on age ranges
-        if (selectedAge >= 1 && selectedAge <= 10) {
-          ageMessage.style.display = 'block';
+      if (age < 18) {
+        if (age === 1) {
           ageMessage.textContent = "Chota Bacha hai kya tu?";
-        } else if (selectedAge >= 11 && selectedAge <= 17) {
-          ageMessage.style.display = 'block';
-          ageMessage.textContent = "School khatam Krke Aana.";
-        } else if (selectedAge >= 50 && selectedAge <= 70) {
-          ageMessage.style.display = 'block';
-          ageMessage.textContent = "Uncle Aap yahan kya kar rahe ho?";
-        } else if (selectedAge >= 71 && selectedAge <= 90) {
-          ageMessage.style.display = 'block';
-          ageMessage.textContent = "Kya majburi hai jo tune ye age select kiya, mejanta hun fake age select kiya hai tune.";
-        } else if (selectedAge >= 91 && selectedAge <= 100) {
-          ageMessage.style.display = 'block';
-          ageMessage.textContent = "Vai please kuch aur select karle.";
+        } else if (age >= 11 && age <= 17) {
+          ageMessage.textContent = "School khatam Krke Aana!";
         } else {
-          ageMessage.style.display = 'none'; // Hide any message if valid age is selected
+          ageMessage.textContent = "Vai please kuch aur select karle!";
         }
-
-        // Enable/Disable Continue button based on the age ranges
-        if (selectedAge >= 18 && selectedAge <= 69) {
-          continueBtn.disabled = false; // Enable the continue button
-        } else {
-          continueBtn.disabled = true; // Disable the continue button for other ages
-        }
+        ageMessage.style.display = "block";
+      } else if (age >= 18 && age <= 69) {
+        // Enable the Continue button
+        continueBtn.disabled = false;
+        ageMessage.style.display = "none";
+      } else if (age >= 70 && age <= 90) {
+        ageMessage.textContent = "Uncle Aap yahan kya kar rahe ho?";
+        ageMessage.style.display = "block";
+      } else if (age > 90) {
+        ageMessage.textContent = "Kya majburi hai jo tune ye age select kia? Mein janta hun fake age select kia hai tune!";
+        ageMessage.style.display = "block";
       }
     });
   </script>
-
 </body>
 </html>
