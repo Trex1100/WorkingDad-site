@@ -7,7 +7,7 @@
     @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
     body {
-      background: url('https://raw.githubusercontent.com/your-username/your-repository/main/assets/images/bg2.jpg') no-repeat center center/cover;
+      background: url('path/to/spiral-image.jpg') no-repeat center center/cover;
       background-size: cover;
       display: flex;
       flex-direction: column;
@@ -15,11 +15,9 @@
       align-items: center;
       height: 100vh;
       margin: 0;
-      gap: 30px;
       color: white;
       font-family: 'Press Start 2P', cursive;
       text-align: center;
-      overflow: hidden;
       position: relative;
     }
 
@@ -33,28 +31,25 @@
     .person {
       position: absolute;
       cursor: pointer;
-      transition: all 0.3s ease;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.8); /* Subtle shadow for depth */
     }
 
-    /* Randomly position each person on the staircase */
-    .person {
-      animation: randomPosition 10s ease-in-out infinite;
-    }
-
-    /* Create the animation for random positioning */
-    @keyframes randomPosition {
-      0% { top: 20%; left: 30%; }
-      20% { top: 35%; left: 40%; }
-      40% { top: 50%; left: 50%; }
-      60% { top: 60%; left: 60%; }
-      80% { top: 70%; left: 70%; }
-      100% { top: 80%; left: 80%; }
-    }
-
-    /* Glowing effect when hovering */
-    .person:hover {
-      box-shadow: 0 0 20px 5px red;
-    }
+    /* Static Positioning for 15 boys on the staircase */
+    .person:nth-child(1) { top: 20%; left: 25%; }
+    .person:nth-child(2) { top: 30%; left: 35%; }
+    .person:nth-child(3) { top: 40%; left: 45%; }
+    .person:nth-child(4) { top: 50%; left: 55%; }
+    .person:nth-child(5) { top: 60%; left: 65%; }
+    .person:nth-child(6) { top: 70%; left: 75%; }
+    .person:nth-child(7) { top: 80%; left: 65%; }
+    .person:nth-child(8) { top: 70%; left: 55%; }
+    .person:nth-child(9) { top: 60%; left: 45%; }
+    .person:nth-child(10) { top: 50%; left: 35%; }
+    .person:nth-child(11) { top: 40%; left: 25%; }
+    .person:nth-child(12) { top: 30%; left: 15%; }
+    .person:nth-child(13) { top: 20%; left: 5%; }
+    .person:nth-child(14) { top: 10%; left: 15%; }
+    .person:nth-child(15) { top: 10%; left: 25%; }
 
   </style>
 </head>
@@ -62,14 +57,19 @@
 
   <h1>Choose Your Option</h1>
 
-  <!-- 15 clickable options -->
-  <div class="person" style="top: 30%; left: 20%;">
-    <img src="https://raw.githubusercontent.com/your-username/your-repository/main/assets/images/bg1.jpg" alt="Person 1" onclick="window.location.href='nextstep.html';" />
+  <!-- 15 boys sitting in random positions along the staircase -->
+  <div class="person" style="top: 20%; left: 25%;">
+    <img src="https://raw.githubusercontent.com/your-username/your-repository/main/assets/images/bg1.jpg" alt="Person 1" />
   </div>
-  <div class="person" style="top: 40%; left: 30%;">
-    <img src="https://raw.githubusercontent.com/your-username/your-repository/main/assets/images/bg1.jpg" alt="Person 2" onclick="window.location.href='nextstep.html';" />
+  <div class="person" style="top: 30%; left: 35%;">
+    <img src="https://raw.githubusercontent.com/your-username/your-repository/main/assets/images/bg1.jpg" alt="Person 2" />
   </div>
-  <!-- Add remaining people similarly with random positioning -->
+  <!-- Add other persons similarly -->
+
+  <!-- Using the uploaded image (replace with your GitHub URL for the image) -->
+  <div class="person" style="top: 50%; left: 50%;">
+    <img src="https://raw.githubusercontent.com/your-username/your-repository/main/assets/images/uploaded_image.jpg" alt="Uploaded Person" />
+  </div>
 
 </body>
 </html>
