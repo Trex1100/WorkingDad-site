@@ -12,18 +12,19 @@
       padding: 0;
       display: flex;
       justify-content: center;
-      align-items: flex-start;
+      align-items: center;
       height: 100vh;
       overflow: hidden;
       flex-direction: column;
+      text-align: center;
     }
 
     .binary-container {
       position: fixed;
       top: 0;
       bottom: 0;
-      width: 10%;  /* Adjust the width to fit the binary code bars */
-      color: #00ff00;  /* Green color for binary code */
+      width: 10%;
+      color: #00ff00;
       font-family: monospace;
       font-size: 18px;
       z-index: 1;
@@ -76,20 +77,19 @@
     }
 
     .template {
-      background-color: rgba(0, 0, 0, 0.7); /* black with some transparency */
+      background-color: rgba(0, 0, 0, 0.7);
       padding: 20px;
       border-radius: 10px;
-      text-align: center;
       color: white;
       font-size: 18px;
       font-weight: bold;
       cursor: pointer;
-      backdrop-filter: blur(8px); /* Blur effect */
+      backdrop-filter: blur(8px);
       transition: box-shadow 0.3s ease;
     }
 
     .template:hover {
-      box-shadow: 0 0 20px 5px rgba(0, 0, 255, 0.7); /* Blue neon glow effect */
+      box-shadow: 0 0 20px 5px rgba(0, 0, 255, 0.7);
     }
 
   </style>
@@ -99,24 +99,50 @@
   <!-- Binary code scrolling on the left side -->
   <div class="binary-container left">
     <div class="binary-code">
-      <pre>1001101010</pre>
-      <pre>1100110011</pre>
-      <pre>1010101010</pre>
-      <pre>1110001110</pre>
-      <pre>1010101010</pre>
-      <!-- More binary lines -->
+      <pre>10101010101010101010</pre>
+      <pre>11001100110011001101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11100011100011110011</pre>
+      <pre>10011010011010010101</pre>
+      <pre>11110000111100001100</pre>
+      <pre>01100110011001100110</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11010101011010101010</pre>
+      <pre>10101010111010111010</pre>
+      <pre>01010101001010101001</pre>
+      <pre>10110010110010110110</pre>
+      <pre>01111000011100011100</pre>
+      <pre>11100010101010110010</pre>
+      <pre>11010110101101010101</pre>
+      <pre>10101010111010101001</pre>
+      <pre>10101011011010101011</pre>
+      <pre>11011010100101010101</pre>
+      <pre>10101010101010101010</pre>
     </div>
   </div>
 
   <!-- Binary code scrolling on the right side -->
   <div class="binary-container right">
     <div class="binary-code">
-      <pre>1001101010</pre>
-      <pre>1100110011</pre>
-      <pre>1010101010</pre>
-      <pre>1110001110</pre>
-      <pre>1010101010</pre>
-      <!-- More binary lines -->
+      <pre>10101010101010101010</pre>
+      <pre>11001100110011001101</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11100011100011110011</pre>
+      <pre>10011010011010010101</pre>
+      <pre>11110000111100001100</pre>
+      <pre>01100110011001100110</pre>
+      <pre>10101010101010101010</pre>
+      <pre>11010101011010101010</pre>
+      <pre>10101010111010111010</pre>
+      <pre>01010101001010101001</pre>
+      <pre>10110010110010110110</pre>
+      <pre>01111000011100011100</pre>
+      <pre>11100010101010110010</pre>
+      <pre>11010110101101010101</pre>
+      <pre>10101010111010101001</pre>
+      <pre>10101011011010101011</pre>
+      <pre>11011010100101010101</pre>
+      <pre>10101010101010101010</pre>
     </div>
   </div>
 
