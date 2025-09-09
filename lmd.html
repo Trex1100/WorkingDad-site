@@ -225,4 +225,63 @@
       loadingBar.style.width = '0%';
       boxes.forEach(box => box.style.pointerEvents = 'auto');
       clearInterval(interval);
-      interval = null
+      interval = null;
+    }
+
+    boxes.forEach(box => {
+      box.addEventListener('click', () => {
+        if(selectedBox) {
+          selectedBox.classList.remove('selected');
+        }
+        box.classList.add('selected');
+        selectedBox = box;
+        nextBtn.disabled = false;
+        nextBtn.classList.add('enabled');
+      });
+    });
+
+    nextBtn.addEventListener('click', () => {
+      if(!selectedBox) return;
+
+      // Disable button & boxes
+      nextBtn.disabled = true;
+      nextBtn.classList.remove('enabled');
+      boxes.forEach(box => box.style.pointerEvents = 'none');
+
+      // Show loading bar container
+      loadingContainer.style.display = 'block';
+
+      let progress = 0;
+      const totalDuration = 20000; // 20 seconds
+      const intervalTime = 100; // update every 100ms
+      const increment = intervalTime / totalDuration * 100;
+
+      loadingBar.style.width = '0%';
+
+      interval = setInterval(() => {
+        progress += increment;
+        if(progress >= 100) {
+          progress = 100;
+          clearInterval(interval);
+          interval = null;
+          // Redirect after loading finishes
+          window.location.href = 'lwsd2.html';
+        }
+        loadingBar.style.width = progress + '%';
+      }, intervalTime);
+    });
+
+    // Listen for page unload or back navigation to reset loading & selection
+    window.addEventListener('beforeunload', () => {
+      resetSelection();
+    });
+
+    // Also handle visibility change (tab changes)
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        resetSelection();
+      }
+    });
+  </script>
+</body>
+</html>
