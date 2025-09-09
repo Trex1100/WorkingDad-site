@@ -22,27 +22,28 @@
 
     h1 {
       font-family: 'Press Start 2P', cursive;
-      font-size: 36px;
+      font-size: 32px;
       color: #ffff00;
-      margin-top: 40px;
+      margin-top: 30px;
       text-align: center;
-      text-shadow: none;
+      text-shadow: 0 0 6px #000;
+      line-height: 1.3;
     }
 
     .subtitle {
-      font-size: 16px;
+      font-size: 15px;
       color: #00ffff;
-      margin-top: 8px;
-      margin-bottom: 25px;
+      margin-top: 6px;
+      margin-bottom: 20px;
       text-align: center;
       font-style: italic;
     }
 
     .description {
       color: white;
-      font-size: 18px;
-      margin: 15px 20px 40px;
-      line-height: 1.4;
+      font-size: 17px;
+      margin: 15px 20px 35px;
+      line-height: 1.5;
       text-align: center;
       max-width: 600px;
     }
@@ -53,7 +54,7 @@
       display: flex;
       flex-direction: column;
       gap: 15px;
-      margin-bottom: 30px;
+      margin-bottom: 25px;
       padding: 0 15px;
     }
 
@@ -73,6 +74,7 @@
       border-radius: 6px;
       border: 1px solid #ccc;
       color: black;
+      width: 100%;
     }
 
     #next-btn {
@@ -84,14 +86,19 @@
       border-radius: 8px;
       opacity: 0.5;
       cursor: not-allowed;
-      transition: box-shadow 0.3s ease, opacity 0.3s ease;
+      transition: box-shadow 0.3s ease, opacity 0.3s ease, transform 0.2s;
       margin-bottom: 20px;
     }
 
     #next-btn.enabled {
       opacity: 1;
       cursor: pointer;
-      box-shadow: 0 0 15px 3px red;
+      box-shadow: 0 0 15px 3px limegreen;
+    }
+
+    #next-btn.enabled:active {
+      transform: scale(0.95);
+      box-shadow: 0 0 20px 5px limegreen;
     }
 
     .loading-container {
@@ -107,7 +114,7 @@
     .loading-bar {
       width: 0;
       height: 100%;
-      background: green;
+      background: limegreen;
       transition: width 0s linear;
     }
 
@@ -118,21 +125,23 @@
       text-align: center;
     }
 
+    /* 📱 Mobile Friendly Adjustments */
     @media (max-width: 600px) {
       h1 {
-        font-size: 26px;
-        margin: 30px 0 10px;
+        font-size: 22px;
+        margin: 25px 10px 10px;
       }
       .subtitle {
-        font-size: 14px;
+        font-size: 13px;
       }
       .description {
-        font-size: 16px;
-        margin: 10px 10px 30px;
+        font-size: 15px;
+        margin: 10px 15px 25px;
       }
       #next-btn {
         width: 100%;
         font-size: 16px;
+        padding: 12px;
       }
       .loading-container {
         width: 90%;
@@ -143,11 +152,11 @@
 <body>
 
   <h1>College Fake Certificate Generator</h1>
-  <div class="subtitle">Powered by WorkingDad</div>
+  <div class="subtitle">--Powered by WorkingDad</div>
 
   <div class="description">
-    Instantly create a realistic-looking college certificate for fun, pranks, or placeholders.<br>
-    Customize by choosing your country, state, and institution, and generate your fake certificate with ease.
+    Instantly create a realistic-looking college certificate.<br>
+    Choose your country, state, and institution, and then generate your fake certificate with ease.
   </div>
 
   <div class="selector-container">
@@ -278,7 +287,7 @@
         if (progress >= 100) {
           clearInterval(interval);
           loadingBar.style.width = '100%';
-          // ✅ REDIRECT
+          // ✅ Redirect to new page
           window.location.href = "cfcg2.html";
         } else {
           loadingBar.style.width = progress + "%";
