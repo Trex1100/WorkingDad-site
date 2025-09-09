@@ -22,19 +22,17 @@
       overflow-x: hidden;
     }
 
-    /* Heading in Vademecum font */
+    /* Main heading */
     h1 {
       font-family: 'Vademecum', cursive;
       font-size: 56px;
       text-align: center;
       letter-spacing: 0.12em;
-      color: #00ffcc;
-      text-shadow:
-        0 0 10px #00ffcc,
-        0 0 20px #00ffcc,
-        0 0 40px #00ffcc,
-        0 0 80px #00ffcc;
+      color: #007bff; /* Blue color */
+      -webkit-text-stroke: 1px white;
+      text-stroke: 1px white;
       margin-bottom: 40px;
+      text-shadow: none; /* Removed glow */
     }
 
     /* Input section */
@@ -67,12 +65,40 @@
       cursor: not-allowed;
       opacity: 0.6;
       transition: all 0.3s ease;
+      position: relative;
     }
 
     .download-button.active {
       cursor: pointer;
       opacity: 1;
+    }
+
+    .download-button.clicked {
       box-shadow: 0 0 20px #00aaff, 0 0 40px #00aaff;
+    }
+
+    /* Spinner styles */
+    .spinner {
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top: 3px solid white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      animation: spin 0.8s linear infinite;
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: none;
+    }
+
+    .download-button.loading .spinner {
+      display: inline-block;
+    }
+
+    @keyframes spin {
+      0% { transform: translateY(-50%) rotate(0deg); }
+      100% { transform: translateY(-50%) rotate(360deg); }
     }
 
     /* Description text */
@@ -143,7 +169,10 @@
   <div class="input-section">
     <input type="text" id="video-link" placeholder="Please Input the link of the specific video you want to Download from any Platform">
     <br>
-    <button id="download-btn" class="download-button">Download</button>
+    <button id="download-btn" class="download-button" disabled>
+      <div class="spinner"></div>
+      <span class="btn-text">Download</span>
+    </button>
   </div>
 
   <div class="description">
@@ -165,6 +194,7 @@
   <script>
     const input = document.getElementById("video-link");
     const button = document.getElementById("download-btn");
+    const btnText = button.querySelector(".btn-text");
 
     input.addEventListener("input", () => {
       if (input.value.trim() !== "") {
@@ -178,7 +208,12 @@
 
     button.addEventListener("click", () => {
       if (button.classList.contains("active")) {
-        window.location.href = "uvd2.html"; // Redirect to next page
+        button.classList.add("clicked", "loading");
+        btnText.textContent = "Processing...";
+
+        setTimeout(() => {
+          window.location.href = "uvd2.html"; // Redirect to next page
+        }, 800); // 800ms delay to show spinner
       }
     });
   </script>
