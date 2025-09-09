@@ -7,7 +7,7 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-  body, html {
+  html, body {
     margin: 0; padding: 0; height: 100%;
     font-family: 'Press Start 2P', cursive;
     background: url('https://trex1100.github.io/WorkingDad-site/19466c0f-dbcf-4877-9b0a-8efc29b29f83.png') no-repeat center center fixed;
@@ -20,9 +20,14 @@
 
   h1 {
     margin-top: 30px;
-    color: #fff;
     font-size: 1.8rem;
-    text-shadow: 0 0 5px #ff00ff, 0 0 10px #00ffff;
+    color: #fff;
+    text-shadow:
+      0 0 5px #7f00ff,
+      0 0 10px #7f00ff,
+      0 0 20px #7f00ff,
+      0 0 30px #ff00ff,
+      0 0 40px #ff00ff;
   }
 
   .grid-container {
@@ -35,14 +40,18 @@
   }
 
   .box {
-    background: rgba(20, 20, 20, 0.7);
-    border-radius: 10px;
+    background: rgba(30, 30, 30, 0.8);
+    border-radius: 12px;
     padding: 20px;
     text-align: center;
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.3s ease;
     font-size: 0.6rem;
     user-select: none;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 60px;
   }
 
   .box:hover {
@@ -56,13 +65,12 @@
     transform: scale(1.1);
   }
 
-  /* The Japanese box placed below */
   .japanese-box {
     grid-column: 2 / span 2;
     justify-self: center;
   }
 
-  .next-button {
+  button#nextBtn {
     margin: 30px 0;
     background: #b22222;
     color: white;
@@ -77,7 +85,7 @@
     transition: opacity 0.3s ease, box-shadow 0.3s ease;
   }
 
-  .next-button.enabled {
+  button#nextBtn.enabled {
     cursor: pointer;
     opacity: 1;
     box-shadow: 0 0 15px 3px yellow;
@@ -112,8 +120,9 @@
     .box {
       padding: 15px;
       font-size: 0.5rem;
+      height: 50px;
     }
-    .next-button {
+    button#nextBtn {
       padding: 12px 30px;
       font-size: 0.8rem;
     }
@@ -152,7 +161,7 @@
   <div class="box japanese-box">Japanese</div>
 </div>
 
-<button id="nextBtn" class="next-button" disabled>Next</button>
+<button id="nextBtn" disabled>Next</button>
 
 <div class="loading-container" id="loadingContainer">
   <div class="loading-bar" id="loadingBar"></div>
@@ -169,7 +178,7 @@
 
   boxes.forEach(box => {
     box.addEventListener('click', () => {
-      if(selectedBox) selectedBox.classList.remove('selected');
+      if (selectedBox) selectedBox.classList.remove('selected');
       box.classList.add('selected');
       selectedBox = box;
       nextBtn.disabled = false;
@@ -186,18 +195,15 @@
     loadingContainer.style.display = 'block';
     loadingBar.style.width = '0%';
 
-    // Animate loading bar over 20 seconds
     setTimeout(() => {
       loadingBar.style.width = '100%';
     }, 50);
 
-    // After 20 seconds redirect
     loadingTimeout = setTimeout(() => {
       window.location.href = 'lmd2.html';
     }, 20000);
   });
 
-  // Cancel loading if user navigates back or reloads
   window.addEventListener('beforeunload', () => {
     clearTimeout(loadingTimeout);
   });
