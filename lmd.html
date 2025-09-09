@@ -25,8 +25,7 @@
       color: #ffff00;
       text-align: center;
       margin: 30px 0 20px;
-      /* Glow effect removed */
-      text-shadow: none;
+      /* glow effect removed as you requested earlier */
     }
 
     .grid-container {
@@ -64,6 +63,17 @@
       color: #fff;
     }
 
+    /* Pop animation keyframes */
+    @keyframes popAnimation {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    .box.pop {
+      animation: popAnimation 0.3s ease forwards;
+    }
+
     .japanese-box {
       background: rgba(0, 0, 0, 0.55);
       backdrop-filter: blur(8px);
@@ -73,8 +83,8 @@
       font-weight: bold;
       cursor: pointer;
       user-select: none;
-      width: 90%;
-      max-width: 740px;
+      width: 400px; /* shortened width */
+      max-width: 90%;
       margin: 0 auto 30px;
       transition: background-color 0.3s ease, box-shadow 0.3s ease;
       box-shadow: 0 0 10px rgba(255,255,255,0.1);
@@ -126,14 +136,14 @@
       overflow: hidden;
       margin-bottom: 30px;
       display: none;
-      border: 2px solid #ffeb3b; /* yellow border */
+      border: 2px solid #28a745; /* green border */
       box-sizing: border-box;
     }
 
     .loading-bar {
       height: 100%;
       width: 0;
-      background: linear-gradient(90deg, #007bff 0%, #ffeb3b 100%);
+      background: linear-gradient(90deg, #28a745 0%, #85e085 100%);
       border-radius: 12px;
       transition: width 0.1s linear;
     }
@@ -234,6 +244,10 @@
         if(selectedBox) {
           selectedBox.classList.remove('selected');
         }
+        // Pop effect
+        box.classList.add('pop');
+        setTimeout(() => box.classList.remove('pop'), 300);
+
         box.classList.add('selected');
         selectedBox = box;
         nextBtn.disabled = false;
@@ -253,7 +267,7 @@
       loadingContainer.style.display = 'block';
 
       let progress = 0;
-      const totalDuration = 20000; // 20 seconds
+      const totalDuration = 25000; // 25 seconds
       const intervalTime = 100; // update every 100ms
       const increment = intervalTime / totalDuration * 100;
 
