@@ -4,7 +4,8 @@
   <meta charset="UTF-8" />
   <title>WorkingDad Downloader</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Vademecum&display=swap');
+    /* Import Press Start 2P font */
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
     body {
@@ -22,15 +23,18 @@
     }
 
     h1 {
-      font-family: 'Vademecum', cursive;
-      font-size: 56px;
+      font-family: 'Press Start 2P', cursive;
+      font-size: 40px;
       text-align: center;
-      letter-spacing: 0.12em;
-      color: #007bff; /* blue */
-      -webkit-text-stroke: 1.5px white;
-      text-stroke: 1.5px white;
+      /* Gradient text */
+      background: linear-gradient(90deg, #ffeb3b 0%, #2196f3 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
       margin-bottom: 40px;
-      text-shadow: none; /* removed glow */
+      /* Add a subtle glow */
+      text-shadow:
+        0 0 5px #ffeb3b,
+        0 0 10px #2196f3;
     }
 
     .input-section {
