@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Fake Degree Generator - Step 2</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
@@ -16,146 +16,71 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: flex-start;
       min-height: 100vh;
       box-sizing: border-box;
+      text-align: center;
     }
 
     h1 {
       font-family: 'Press Start 2P', cursive;
-      font-size: 32px;
+      font-size: 28px;
       color: #ffff00;
-      margin-top: 30px;
-      text-align: center;
+      margin: 30px 10px 10px;
       text-shadow: 0 0 6px #000;
-      line-height: 1.3;
     }
 
     .subtitle {
       font-size: 18px;
       color: #00ffff;
-      margin-top: 8px;
-      margin-bottom: 20px;
-      text-align: center;
+      margin-bottom: 30px;
       font-style: italic;
-    }
-
-    .description {
-      color: white;
-      font-size: 17px;
-      margin: 15px 20px 35px;
-      line-height: 1.5;
-      text-align: center;
-      max-width: 600px;
-    }
-
-    .form-container {
-      width: 100%;
-      max-width: 600px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      margin-bottom: 25px;
-      padding: 0 15px;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .form-group label {
-      font-size: 14px;
-      margin-bottom: 6px;
-    }
-
-    .form-group input,
-    .form-group select {
-      padding: 10px;
-      font-size: 16px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      color: black;
-      width: 100%;
-    }
-
-    #generate-btn {
-      background-color: #007bff;
-      color: white;
-      font-size: 18px;
-      padding: 12px 40px;
-      border: none;
-      border-radius: 8px;
-      opacity: 0.5;
-      cursor: not-allowed;
-      transition: box-shadow 0.3s ease, opacity 0.3s ease, transform 0.2s;
-      margin-bottom: 20px;
-    }
-
-    #generate-btn.enabled {
-      opacity: 1;
-      cursor: pointer;
-      box-shadow: 0 0 15px 3px limegreen;
-    }
-
-    #generate-btn.enabled:active {
-      transform: scale(0.95);
-      box-shadow: 0 0 20px 5px limegreen;
     }
 
     .loading-container {
       width: 320px;
-      height: 20px;
+      height: 24px;
       border: 2px solid #007bff;
       border-radius: 10px;
       overflow: hidden;
-      display: none;
-      margin-bottom: 10px;
+      margin-top: 40px;
     }
 
     .loading-bar {
       width: 0;
       height: 100%;
       background: limegreen;
-      transition: width 0s linear;
+      transition: width 0.1s linear;
     }
 
     .status-text {
-      font-size: 14px;
-      color: white;
-      min-height: 1.4em;
-      text-align: center;
-    }
-
-    .blink {
-      animation: blink 1.2s infinite;
+      font-size: 16px;
+      color: #ffcc00;
+      margin-top: 15px;
+      font-weight: bold;
+      text-shadow: 0 0 10px #000;
+      animation: blink 1s infinite;
     }
 
     @keyframes blink {
       50% {
-        opacity: 0;
+        opacity: 0.3;
       }
     }
 
-    /* 📱 Mobile */
+    /* 📱 Mobile adjustments */
     @media (max-width: 600px) {
       h1 {
-        font-size: 24px;
-        margin: 25px 10px 10px;
+        font-size: 22px;
       }
       .subtitle {
         font-size: 16px;
       }
-      .description {
-        font-size: 15px;
-        margin: 10px 15px 25px;
-      }
-      #generate-btn {
-        width: 100%;
-        font-size: 16px;
-        padding: 12px;
-      }
       .loading-container {
         width: 90%;
+      }
+      .status-text {
+        font-size: 14px;
       }
     }
   </style>
@@ -163,132 +88,53 @@
 <body>
 
   <h1>Fake Degree Generator</h1>
-  <div class="subtitle">--Powered by WorkingDad</div>
+  <div class="subtitle">-- Powered by WorkingDad --</div>
 
-  <div class="description" id="dynamic-desc">
-    <!-- Will be filled dynamically -->
-  </div>
-
-  <div class="form-container">
-    <div class="form-group">
-      <label for="name-input">Name</label>
-      <input type="text" id="name-input" placeholder="Enter your full name">
-    </div>
-
-    <div class="form-group">
-      <label for="specialisation-select">Specialisation</label>
-      <select id="specialisation-select">
-        <option value="" disabled selected>Select Specialisation</option>
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label for="date-input">Date of Issue of Degree</label>
-      <input type="date" id="date-input">
-    </div>
-
-    <div class="form-group">
-      <label for="class-select">Passed in Class</label>
-      <select id="class-select">
-        <option value="" disabled selected>Select Class</option>
-        <option value="First">First</option>
-        <option value="Second">Second</option>
-        <option value="Third">Third</option>
-      </select>
-    </div>
-  </div>
-
-  <button id="generate-btn" disabled>Generate</button>
-
-  <div class="loading-container" id="loading-container">
+  <div class="loading-container">
     <div class="loading-bar" id="loading-bar"></div>
   </div>
-  <div class="status-text blink" id="status-text"></div>
+
+  <div class="status-text">Generating your Degree from Government Servers...</div>
 
   <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const degree = urlParams.get("degree") || "your";
-    const institution = urlParams.get("institution") || "your institution";
-
-    const desc = document.getElementById("dynamic-desc");
-    desc.textContent = `Please fill your required details in your ${degree} degree for your ${institution} institution.`;
-
-    // Specialisation options based on degree
-    const degreeSpecialisations = {
-      BSc: ["Physics", "Chemistry", "Mathematics", "Computer Science"],
-      BA: ["English", "History", "Political Science", "Psychology"],
-      BCom: ["Accounting", "Finance", "Marketing", "Economics"],
-      MBA: ["Finance", "Marketing", "Human Resources", "Operations"],
-      MSc: ["Physics", "Mathematics", "Biotechnology", "Data Science"],
-      PhD: ["Physics", "Literature", "Computer Science", "Engineering"]
-    };
-
-    const nameInput = document.getElementById("name-input");
-    const specSelect = document.getElementById("specialisation-select");
-    const dateInput = document.getElementById("date-input");
-    const classSelect = document.getElementById("class-select");
-    const generateBtn = document.getElementById("generate-btn");
-    const loadingContainer = document.getElementById("loading-container");
     const loadingBar = document.getElementById("loading-bar");
-    const statusText = document.getElementById("status-text");
 
-    let interval = null;
-
-    // Populate specialisations
-    if (degreeSpecialisations[degree]) {
-      degreeSpecialisations[degree].forEach(spec => {
-        const option = document.createElement("option");
-        option.value = spec;
-        option.textContent = spec;
-        specSelect.appendChild(option);
-      });
-    }
-
-    function checkInputs() {
-      if (nameInput.value.trim() && specSelect.value && dateInput.value && classSelect.value) {
-        generateBtn.disabled = false;
-        generateBtn.classList.add("enabled");
-      } else {
-        generateBtn.disabled = true;
-        generateBtn.classList.remove("enabled");
-      }
-    }
-
-    nameInput.addEventListener("input", checkInputs);
-    specSelect.addEventListener("change", checkInputs);
-    dateInput.addEventListener("input", checkInputs);
-    classSelect.addEventListener("change", checkInputs);
-
-    generateBtn.addEventListener("click", () => {
-      if (interval) clearInterval(interval);
-      generateBtn.disabled = true;
-      generateBtn.classList.remove("enabled");
-
-      loadingBar.style.transition = "none";
-      loadingBar.style.width = "0%";
-      loadingContainer.style.display = "block";
-
-      statusText.textContent = "Generating your Degree from Government Servers";
-
+    function startProgress() {
       let progress = 0;
       const duration = 60000; // 1 minute
       const stepTime = 100;
       const increment = (stepTime / duration) * 100;
 
-      loadingBar.style.transition = "width 0.1s linear";
-
-      interval = setInterval(() => {
+      const interval = setInterval(() => {
         progress += increment;
         if (progress >= 100) {
           clearInterval(interval);
           loadingBar.style.width = "100%";
-          // Redirect after generation
+          // ✅ Redirect to fdg3.html
           window.location.href = "fdg3.html";
         } else {
           loadingBar.style.width = progress + "%";
         }
       }, stepTime);
+    }
+
+    // 🔒 Prevent going back
+    history.pushState(null, null, location.href);
+    window.onpopstate = function () {
+      history.go(1);
+    };
+
+    // 🔒 Reset page if user switches tab or unfocuses
+    function resetPage() {
+      location.reload();
+    }
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) resetPage();
     });
+    window.addEventListener("blur", resetPage);
+
+    // Start progress when page loads
+    window.onload = startProgress;
   </script>
 </body>
 </html>
