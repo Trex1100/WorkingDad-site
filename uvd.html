@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WorkingDad Downloader</title>
+  <style>
+    @font-face {
+      font-family: 'Vademecum';
+      src: url('fonts/Vademecum.otf') format('opentype');
+    }
+
+    body {
+      background: 
+        radial-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.95)),
+        url('interface.png') no-repeat center center;
+      background-size: cover;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      margin: 0;
+      padding: 40px 20px;
+      color: white;
+      font-family: 'Vademecum', cursive;
+      overflow-y: auto;
+    }
+
+    h1 {
+      font-size: 48px;
+      color: #00aaff;
+      -webkit-text-stroke: 1px black;
+      text-shadow: 
+        0 0 10px #00aaff,
+        0 0 20px #00aaff,
+        0 0 30px #00aaff;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .input-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 700px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 15px;
+      font-size: 18px;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      text-align: center;
+      font-family: 'Vademecum', cursive;
+      box-shadow: 0 0 12px #005f99;
+      margin-bottom: 20px;
+    }
+
+    .download-btn {
+      padding: 15px 50px;
+      font-size: 20px;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      background-color: #cc0000;
+      color: white;
+      letter-spacing: 0.05em;
+      transition: all 0.3s ease;
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .download-btn.active {
+      opacity: 1;
+      pointer-events: auto;
+      box-shadow: 0 0 15px #00aaff, 0 0 30px #00aaff;
+    }
+
+    .description {
+      margin-top: 40px;
+      max-width: 900px;
+      line-height: 1.6;
+      font-size: 18px;
+      text-align: justify;
+    }
+
+    .description h2 {
+      font-size: 28px;
+      margin-top: 40px;
+      margin-bottom: 15px;
+      color: #00aaff;
+      -webkit-text-stroke: 0.5px black;
+      text-align: left;
+    }
+
+    .description p {
+      margin-bottom: 20px;
+    }
+
+    .description ol {
+      padding-left: 20px;
+    }
+
+    .description li {
+      margin-bottom: 10px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 32px;
+      }
+      .description {
+        font-size: 16px;
+      }
+      input[type="text"] {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>WorkingDad Downloader</h1>
+
+  <div class="input-container">
+    <input type="text" id="video-link" placeholder="Please Input the link of the specific video you want to Download from any Platform">
+    <button id="download-btn" class="download-btn">Download</button>
+  </div>
+
+  <div class="description">
+    <p>
+      <strong>WorkingDad Downloader</strong> is a free search engine with a built-in downloader. 
+      Simply search for your required video on several sources and download the video for free. 
+      WorkingDad Downloader will work on your desktop, tablet and mobile devices, so you do not need 
+      to install any additional apps. The usage is free and safe!
+    </p>
+
+    <h2>How to use</h2>
+    <ol>
+      <li>Simply enter your search query above. As soon as you type in your search query, a list of suggestions will pop up. Feel free to choose a suggestion or ignore them. Then click on the "Search" button.</li>
+      <li>WorkingDad Downloader will search for any matching results for your search query. As soon as the search is completed you will get a list of results. If you would like to search on more sources for your search query simply click on the "Enable" button at the end of the results list.</li>
+      <li>Now you are able to access the results or to download them by clicking on one of the download buttons. Kindly note: some results need to be converted to the chosen format before you are able to download them. This might take a short while.</li>
+    </ol>
+    <p>
+      Alternatively, just enter the video URL above and click on the "Search" button. 
+      After that choose your preferred download format. The video will be converted, 
+      and after a short time you will be able to download the converted video.
+    </p>
+  </div>
+
+  <script>
+    const videoInput = document.getElementById("video-link");
+    const downloadBtn = document.getElementById("download-btn");
+
+    videoInput.addEventListener("input", () => {
+      if (videoInput.value.trim() !== "") {
+        downloadBtn.classList.add("active");
+      } else {
+        downloadBtn.classList.remove("active");
+      }
+    });
+
+    // Redirect to uvd2.html on click
+    downloadBtn.addEventListener("click", () => {
+      if (downloadBtn.classList.contains("active")) {
+        window.location.href = "uvd2.html";
+      }
+    });
+  </script>
+</body>
+</html>
