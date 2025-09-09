@@ -2,238 +2,229 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Select Category - LWSD</title>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+  <title>Select Category</title>
   <style>
-    /* Background */
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
     body {
       margin: 0;
-      min-height: 100vh;
+      padding: 0;
+      background: url('interface.png') no-repeat center center/cover;
+      font-family: 'Arial', sans-serif;
+      color: white;
       display: flex;
       flex-direction: column;
       align-items: center;
-      background: url('interface.png') no-repeat center center fixed;
-      background-size: cover;
-      color: white;
-      font-family: 'Roboto', sans-serif;
+      min-height: 100vh;
       overflow-x: hidden;
-      padding: 40px 20px 60px;
-      box-sizing: border-box;
     }
 
-    /* Header */
     h1 {
       font-family: 'Press Start 2P', cursive;
-      font-size: 32px;
-      color: #007bff; /* Blue */
-      -webkit-text-stroke: 1.5px white;
-      text-stroke: 1.5px white;
-      margin-bottom: 40px;
+      font-size: 40px;
+      color: #ffff00; /* neon yellow */
       text-align: center;
+      margin: 30px 0 20px;
+      text-shadow:
+        0 0 5px #ffff00,
+        0 0 10px #ffff00,
+        0 0 20px #ffd700,
+        0 0 30px #ffd700,
+        0 0 40px #ffd700,
+        0 0 55px #ffd700,
+        0 0 75px #ffd700;
     }
 
-    /* Grid container for boxes */
     .grid-container {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
-      max-width: 960px;
-      width: 100%;
-      justify-items: center;
+      grid-gap: 15px;
+      max-width: 900px;
+      width: 90%;
       margin-bottom: 20px;
+      justify-items: center;
     }
 
-    /* Individual blurry boxes */
+    /* The 20 main boxes */
     .box {
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(0, 0, 0, 0.55);
       backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border-radius: 12px;
-      padding: 20px 15px;
+      border-radius: 10px;
+      padding: 15px;
       width: 180px;
-      height: 80px;
-      color: white;
-      font-family: 'Roboto', sans-serif;
-      font-weight: 700;
-      font-size: 16px;
       text-align: center;
-      line-height: 1.2;
+      font-weight: bold;
       cursor: pointer;
       user-select: none;
-      box-shadow: 0 0 10px rgba(0, 123, 255, 0.6);
-      transition: box-shadow 0.3s ease, transform 0.3s ease, background 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 0 10px rgba(255,255,255,0.1);
     }
 
-    /* Hover effect */
-    .box:hover:not(.selected) {
-      box-shadow: 0 0 20px rgba(0, 123, 255, 0.9);
-      transform: translateY(-5px);
+    .box:hover {
+      background: rgba(0, 0, 0, 0.75);
+      box-shadow: 0 0 15px #007bff;
     }
 
-    /* Selected box style */
+    /* Selected state */
     .box.selected {
-      background: rgba(0, 123, 255, 0.8);
-      box-shadow: 0 0 25px #007bff;
-      transform: translateY(-5px);
+      background: #007bff;
+      box-shadow: 0 0 15px #00ccff, 0 0 30px #00ccff;
+      color: #fff;
     }
 
-    /* The 21st box centered below the grid */
-    .box-bottom {
-      grid-column: 2 / span 2;
-      margin: 0 auto;
-      width: 380px; /* wider */
-      height: 80px;
+    /* The last Japanese box spanning 4 columns */
+    .japanese-box {
+      background: rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(8px);
+      border-radius: 10px;
+      padding: 15px;
+      text-align: center;
+      font-weight: bold;
+      cursor: pointer;
+      user-select: none;
+      width: 90%;
+      max-width: 740px;
+      margin: 0 auto 30px;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 0 10px rgba(255,255,255,0.1);
     }
 
-    /* Next button */
-    #nextBtn {
-      background-color: #d32f2f;
+    .japanese-box:hover {
+      background: rgba(0, 0, 0, 0.75);
+      box-shadow: 0 0 15px #007bff;
+    }
+
+    .japanese-box.selected {
+      background: #007bff;
+      box-shadow: 0 0 15px #00ccff, 0 0 30px #00ccff;
+      color: #fff;
+    }
+
+    /* Next button styling */
+    #next-btn {
+      background-color: #d32f2f; /* red */
       color: white;
-      font-family: 'Press Start 2P', cursive;
-      font-size: 18px;
-      padding: 12px 36px;
       border: none;
-      border-radius: 12px;
+      padding: 15px 50px;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 18px;
       cursor: not-allowed;
       opacity: 0.5;
-      transition: opacity 0.3s ease, cursor 0.3s ease;
-      margin: 10px auto 30px;
-      display: block;
       user-select: none;
+      transition: box-shadow 0.4s ease;
+      margin-bottom: 20px;
+      position: relative;
     }
-    #nextBtn.enabled {
+
+    #next-btn.enabled {
       cursor: pointer;
       opacity: 1;
+      box-shadow: 0 0 20px 5px #ffeb3b; /* yellow glow */
+      user-select: auto;
     }
 
-    /* Loading bar container box */
-    .loading-box {
-      max-width: 400px;
-      width: 100%;
-      height: 20px;
+    #next-btn.enabled:hover {
+      box-shadow: 0 0 30px 10px #ffeb3b;
+    }
+
+    /* Loading bar container */
+    .loading-container {
+      width: 320px;
+      height: 25px;
       background: rgba(255, 255, 255, 0.15);
-      border-radius: 10px;
-      box-shadow: inset 0 0 8px rgba(0, 123, 255, 0.6);
+      border-radius: 12px;
       overflow: hidden;
-      margin: 0 auto;
-      display: none;
+      margin-bottom: 30px;
+      display: none; /* hidden initially */
     }
 
-    /* Loading bar itself */
+    /* Loading bar progress */
     .loading-bar {
       height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #007bff, #ffcc00);
-      border-radius: 10px;
-      transition: width 10s linear;
+      width: 0;
+      background: linear-gradient(90deg, #007bff 0%, #ffeb3b 100%);
+      border-radius: 12px;
+      transition: width 0.1s linear;
     }
 
     /* Responsive */
-    @media (max-width: 1024px) {
-      .grid-container {
-        grid-template-columns: repeat(3, 1fr);
-      }
-      .box {
-        width: 150px;
-        height: 70px;
-        font-size: 14px;
-      }
-      .box-bottom {
-        width: 320px;
-      }
-      #nextBtn {
-        font-size: 14px;
-        padding: 10px 28px;
-      }
-      .loading-box {
-        max-width: 300px;
-        height: 16px;
-      }
-    }
-
     @media (max-width: 600px) {
       h1 {
-        font-size: 24px;
-        -webkit-text-stroke: 1px white;
-        text-stroke: 1px white;
+        font-size: 25px;
+        margin-top: 20px;
       }
       .grid-container {
         grid-template-columns: repeat(2, 1fr);
-        gap: 15px;
+        width: 95%;
       }
       .box {
-        width: 130px;
-        height: 60px;
-        font-size: 12px;
-        padding: 15px 10px;
+        width: 100%;
+        font-size: 14px;
+        padding: 12px;
       }
-      .box-bottom {
-        width: 260px;
-        height: 60px;
-        font-size: 12px;
+      .japanese-box {
+        width: 100%;
+        font-size: 14px;
+        padding: 12px;
       }
-      #nextBtn {
-        font-size: 12px;
-        padding: 8px 20px;
+      .loading-container {
+        width: 90%;
+        height: 20px;
       }
-      .loading-box {
-        max-width: 260px;
-        height: 12px;
+      #next-btn {
+        padding: 12px 30px;
+        font-size: 16px;
       }
     }
   </style>
 </head>
 <body>
-
   <h1>Select Category</h1>
 
-  <div class="grid-container" role="list">
-    <div class="box" role="listitem" tabindex="0" data-url="lwsd2.html">Bollywood: Hindi</div>
-    <div class="box" role="listitem" tabindex="0" data-url="lwsd2.html">Hollywood: English</div>
-    <div class="box" role="listitem" tabindex="0" data-url="lwsd2.html">Tollywood: Telugu</div>
-    <div class="box" role="listitem" tabindex="0" data-url="lwsd2.html">Kollywood: Tamil</div>
+  <div class="grid-container" id="grid">
+    <div class="box" data-category="Bollywood: Hindi">Bollywood: Hindi</div>
+    <div class="box" data-category="Hollywood: English">Hollywood: English</div>
+    <div class="box" data-category="Tollywood: Telugu">Tollywood: Telugu</div>
+    <div class="box" data-category="Kollywood: Tamil">Kollywood: Tamil</div>
 
-    <div class="box" role="listitem" tabindex="0" data-url="lwsd2.html">Mollywood: Malayalam</div>
-    <div class="box" role="listitem" tabindex="0" data-url="lwsd2.html">Sandalwood: Kannada</div>
-    <div class="box" role="listitem" tabindex="0" data-url="lwsd2.html">Pollywood: Punjabi</div>
-    <div class="box" role="listitem" tabindex="0" data-url="lwsd2.html">Ollywood: Odia</div>
+    <div class="box" data-category="Mollywood: Malayalam">Mollywood: Malayalam</div>
+    <div class="box" data-category="Sandalwood: Kannada">Sandalwood: Kannada</div>
+    <div class="box" data-category="Pollywood: Punjabi">Pollywood: Punjabi</div>
+    <div class="box" data-category="Ollywood: Odia">Ollywood: Odia</div>
 
-    <div class="box" role="listitem" tabindex="0" data-url="lwsd2.html">Bhojiwood: Bhojpuri</div>
-    <div class="box" role="listitem" tabindex="0" data-url="lwsd2.html">Jollywood: Assamese</div>
-    <div class="box" role="listitem" tabindex="0" data-url="lwsd2.html">Chhollywood: Chhattisgarh</div>
-    <div class="box" role="listitem" tabindex="0" data-url="lwsd2.html">Nollywood: Nigerian</div>
+    <div class="box" data-category="Bhojiwood: Bhojpuri">Bhojiwood: Bhojpuri</div>
+    <div class="box" data-category="Jollywood: Assamese">Jollywood: Assamese</div>
+    <div class="box" data-category="Chhollywood: Chhattisgarh">Chhollywood: Chhattisgarh</div>
+    <div class="box" data-category="Nollywood: Nigerian">Nollywood: Nigerian</div>
 
-    <div class="box" role="listitem" tabindex="0" data-url="lwsd2.html">Lollywood: Pakistani</div>
-    <div class="box" role="listitem" tabindex="0" data-url="lwsd2.html">Kariwood: Pakistani</div>
-    <div class="box" role="listitem" tabindex="0" data-url="lwsd2.html">Dhaliwood: Bangladeshi</div>
-    <div class="box" role="listitem" tabindex="0" data-url="lwsd2.html">Hallyuwood/Hallywood: South Korean</div>
+    <div class="box" data-category="Lollywood: Pakistani">Lollywood: Pakistani</div>
+    <div class="box" data-category="Kariwood: Pakistani">Kariwood: Pakistani</div>
+    <div class="box" data-category="Dhaliwood: Bangladeshi">Dhaliwood: Bangladeshi</div>
+    <div class="box" data-category="Hallyuwood/Hallywood: South Korean">Hallyuwood/Hallywood: South Korean</div>
 
-    <div class="box" role="listitem" tabindex="0" data-url="lwsd2.html">Wellywood: New Zealand</div>
-    <div class="box" role="listitem" tabindex="0" data-url="lwsd2.html">Hollywood North: Canadian</div>
-    <div class="box" role="listitem" tabindex="0" data-url="lwsd2.html">Chinese and Japanese</div>
-
-    <!-- The 21st box centered below -->
-    <div class="box box-bottom" role="listitem" tabindex="0" data-url="lwsd2.html">Japanese</div>
+    <div class="box" data-category="Wellywood: New Zealand">Wellywood: New Zealand</div>
+    <div class="box" data-category="Hollywood North: Canadian">Hollywood North: Canadian</div>
+    <div class="box" data-category="Chinese">Chinese</div>
+    <div class="box" data-category="Dhollywood/Gollywood: Gujarati">Dhollywood/Gollywood: Gujarati</div>
   </div>
 
-  <button id="nextBtn" disabled>Next</button>
+  <div class="japanese-box" data-category="Japanese">Japanese</div>
 
-  <div class="loading-box" aria-label="Loading progress bar">
-    <div class="loading-bar" id="loadingBar"></div>
+  <button id="next-btn" disabled>Next</button>
+
+  <div class="loading-container" id="loading-container">
+    <div class="loading-bar" id="loading-bar"></div>
   </div>
 
   <script>
-    const boxes = document.querySelectorAll('.box');
-    const nextBtn = document.getElementById('nextBtn');
-    const loadingBox = document.querySelector('.loading-box');
-    const loadingBar = document.getElementById('loadingBar');
+    const boxes = document.querySelectorAll('.box, .japanese-box');
+    const nextBtn = document.getElementById('next-btn');
+    const loadingContainer = document.getElementById('loading-container');
+    const loadingBar = document.getElementById('loading-bar');
 
     let selectedBox = null;
 
-    // Handle box selection
     boxes.forEach(box => {
       box.addEventListener('click', () => {
         if(selectedBox) {
@@ -244,40 +235,37 @@
         nextBtn.disabled = false;
         nextBtn.classList.add('enabled');
       });
-
-      // Accessibility: allow keyboard selection
-      box.addEventListener('keydown', e => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          box.click();
-        }
-      });
     });
 
-    // Handle next button click
     nextBtn.addEventListener('click', () => {
-      if (!selectedBox) return;
+      if(!selectedBox) return; // safety check
 
-      // Disable button to prevent multiple clicks
+      // Disable button & boxes
       nextBtn.disabled = true;
       nextBtn.classList.remove('enabled');
-      nextBtn.style.cursor = 'not-allowed';
+      boxes.forEach(box => box.style.pointerEvents = 'none');
 
-      // Show loading bar and animate
-      loadingBox.style.display = 'block';
+      // Show loading bar container
+      loadingContainer.style.display = 'block';
+
+      let progress = 0;
+      const totalDuration = 20000; // 20 seconds
+      const intervalTime = 100; // update every 100ms
+      const increment = intervalTime / totalDuration * 100;
+
       loadingBar.style.width = '0%';
 
-      // Animate loading bar from 0 to 100% in 10 seconds
-      setTimeout(() => {
-        loadingBar.style.width = '100%';
-      }, 50); // slight delay for transition
-
-      // Redirect after 10 seconds
-      setTimeout(() => {
-        window.location.href = selectedBox.dataset.url;
-      }, 10050);
+      const interval = setInterval(() => {
+        progress += increment;
+        if(progress >= 100) {
+          progress = 100;
+          clearInterval(interval);
+          // Redirect after loading finishes
+          window.location.href = 'lwsd2.html';
+        }
+        loadingBar.style.width = progress + '%';
+      }, intervalTime);
     });
   </script>
-
 </body>
 </html>
