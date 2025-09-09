@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Select Category</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    body, html {
+      margin: 0; padding: 0;
+      height: 100%;
+      background: url('interface.png') no-repeat center center/cover;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: white;
+      overflow-x: hidden;
+    }
+
+    h1 {
+      font-family: 'Press Start 2P', cursive;
+      font-size: 32px;
+      margin: 30px 0 20px 0;
+      color: #007bff; /* blue */
+      -webkit-text-stroke: 1.5px white;
+      text-stroke: 1.5px white;
+      text-align: center;
+      user-select: none;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-gap: 20px;
+      width: 90vw;
+      max-width: 1000px;
+      margin-bottom: 30px;
+    }
+
+    .box {
+      background: rgba(255 255 255 / 0.15);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 15px;
+      padding: 25px 10px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.15s ease;
+      user-select: none;
+      color: white;
+      box-shadow: 0 0 10px rgba(0,123,255,0.5);
+    }
+
+    .box:hover {
+      background: rgba(255 255 255 / 0.3);
+      transform: scale(1.05);
+      box-shadow: 0 0 20px 2px #007bff;
+    }
+
+    .japanese-box {
+      grid-column: 2 / span 2;
+    }
+
+    /* Loading Bar */
+    .loading-bar-container {
+      width: 90vw;
+      max-width: 1000px;
+      height: 25px;
+      background: rgba(255 255 255 / 0.15);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 40px;
+      box-shadow: 0 0 12px rgba(0, 123, 255, 0.7);
+    }
+
+    .loading-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #007bff, #ffcc00);
+      border-radius: 12px 0 0 12px;
+      animation: loadingAnim 10s linear forwards;
+    }
+
+    @keyframes loadingAnim {
+      0% { width: 0%; }
+      100% { width: 100%; }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 24px;
+        -webkit-text-stroke: 1px white;
+        text-stroke: 1px white;
+      }
+
+      .container {
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 15px;
+      }
+
+      .box {
+        font-size: 0.8rem;
+        padding: 20px 10px;
+      }
+
+      .japanese-box {
+        grid-column: auto;
+      }
+
+      .loading-bar-container {
+        width: 95vw;
+        height: 20px;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+      .box {
+        font-size: 0.75rem;
+        padding: 15px 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Select Category</h1>
+
+  <div class="container">
+    <div class="box" onclick="goNext()">Bollywood: Hindi</div>
+    <div class="box" onclick="goNext()">Hollywood: English</div>
+    <div class="box" onclick="goNext()">Tollywood: Telugu</div>
+    <div class="box" onclick="goNext()">Kollywood: Tamil</div>
+
+    <div class="box" onclick="goNext()">Mollywood: Malayalam</div>
+    <div class="box" onclick="goNext()">Sandalwood: Kannada</div>
+    <div class="box" onclick="goNext()">Pollywood: Punjabi</div>
+    <div class="box" onclick="goNext()">Ollywood: Odia</div>
+
+    <div class="box" onclick="goNext()">Bhojiwood: Bhojpuri</div>
+    <div class="box" onclick="goNext()">Jollywood: Assamese</div>
+    <div class="box" onclick="goNext()">Chhollywood: Chhattisgarh</div>
+    <div class="box" onclick="goNext()">Nollywood: Nigerian</div>
+
+    <div class="box" onclick="goNext()">Lollywood: Pakistani</div>
+    <div class="box" onclick="goNext()">Kariwood: Pakistani</div>
+    <div class="box" onclick="goNext()">Dhaliwood: Bangladeshi</div>
+    <div class="box" onclick="goNext()">Hallyuwood/Hallywood: South Korean</div>
+
+    <div class="box" onclick="goNext()">Wellywood: New Zealand</div>
+    <div class="box" onclick="goNext()">Hollywood North: Canadian</div>
+    <div class="box" onclick="goNext()">Chinese</div>
+    <div class="box japanese-box" onclick="goNext()">Japanese</div>
+  </div>
+
+  <div class="loading-bar-container">
+    <div class="loading-bar"></div>
+  </div>
+
+  <script>
+    function goNext() {
+      window.location.href = 'lmd2.html';
+    }
+
+    // After 10 seconds redirect automatically (like loading bar finishing)
+    setTimeout(() => {
+      window.location.href = 'lmd2.html';
+    }, 10000);
+  </script>
+</body>
+</html>
