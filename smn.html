@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Study Materials and Notes</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: url('interface.png') no-repeat center center/cover;
+      background-size: cover;
+      font-family: Arial, sans-serif;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+
+    h1 {
+      font-family: 'Press Start 2P', cursive;
+      font-size: 42px;
+      color: #ffff00;
+      margin-top: 40px;
+      text-align: center;
+      text-shadow: none;
+    }
+
+    .description {
+      color: white;
+      font-size: 18px;
+      margin: 15px 20px 40px;
+      line-height: 1.4;
+      text-align: center;
+      max-width: 600px;
+    }
+
+    .selector-container {
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .selector-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .selector-group label {
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+
+    .selector-group select {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      color: black;
+    }
+
+    #next-btn {
+      background-color: #007bff;
+      color: white;
+      font-size: 18px;
+      padding: 12px 40px;
+      border: none;
+      border-radius: 8px;
+      opacity: 0.5;
+      cursor: not-allowed;
+      transition: box-shadow 0.3s ease, opacity 0.3s ease;
+    }
+
+    #next-btn.enabled {
+      opacity: 1;
+      cursor: pointer;
+      box-shadow: 0 0 15px 3px red;
+    }
+
+    .loading-container {
+      width: 320px;
+      height: 20px;
+      border: 2px solid #007bff;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 20px 0;
+      display: none;
+    }
+
+    .loading-bar {
+      width: 0;
+      height: 100%;
+      background: #007bff;
+      transition: width 25s linear;
+    }
+
+    .status-text {
+      font-size: 14px;
+      color: white;
+      margin-top: 10px;
+      min-height: 1.4em;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 32px;
+      }
+      .description, .selector-container {
+        padding: 0 15px;
+      }
+      #next-btn {
+        width: 90%;
+        font-size: 16px;
+      }
+      .loading-container {
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Study Materials and Notes</h1>
+  <div class="description">
+    Find your required study materials and notes from your required school, colleges or universities.
+  </div>
+
+  <div class="selector-container">
+    <div class="selector-group">
+      <label for="country-select">Select your Country</label>
+      <select id="country-select">
+        <option value="" disabled selected>Select Country</option>
+      </select>
+    </div>
+    <div class="selector-group">
+      <label for="state-select">Select your State</label>
+      <select id="state-select" disabled>
+        <option value="" disabled selected>Select State</option>
+      </select>
+    </div>
+    <div class="selector-group">
+      <label for="school-select">Select your School/College/University</label>
+      <select id="school-select" disabled>
+        <option value="" disabled selected>Select Institution</option>
+      </select>
+    </div>
+  </div>
+
+  <button id="next-btn" disabled>Next</button>
+
+  <div class="loading-container" id="loading-container">
+    <div class="loading-bar" id="loading-bar"></div>
+  </div>
+  <div class="status-text" id="status-text"></div>
+
+  <script>
+    const data = {
+      "USA": {
+        "California": ["Stanford University", "UCLA"],
+        "Texas": ["University of Texas", "Rice University"]
+      },
+      "India": {
+        "Maharashtra": ["IIT Bombay", "University of Mumbai"],
+        "Delhi": ["Delhi University", "JNU"]
+      }
+    };
+
+    const countrySelect = document.getElementById('country-select');
+    const stateSelect = document.getElementById('state-select');
+    const schoolSelect = document.getElementById('school-select');
+    const nextBtn = document.getElementById('next-btn');
+    const loadingContainer = document.getElementById('loading-container');
+    const loadingBar = document.getElementById('loading-bar');
+    const statusText = document.getElementById('status-text');
+
+    function populateCountries() {
+      Object.keys(data).sort().forEach(country => {
+        countrySelect.add(new Option(country, country));
+      });
+    }
+
+    countrySelect.addEventListener('change', () => {
+      const country = countrySelect.value;
+      stateSelect.innerHTML = '<option value="" disabled selected>Select State</option>';
+      schoolSelect.innerHTML = '<option value="" disabled selected>Select Institution</option>';
+      stateSelect.disabled = false;
+      schoolSelect.disabled = true;
+      nextBtn.disabled = true;
+      nextBtn.classList.remove('enabled');
+
+      Object.keys(data[country]).sort().forEach(state => {
+        stateSelect.add(new Option(state, state));
+      });
+    });
+
+    stateSelect.addEventListener('change', () => {
+      const country = countrySelect.value;
+      const state = stateSelect.value;
+      schoolSelect.innerHTML = '<option value="" disabled selected>Select Institution</option>';
+      schoolSelect.disabled = false;
+      nextBtn.disabled = true;
+      nextBtn.classList.remove('enabled');
+
+      data[country][state].forEach(inst => {
+        schoolSelect.add(new Option(inst, inst));
+      });
+    });
+
+    schoolSelect.addEventListener('change', () => {
+      if (countrySelect.value && stateSelect.value && schoolSelect.value) {
+        nextBtn.disabled = false;
+        nextBtn.classList.add('enabled');
+      }
+    });
+
+    nextBtn.addEventListener('click', () => {
+      nextBtn.disabled = true;
+      nextBtn.classList.remove('enabled');
+
+      loadingContainer.style.display = 'block';
+      statusText.textContent = `Going through your ${inferInstitutionType(schoolSelect.value)} computers...`;
+
+      setTimeout(() => {
+        loadingBar.style.width = '100%';
+      }, 50);
+
+      setTimeout(() => {
+        // Redirect or next action here
+      }, 25050);
+    });
+
+    function inferInstitutionType(name) {
+      if (/school/i.test(name)) return 'school';
+      if (/college/i.test(name)) return 'college';
+      if (/university/i.test(name)) return 'university';
+      return 'institution';
+    }
+
+    populateCountries();
+  </script>
+
+</body>
+</html>
