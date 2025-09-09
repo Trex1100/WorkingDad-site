@@ -1,247 +1,207 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Select Category</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Select Category</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-    body, html {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      font-family: 'Press Start 2P', cursive;
-      background: url('interface.png') no-repeat center center/cover;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      color: #007bff; /* Blue text */
-      -webkit-text-stroke: 1.5px white;
-      text-stroke: 1.5px white;
-      overflow-x: hidden;
-    }
+  body, html {
+    margin: 0; padding: 0; height: 100%;
+    font-family: 'Press Start 2P', cursive;
+    background: url('https://trex1100.github.io/WorkingDad-site/19466c0f-dbcf-4877-9b0a-8efc29b29f83.png') no-repeat center center fixed;
+    background-size: cover;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 
-    h1 {
-      font-size: 40px;
-      margin: 30px 0 20px 0;
-      /* Removed glow effect */
-      -webkit-text-stroke: 1.5px white;
-      text-stroke: 1.5px white;
-      color: #007bff;
-    }
+  h1 {
+    margin-top: 30px;
+    color: #fff;
+    font-size: 1.8rem;
+    text-shadow: 0 0 5px #ff00ff, 0 0 10px #00ffff;
+  }
 
+  .grid-container {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 15px;
+    width: 90vw;
+    max-width: 900px;
+  }
+
+  .box {
+    background: rgba(20, 20, 20, 0.7);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+    font-size: 0.6rem;
+    user-select: none;
+  }
+
+  .box:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px 3px #00bfff;
+  }
+
+  .box.selected {
+    background: #1a73e8;
+    box-shadow: 0 0 15px 5px #1a73e8;
+    transform: scale(1.1);
+  }
+
+  /* The Japanese box placed below */
+  .japanese-box {
+    grid-column: 2 / span 2;
+    justify-self: center;
+  }
+
+  .next-button {
+    margin: 30px 0;
+    background: #b22222;
+    color: white;
+    padding: 15px 50px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 10px;
+    border: none;
+    cursor: not-allowed;
+    opacity: 0.5;
+    box-shadow: 0 0 10px #000;
+    transition: opacity 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .next-button.enabled {
+    cursor: pointer;
+    opacity: 1;
+    box-shadow: 0 0 15px 3px yellow;
+  }
+
+  .loading-container {
+    width: 80vw;
+    max-width: 400px;
+    background: rgba(0,0,0,0.7);
+    border: 2px solid white;
+    border-radius: 10px;
+    height: 20px;
+    margin-bottom: 30px;
+    overflow: hidden;
+    display: none;
+  }
+
+  .loading-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #00bfff 0%, #ffde59 100%);
+    width: 0%;
+    transition: width 20s linear;
+  }
+
+  /* Responsive for phones */
+  @media (max-width: 600px) {
     .grid-container {
-      display: grid;
-      grid-template-columns: repeat(4, 180px);
-      grid-gap: 20px;
-      justify-content: center;
-      width: 100%;
-      max-width: 800px;
-      padding-bottom: 30px;
+      grid-template-columns: repeat(2, 1fr);
+      width: 95vw;
+      grid-gap: 10px;
     }
-
     .box {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
-      height: 110px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      color: white;
-      font-size: 13px;
-      cursor: pointer;
-      transition: box-shadow 0.3s ease, transform 0.3s ease;
-      padding: 0 10px;
-      user-select: none;
-      border: 2px solid transparent;
+      padding: 15px;
+      font-size: 0.5rem;
     }
-
-    .box:hover {
-      box-shadow: 0 0 25px #00aaff;
-      transform: scale(1.05);
-    }
-
-    .box.selected {
-      border: 2px solid #00aaff;
-      box-shadow: 0 0 30px #00aaff;
-    }
-
-    /* Special placement for Japanese box, same size */
-    .japanese-box {
-      grid-column: 2 / span 2; /* center in last row spanning 2 columns */
-      justify-self: center;
-    }
-
     .next-button {
-      background-color: #cc0000;
-      color: white;
-      font-size: 16px;
-      padding: 15px 60px;
-      border-radius: 10px;
-      font-family: 'Press Start 2P', cursive;
-      border: none;
-      cursor: not-allowed;
-      opacity: 0.6;
-      margin-bottom: 20px;
-      transition: box-shadow 0.4s ease;
-      user-select: none;
-      outline: none;
-      letter-spacing: 0.07em;
-      box-shadow: none;
+      padding: 12px 30px;
+      font-size: 0.8rem;
     }
-
-    .next-button.enabled {
-      cursor: pointer;
-      opacity: 1;
-      box-shadow: 0 0 20px 4px #ffcc00;
+    .japanese-box {
+      grid-column: auto;
+      justify-self: auto;
     }
-
-    /* Loading bar container */
-    .loading-container {
-      width: 300px;
-      height: 20px;
-      border: 2px solid white;
-      border-radius: 12px;
-      overflow: hidden;
-      margin-bottom: 40px;
-      display: none;
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    /* Loading bar fill */
-    .loading-bar {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #007bff 0%, #ffcc00 50%, #007bff 100%);
-      animation: none;
-      border-radius: 12px 0 0 12px;
-      transition: width 0.2s ease;
-    }
-
-    /* Responsive for small devices */
-    @media (max-width: 600px) {
-      .grid-container {
-        grid-template-columns: repeat(2, 1fr);
-        max-width: 400px;
-        grid-gap: 15px;
-      }
-
-      .box {
-        height: 90px;
-        font-size: 11px;
-      }
-
-      .next-button {
-        padding: 12px 40px;
-        font-size: 14px;
-      }
-
-      .loading-container {
-        width: 90%;
-        height: 16px;
-      }
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
-  <h1>Select Category</h1>
 
-  <div class="grid-container">
-    <div class="box" data-name="Bollywood: Hindi">Bollywood: Hindi</div>
-    <div class="box" data-name="Hollywood: English">Hollywood: English</div>
-    <div class="box" data-name="Tollywood: Telugu">Tollywood: Telugu</div>
-    <div class="box" data-name="Kollywood: Tamil">Kollywood: Tamil</div>
-    <div class="box" data-name="Mollywood: Malayalam">Mollywood: Malayalam</div>
-    <div class="box" data-name="Sandalwood: Kannada">Sandalwood: Kannada</div>
-    <div class="box" data-name="Pollywood: Punjabi">Pollywood: Punjabi</div>
-    <div class="box" data-name="Ollywood: Odia">Ollywood: Odia</div>
-    <div class="box" data-name="Bhojiwood: Bhojpuri">Bhojiwood: Bhojpuri</div>
-    <div class="box" data-name="Jollywood: Assamese">Jollywood: Assamese</div>
-    <div class="box" data-name="Chhollywood: Chhattisgarh">Chhollywood: Chhattisgarh</div>
-    <div class="box" data-name="Nollywood: Nigerian">Nollywood: Nigerian</div>
-    <div class="box" data-name="Lollywood: Pakistani">Lollywood: Pakistani</div>
-    <div class="box" data-name="Kariwood: Pakistani">Kariwood: Pakistani</div>
-    <div class="box" data-name="Dhaliwood: Bangladeshi">Dhaliwood: Bangladeshi</div>
-    <div class="box" data-name="Hallyuwood/Hallywood: South Korean">Hallyuwood/Hallywood: South Korean</div>
-    <div class="box" data-name="Wellywood: New Zealand">Wellywood: New Zealand</div>
-    <div class="box" data-name="Hollywood North: Canadian">Hollywood North: Canadian</div>
-    <div class="box" data-name="Chinese">Chinese</div>
-    <div class="box" data-name="Dhollywood/Gollywood: Gujarati">Dhollywood/Gollywood: Gujarati</div>
-    <div class="box japanese-box" data-name="Japanese">Japanese</div>
-  </div>
+<h1>Select Category</h1>
 
-  <button class="next-button" disabled>Next</button>
+<div class="grid-container" id="grid-container">
+  <div class="box">Bollywood: Hindi</div>
+  <div class="box">Hollywood: English</div>
+  <div class="box">Tollywood: Telugu</div>
+  <div class="box">Kollywood: Tamil</div>
+  <div class="box">Mollywood: Malayalam</div>
+  <div class="box">Sandalwood: Kannada</div>
+  <div class="box">Pollywood: Punjabi</div>
+  <div class="box">Ollywood: Odia</div>
+  <div class="box">Bhojiwood: Bhojpuri</div>
+  <div class="box">Jollywood: Assamese</div>
+  <div class="box">Chhollywood: Chhattisgarh</div>
+  <div class="box">Nollywood: Nigerian</div>
+  <div class="box">Lollywood: Pakistani</div>
+  <div class="box">Kariwood: Pakistani</div>
+  <div class="box">Dhaliwood: Bangladeshi</div>
+  <div class="box">Hallyuwood/Hallywood: South Korean</div>
+  <div class="box">Wellywood: New Zealand</div>
+  <div class="box">Hollywood North: Canadian</div>
+  <div class="box">Chinese</div>
+  <div class="box">Dhollywood/Gollywood: Gujarati</div>
+  <div class="box japanese-box">Japanese</div>
+</div>
 
-  <div class="loading-container">
-    <div class="loading-bar"></div>
-  </div>
+<button id="nextBtn" class="next-button" disabled>Next</button>
 
-  <script>
-    const boxes = document.querySelectorAll('.box');
-    const nextButton = document.querySelector('.next-button');
-    const loadingContainer = document.querySelector('.loading-container');
-    const loadingBar = document.querySelector('.loading-bar');
+<div class="loading-container" id="loadingContainer">
+  <div class="loading-bar" id="loadingBar"></div>
+</div>
 
-    let selectedBox = null;
-    let loadingInterval = null;
-    let loadingProgress = 0;
+<script>
+  const boxes = document.querySelectorAll('.box');
+  const nextBtn = document.getElementById('nextBtn');
+  const loadingContainer = document.getElementById('loadingContainer');
+  const loadingBar = document.getElementById('loadingBar');
 
-    // Select box handler
-    boxes.forEach(box => {
-      box.addEventListener('click', () => {
-        if (selectedBox) {
-          selectedBox.classList.remove('selected');
-        }
-        box.classList.add('selected');
-        selectedBox = box;
+  let selectedBox = null;
+  let loadingTimeout;
 
-        nextButton.disabled = false;
-        nextButton.classList.add('enabled');
-      });
+  boxes.forEach(box => {
+    box.addEventListener('click', () => {
+      if(selectedBox) selectedBox.classList.remove('selected');
+      box.classList.add('selected');
+      selectedBox = box;
+      nextBtn.disabled = false;
+      nextBtn.classList.add('enabled');
     });
+  });
 
-    function startLoading() {
-      loadingContainer.style.display = 'block';
-      loadingProgress = 0;
-      loadingBar.style.width = '0%';
+  nextBtn.addEventListener('click', () => {
+    if (!selectedBox) return;
 
-      loadingInterval = setInterval(() => {
-        loadingProgress += 0.5; // 20 seconds total (100 / 0.5 = 200 steps = 20s)
-        loadingBar.style.width = loadingProgress + '%';
+    nextBtn.disabled = true;
+    nextBtn.classList.remove('enabled');
 
-        if (loadingProgress >= 100) {
-          clearInterval(loadingInterval);
-          window.location.href = "lmd2.html";
-        }
-      }, 100); // every 100ms (0.1s)
-    }
+    loadingContainer.style.display = 'block';
+    loadingBar.style.width = '0%';
 
-    nextButton.addEventListener('click', () => {
-      if (!selectedBox) return;
-      nextButton.disabled = true;
-      nextButton.classList.remove('enabled');
-      startLoading();
-    });
+    // Animate loading bar over 20 seconds
+    setTimeout(() => {
+      loadingBar.style.width = '100%';
+    }, 50);
 
-    // Stop loading and reset if user presses back or reloads
-    window.addEventListener('popstate', () => {
-      if (loadingInterval) {
-        clearInterval(loadingInterval);
-        loadingProgress = 0;
-        loadingBar.style.width = '0%';
-        loadingContainer.style.display = 'none';
-        if (selectedBox) {
-          selectedBox.classList.remove('selected');
-          selectedBox = null;
-        }
-        nextButton.disabled = true;
-        nextButton.classList.remove('enabled');
-      }
-    });
-  </script>
+    // After 20 seconds redirect
+    loadingTimeout = setTimeout(() => {
+      window.location.href = 'lmd2.html';
+    }, 20000);
+  });
+
+  // Cancel loading if user navigates back or reloads
+  window.addEventListener('beforeunload', () => {
+    clearTimeout(loadingTimeout);
+  });
+</script>
+
 </body>
 </html>
