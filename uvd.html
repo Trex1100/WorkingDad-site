@@ -3,11 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <title>WorkingDad Downloader</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
   <style>
-    /* Import Press Start 2P font */
-    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
-
     body {
       background: url('interface.png') no-repeat center center/cover;
       display: flex;
@@ -24,17 +21,29 @@
 
     h1 {
       font-family: 'Press Start 2P', cursive;
-      font-size: 40px;
+      font-size: 56px;
       text-align: center;
-      /* Gradient text */
-      background: linear-gradient(90deg, #ffeb3b 0%, #2196f3 100%);
+      background: linear-gradient(90deg, #f9f871 0%, #3ab1ff 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      position: relative;
+      z-index: 1;
       margin-bottom: 40px;
-      /* Add a subtle glow */
-      text-shadow:
-        0 0 5px #ffeb3b,
-        0 0 10px #2196f3;
+    }
+
+    /* Glow behind the text */
+    h1::before {
+      content: "WorkingDad Downloader";
+      position: absolute;
+      top: 0; 
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Press Start 2P', cursive;
+      font-size: 56px;
+      color: #f9f871;
+      filter: blur(8px);
+      opacity: 0.8;
+      z-index: -1;
     }
 
     .input-section {
