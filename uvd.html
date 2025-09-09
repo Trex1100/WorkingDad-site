@@ -4,12 +4,13 @@
   <meta charset="UTF-8" />
   <title>WorkingDad Downloader</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+    /* Import fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Vademecum&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
     body {
       background: 
-        radial-gradient(circle at center, rgba(0, 170, 255, 0.2), rgba(0, 0, 0, 0.95)),
+        radial-gradient(circle at center, rgba(0, 170, 255, 0.25), rgba(0, 0, 0, 0.95)),
         url('interface.png') no-repeat center center/cover;
       display: flex;
       flex-direction: column;
@@ -21,21 +22,22 @@
       min-height: 100vh;
     }
 
+    /* Heading in Vademecum font */
     h1 {
-      font-family: 'Press Start 2P', cursive;
-      font-size: 50px;
+      font-family: 'Vademecum', cursive;
+      font-size: 56px;
       text-align: center;
       letter-spacing: 0.12em;
-      -webkit-text-stroke: 1.5px black;
-      color: #00aaff;
+      color: #00ffcc;
       text-shadow:
-        0 0 10px #00aaff,
-        0 0 20px #00aaff,
-        0 0 40px #00aaff,
-        0 0 80px #00aaff;
+        0 0 10px #00ffcc,
+        0 0 20px #00ffcc,
+        0 0 40px #00ffcc,
+        0 0 80px #00ffcc;
       margin-bottom: 40px;
     }
 
+    /* Input section */
     .input-section {
       width: 100%;
       max-width: 700px;
@@ -52,11 +54,12 @@
       margin-bottom: 20px;
     }
 
+    /* Download button */
     .download-button {
       padding: 15px 40px;
       background-color: red;
       color: white;
-      font-family: 'Press Start 2P', cursive;
+      font-family: 'Vademecum', cursive;
       font-size: 18px;
       font-weight: bold;
       border: none;
@@ -64,7 +67,6 @@
       cursor: not-allowed;
       opacity: 0.6;
       transition: all 0.3s ease;
-      text-shadow: none;
     }
 
     .download-button.active {
@@ -73,16 +75,19 @@
       box-shadow: 0 0 20px #00aaff, 0 0 40px #00aaff;
     }
 
+    /* Description text */
     .description {
       margin-top: 40px;
       max-width: 900px;
       text-align: justify;
       line-height: 1.6;
       font-size: 16px;
+      font-family: 'Roboto', sans-serif;
     }
 
+    /* Subtitle "How to use" */
     h2 {
-      font-family: 'Press Start 2P', cursive;
+      font-family: 'Vademecum', cursive;
       font-size: 28px;
       text-align: center;
       margin-top: 50px;
@@ -90,6 +95,7 @@
       text-shadow: 0 0 10px #ffcc00, 0 0 20px #ffcc00;
     }
 
+    /* Ordered list */
     ol {
       max-width: 900px;
       margin: 20px auto;
@@ -97,6 +103,26 @@
       line-height: 1.8;
       font-size: 16px;
       font-family: 'Roboto', sans-serif;
+    }
+
+    /* Neon glow effect for background hands */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 20% 80%, rgba(0, 0, 255, 0.3), transparent 60%),
+                  radial-gradient(circle at 80% 80%, rgba(255, 0, 0, 0.3), transparent 60%);
+      z-index: -1;
+      pointer-events: none;
+      animation: glow 4s infinite alternate;
+    }
+
+    @keyframes glow {
+      0% { opacity: 0.6; }
+      100% { opacity: 1; }
     }
   </style>
 </head>
