@@ -22,17 +22,10 @@
     h1 {
       font-family: 'Press Start 2P', cursive;
       font-size: 40px;
-      color: #ffff00; /* neon yellow */
+      color: #ffff00;
       text-align: center;
       margin: 30px 0 20px;
-      text-shadow:
-        0 0 5px #ffff00,
-        0 0 10px #ffff00,
-        0 0 20px #ffd700,
-        0 0 30px #ffd700,
-        0 0 40px #ffd700,
-        0 0 55px #ffd700,
-        0 0 75px #ffd700;
+      text-shadow: none; /* Removed glow */
     }
 
     .grid-container {
@@ -45,7 +38,6 @@
       justify-items: center;
     }
 
-    /* The 20 main boxes */
     .box {
       background: rgba(0, 0, 0, 0.55);
       backdrop-filter: blur(8px);
@@ -65,14 +57,12 @@
       box-shadow: 0 0 15px #007bff;
     }
 
-    /* Selected state */
     .box.selected {
       background: #007bff;
       box-shadow: 0 0 15px #00ccff, 0 0 30px #00ccff;
       color: #fff;
     }
 
-    /* The last Japanese box spanning 4 columns */
     .japanese-box {
       background: rgba(0, 0, 0, 0.55);
       backdrop-filter: blur(8px);
@@ -100,9 +90,8 @@
       color: #fff;
     }
 
-    /* Next button styling */
     #next-btn {
-      background-color: #d32f2f; /* red */
+      background-color: #d32f2f;
       color: white;
       border: none;
       padding: 15px 50px;
@@ -120,7 +109,7 @@
     #next-btn.enabled {
       cursor: pointer;
       opacity: 1;
-      box-shadow: 0 0 20px 5px #ffeb3b; /* yellow glow */
+      box-shadow: 0 0 20px 5px #ffeb3b;
       user-select: auto;
     }
 
@@ -128,7 +117,6 @@
       box-shadow: 0 0 30px 10px #ffeb3b;
     }
 
-    /* Loading bar container */
     .loading-container {
       width: 320px;
       height: 25px;
@@ -136,10 +124,11 @@
       border-radius: 12px;
       overflow: hidden;
       margin-bottom: 30px;
-      display: none; /* hidden initially */
+      display: none;
+      border: 2px solid #ffeb3b; /* yellow border */
+      box-sizing: border-box;
     }
 
-    /* Loading bar progress */
     .loading-bar {
       height: 100%;
       width: 0;
@@ -148,7 +137,6 @@
       transition: width 0.1s linear;
     }
 
-    /* Responsive */
     @media (max-width: 600px) {
       h1 {
         font-size: 25px;
@@ -224,48 +212,17 @@
     const loadingBar = document.getElementById('loading-bar');
 
     let selectedBox = null;
+    let interval = null;
 
-    boxes.forEach(box => {
-      box.addEventListener('click', () => {
-        if(selectedBox) {
-          selectedBox.classList.remove('selected');
-        }
-        box.classList.add('selected');
-        selectedBox = box;
-        nextBtn.disabled = false;
-        nextBtn.classList.add('enabled');
-      });
-    });
-
-    nextBtn.addEventListener('click', () => {
-      if(!selectedBox) return; // safety check
-
-      // Disable button & boxes
+    function resetSelection() {
+      if (selectedBox) {
+        selectedBox.classList.remove('selected');
+        selectedBox = null;
+      }
       nextBtn.disabled = true;
       nextBtn.classList.remove('enabled');
-      boxes.forEach(box => box.style.pointerEvents = 'none');
-
-      // Show loading bar container
-      loadingContainer.style.display = 'block';
-
-      let progress = 0;
-      const totalDuration = 20000; // 20 seconds
-      const intervalTime = 100; // update every 100ms
-      const increment = intervalTime / totalDuration * 100;
-
+      loadingContainer.style.display = 'none';
       loadingBar.style.width = '0%';
-
-      const interval = setInterval(() => {
-        progress += increment;
-        if(progress >= 100) {
-          progress = 100;
-          clearInterval(interval);
-          // Redirect after loading finishes
-          window.location.href = 'lwsd2.html';
-        }
-        loadingBar.style.width = progress + '%';
-      }, intervalTime);
-    });
-  </script>
-</body>
-</html>
+      boxes.forEach(box => box.style.pointerEvents = 'auto');
+      clearInterval(interval);
+      interval = null
