@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Fake Degree Generator - Step 2</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: url('interface.png') no-repeat center center/cover;
+      font-family: Arial, sans-serif;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+
+    h1 {
+      font-family: 'Press Start 2P', cursive;
+      font-size: 38px;
+      color: #ffff00;
+      margin-top: 40px;
+      text-align: center;
+      text-shadow: 0 0 6px #000;
+    }
+
+    .powered {
+      font-size: 20px;
+      margin-bottom: 30px;
+      color: #ff3333;
+      text-shadow: 0 0 6px #ff3333;
+    }
+
+    .loading-container {
+      width: 320px;
+      height: 20px;
+      border: 2px solid #007bff;
+      border-radius: 10px;
+      overflow: hidden;
+      display: none;
+      margin-bottom: 15px;
+    }
+
+    .loading-bar {
+      width: 0;
+      height: 100%;
+      background: green;
+      transition: width 0s linear;
+    }
+
+    .status-text {
+      font-size: 14px;
+      color: white;
+      min-height: 1.4em;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .gov-message {
+      font-size: 13px;
+      color: #ffcc00;
+      margin-top: 4px;
+      text-align: center;
+      display: none;
+      text-shadow: 0 0 6px #ffcc00;
+      animation: blink 1.2s infinite;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0.4; }
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 26px;
+      }
+      .powered {
+        font-size: 16px;
+      }
+      .loading-container {
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Fake Degree Generator</h1>
+  <div class="powered">Powered by WorkingDad</div>
+
+  <div class="loading-container" id="loading-container">
+    <div class="loading-bar" id="loading-bar"></div>
+  </div>
+  <div class="status-text" id="status-text"></div>
+
+  <!-- ✅ New blinking message -->
+  <div class="gov-message" id="gov-message">
+    Generating your Degree from Government Servers
+  </div>
+
+  <script>
+    const loadingContainer = document.getElementById('loading-container');
+    const loadingBar = document.getElementById('loading-bar');
+    const statusText = document.getElementById('status-text');
+    const govMessage = document.getElementById('gov-message');
+
+    let interval = null;
+
+    // Start the loading process immediately on page load
+    window.addEventListener('load', () => {
+      if (interval) clearInterval(interval);
+
+      loadingBar.style.transition = "none";
+      loadingBar.style.width = "0%";
+      loadingContainer.style.display = "block";
+
+      statusText.textContent = "Generating your certificate...";
+      govMessage.style.display = "block";
+
+      let progress = 0;
+      const duration = 60000; // 1 minute
+      const stepTime = 100;
+      const increment = (stepTime / duration) * 100;
+
+      loadingBar.style.transition = "width 0.1s linear";
+
+      interval = setInterval(() => {
+        progress += increment;
+        if (progress >= 100) {
+          clearInterval(interval);
+          loadingBar.style.width = "100%";
+          window.location.href = "fdg3.html";
+        } else {
+          loadingBar.style.width = progress + "%";
+        }
+      }, stepTime);
+    });
+  </script>
+</body>
+</html>
