@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>WorkingDad Downloader</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      background: url('interface.png') no-repeat center center/cover;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px;
+      margin: 0;
+      color: white;
+      font-family: 'Roboto', sans-serif;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    h1 {
+      font-family: 'Press Start 2P', cursive;
+      font-size: 56px;
+      text-align: center;
+      background: linear-gradient(90deg, #f9f871 0%, #3ab1ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      position: relative;
+      z-index: 1;
+      margin-bottom: 40px;
+    }
+
+    /* Glow behind the text */
+    h1::before {
+      content: "WorkingDad Downloader";
+      position: absolute;
+      top: 0; 
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Press Start 2P', cursive;
+      font-size: 56px;
+      color: #f9f871;
+      filter: blur(8px);
+      opacity: 0.8;
+      z-index: -1;
+    }
+
+    .input-section {
+      width: 100%;
+      max-width: 700px;
+      text-align: center;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 15px;
+      font-size: 18px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      margin-bottom: 20px;
+    }
+
+    .download-button {
+      padding: 15px 40px;
+      background-color: red;
+      color: white;
+      font-family: 'Vademecum', cursive;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: not-allowed;
+      opacity: 0.6;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .download-button.active {
+      cursor: pointer;
+      opacity: 1;
+    }
+
+    /* Glow effect on click */
+    .download-button.glowing {
+      animation: glowRed 1s ease forwards;
+      box-shadow: 0 0 40px 10px rgba(255, 0, 0, 0.8);
+    }
+
+    @keyframes glowRed {
+      0% {
+        box-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+      }
+      100% {
+        box-shadow: 0 0 40px 15px rgba(255, 0, 0, 1);
+      }
+    }
+
+    /* Loading spinner */
+    .spinner {
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top: 3px solid white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      animation: spin 1s linear infinite;
+      margin-left: 10px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg);}
+      100% { transform: rotate(360deg);}
+    }
+
+    .description {
+      margin-top: 40px;
+      max-width: 900px;
+      text-align: justify;
+      line-height: 1.6;
+      font-size: 16px;
+      font-family: 'Roboto', sans-serif;
+    }
+
+    h2 {
+      font-family: 'Vademecum', cursive;
+      font-size: 28px;
+      text-align: center;
+      margin-top: 50px;
+      color: #ffcc00;
+      text-shadow: 0 0 10px #ffcc00, 0 0 20px #ffcc00;
+    }
+
+    ol {
+      max-width: 900px;
+      margin: 20px auto;
+      padding-left: 20px;
+      line-height: 1.8;
+      font-size: 16px;
+      font-family: 'Roboto', sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <h1>WorkingDad Downloader</h1>
+
+  <div class="input-section">
+    <input type="text" id="video-link" placeholder="Please Input the link of the specific video you want to Download from any Platform">
+    <br>
+    <button id="download-btn" class="download-button" disabled>Download</button>
+  </div>
+
+  <div class="description">
+    <p>
+      WorkingDad Downloader is a free search engine with a built-in downloader. Simply search for your required video on several sources and download the video for free. WorkingDad Downloader will work on your desktop, tablet and mobile devices, so you do not need to install any additional apps. The usage is free and safe!
+    </p>
+  </div>
+
+  <h2>How to use</h2>
+  <ol>
+    <li>Simply enter your search query above. As soon as you type in your search query, a list of suggestions will pop up. Feel free to choose a suggestion or ignore them. Then click on the „Search” button.</li>
+    <li>WorkingDad Downloader will search for any matching results for your search query. As soon as the search is completed you will get a list of results. If you would like to search on more sources for your search query simply click on the „Enable” button at the end of the results list.</li>
+    <li>Now you are able to access the results or to download them by clicking on one of the download buttons. Kindly note: some results need to be converted to the chosen format before you are able to download them. This might take a short while.</li>
+  </ol>
+  <p style="max-width: 900px; margin: auto; line-height: 1.6;">
+    Alternatively, just enter the video URL above and click on the „Search” button. After that choose your preferred download format. The video will be converted, and after a short time you will be able to download the converted video.
+  </p>
+
+  <script>
+    // Disable back navigation
+    history.pushState(null, null, location.href);
+    window.onpopstate = function () {
+      history.go(1);
+    };
+
+    const input = document.getElementById("video-link");
+    const button = document.getElementById("download-btn");
+
+    input.addEventListener("input", () => {
+      if (input.value.trim() !== "") {
+        button.classList.add("active");
+        button.removeAttribute("disabled");
+      } else {
+        button.classList.remove("active");
+        button.setAttribute("disabled", true);
+      }
+    });
+
+    button.addEventListener("click", () => {
+      if (button.classList.contains("active")) {
+        // Add glow effect
+        button.classList.add('glowing');
+
+        // Add spinner
+        const spinner = document.createElement('div');
+        spinner.classList.add('spinner');
+        button.appendChild(spinner);
+
+        // Disable button to prevent double click
+        button.disabled = true;
+
+        // Redirect after 1.2 seconds
+        setTimeout(() => {
+          window.location.href = "uvd2.html";
+        }, 1200);
+      }
+    });
+  </script>
+</body>
+</html>

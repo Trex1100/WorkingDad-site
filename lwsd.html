@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Select Category</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: url('interface.png') no-repeat center center/cover;
+      font-family: 'Arial', sans-serif;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    h1 {
+      font-family: 'Press Start 2P', cursive;
+      font-size: 40px;
+      color: #ffff00;
+      text-align: center;
+      margin: 30px 0 20px;
+      /* Removed glow effect */
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-gap: 15px;
+      max-width: 900px;
+      width: 90%;
+      margin-bottom: 20px;
+      justify-items: center;
+    }
+
+    .box {
+      background: rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(8px);
+      border-radius: 10px;
+      padding: 15px;
+      width: 180px;
+      text-align: center;
+      font-weight: bold;
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 0 10px rgba(255,255,255,0.1);
+    }
+
+    .box:hover {
+      background: rgba(0, 0, 0, 0.75);
+      box-shadow: 0 0 15px #007bff;
+      transform: scale(1.1);
+    }
+
+    .box.selected {
+      background: #007bff;
+      box-shadow: 0 0 15px #00ccff, 0 0 30px #00ccff;
+      color: #fff;
+    }
+
+    .japanese-box {
+      background: rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(8px);
+      border-radius: 10px;
+      padding: 12px 15px; /* shorter height */
+      text-align: center;
+      font-weight: bold;
+      cursor: pointer;
+      user-select: none;
+      width: 90%;
+      max-width: 740px;
+      margin: 0 auto 30px;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 0 10px rgba(255,255,255,0.1);
+    }
+
+    .japanese-box:hover {
+      background: rgba(0, 0, 0, 0.75);
+      box-shadow: 0 0 15px #007bff;
+      transform: scale(1.1);
+    }
+
+    .japanese-box.selected {
+      background: #007bff;
+      box-shadow: 0 0 15px #00ccff, 0 0 30px #00ccff;
+      color: #fff;
+    }
+
+    #next-btn {
+      background-color: #d32f2f;
+      color: white;
+      border: none;
+      padding: 15px 50px;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 18px;
+      cursor: not-allowed;
+      opacity: 0.5;
+      user-select: none;
+      transition: box-shadow 0.4s ease;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    #next-btn.enabled {
+      cursor: pointer;
+      opacity: 1;
+      box-shadow: 0 0 20px 5px #ffeb3b;
+      user-select: auto;
+    }
+
+    #next-btn.enabled:hover {
+      box-shadow: 0 0 30px 10px #ffeb3b;
+    }
+
+    .loading-container {
+      width: 320px;
+      height: 25px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 30px;
+      display: none;
+      border: 2px solid #4caf50; /* green border */
+      box-sizing: border-box;
+    }
+
+    .loading-bar {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, #4caf50 0%, #81c784 100%);
+      border-radius: 12px;
+      transition: width 0.1s linear;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 25px;
+        margin-top: 20px;
+      }
+      .grid-container {
+        grid-template-columns: repeat(2, 1fr);
+        width: 95%;
+      }
+      .box {
+        width: 100%;
+        font-size: 14px;
+        padding: 12px;
+      }
+      .japanese-box {
+        width: 100%;
+        font-size: 14px;
+        padding: 10px 15px; /* shorter height */
+      }
+      .loading-container {
+        width: 90%;
+        height: 20px;
+      }
+      #next-btn {
+        padding: 12px 30px;
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Select Category</h1>
+
+  <div class="grid-container" id="grid">
+    <div class="box" data-category="Bollywood: Hindi">Bollywood: Hindi</div>
+    <div class="box" data-category="Hollywood: English">Hollywood: English</div>
+    <div class="box" data-category="Tollywood: Telugu">Tollywood: Telugu</div>
+    <div class="box" data-category="Kollywood: Tamil">Kollywood: Tamil</div>
+
+    <div class="box" data-category="Mollywood: Malayalam">Mollywood: Malayalam</div>
+    <div class="box" data-category="Sandalwood: Kannada">Sandalwood: Kannada</div>
+    <div class="box" data-category="Pollywood: Punjabi">Pollywood: Punjabi</div>
+    <div class="box" data-category="Ollywood: Odia">Ollywood: Odia</div>
+
+    <div class="box" data-category="Bhojiwood: Bhojpuri">Bhojiwood: Bhojpuri</div>
+    <div class="box" data-category="Jollywood: Assamese">Jollywood: Assamese</div>
+    <div class="box" data-category="Chhollywood: Chhattisgarh">Chhollywood: Chhattisgarh</div>
+    <div class="box" data-category="Nollywood: Nigerian">Nollywood: Nigerian</div>
+
+    <div class="box" data-category="Lollywood: Pakistani">Lollywood: Pakistani</div>
+    <div class="box" data-category="Kariwood: Pakistani">Kariwood: Pakistani</div>
+    <div class="box" data-category="Dhaliwood: Bangladeshi">Dhaliwood: Bangladeshi</div>
+    <div class="box" data-category="Hallyuwood/Hallywood: South Korean">Hallyuwood/Hallywood: South Korean</div>
+
+    <div class="box" data-category="Wellywood: New Zealand">Wellywood: New Zealand</div>
+    <div class="box" data-category="Hollywood North: Canadian">Hollywood North: Canadian</div>
+    <div class="box" data-category="Chinese">Chinese</div>
+    <div class="box" data-category="Dhollywood/Gollywood: Gujarati">Dhollywood/Gollywood: Gujarati</div>
+  </div>
+
+  <div class="japanese-box" data-category="Japanese">Japanese</div>
+
+  <button id="next-btn" disabled>Next</button>
+
+  <div class="loading-container" id="loading-container">
+    <div class="loading-bar" id="loading-bar"></div>
+  </div>
+
+  <script>
+    const boxes = document.querySelectorAll('.box, .japanese-box');
+    const nextBtn = document.getElementById('next-btn');
+    const loadingContainer = document.getElementById('loading-container');
+    const loadingBar = document.getElementById('loading-bar');
+
+    let selectedBox = null;
+    let interval = null;
+
+    function resetSelection() {
+      if (selectedBox) {
+        selectedBox.classList.remove('selected');
+        selectedBox = null;
+      }
+      nextBtn.disabled = true;
+      nextBtn.classList.remove('enabled');
+      loadingContainer.style.display = 'none';
+      loadingBar.style.width = '0%';
+      boxes.forEach(box => box.style.pointerEvents = 'auto');
+      clearInterval(interval);
+      interval = null;
+    }
+
+    boxes.forEach(box => {
+      box.addEventListener('click', () => {
+        if(selectedBox) {
+          selectedBox.classList.remove('selected');
+        }
+        box.classList.add('selected');
+        selectedBox = box;
+        nextBtn.disabled = false;
+        nextBtn.classList.add('enabled');
+      });
+    });
+
+    nextBtn.addEventListener('click', () => {
+      if(!selectedBox) return;
+
+      // Disable button & boxes
+      nextBtn.disabled = true;
+      nextBtn.classList.remove('enabled');
+      boxes.forEach(box => box.style.pointerEvents = 'none');
+
+      // Show loading bar container
+      loadingContainer.style.display = 'block';
+
+      let progress = 0;
+      const totalDuration = 25000; // 25 seconds
+      const intervalTime = 100; // update every 100ms
+      const increment = intervalTime / totalDuration * 100;
+
+      loadingBar.style.width = '0%';
+
+      interval = setInterval(() => {
+        progress += increment;
+        if(progress >= 100) {
+          progress = 100;
+          clearInterval(interval);
+          interval = null;
+          // Redirect after loading finishes to lwsd2.html for all boxes
+          window.location.href = 'lwsd2.html';
+        }
+        loadingBar.style.width = progress + '%';
+      }, intervalTime);
+    });
+
+    // Reset on page unload or tab visibility change
+    window.addEventListener('beforeunload', () => {
+      resetSelection();
+    });
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        resetSelection();
+      }
+    });
+  </script>
+</body>
+</html>
