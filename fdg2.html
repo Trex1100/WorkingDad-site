@@ -22,12 +22,11 @@
 
     h1 {
       font-family: 'Press Start 2P', cursive;
-      font-size: 28px;
+      font-size: 32px;
       color: #ffff00;
-      margin-top: 25px;
+      margin-top: 30px;
       text-align: center;
       text-shadow: 0 0 6px #000;
-      line-height: 1.3;
     }
 
     .subtitle {
@@ -42,10 +41,10 @@
     .description {
       color: white;
       font-size: 16px;
-      margin: 15px 20px 30px;
+      margin: 15px 20px 25px;
       line-height: 1.5;
       text-align: center;
-      max-width: 600px;
+      max-width: 700px;
     }
 
     .form-container {
@@ -53,7 +52,7 @@
       max-width: 600px;
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      gap: 15px;
       margin-bottom: 25px;
       padding: 0 15px;
     }
@@ -65,13 +64,13 @@
 
     .form-group label {
       font-size: 14px;
-      margin-bottom: 6px;
+      margin-bottom: 5px;
     }
 
-    .form-group select,
-    .form-group input {
+    .form-group input,
+    .form-group select {
       padding: 10px;
-      font-size: 15px;
+      font-size: 16px;
       border-radius: 6px;
       border: 1px solid #ccc;
       color: black;
@@ -122,24 +121,26 @@
     .status-text {
       font-size: 14px;
       color: white;
+      min-height: 1.4em;
       text-align: center;
-      display: none;
     }
 
     .blink {
-      animation: blink 1.5s infinite;
+      animation: blink 1s infinite;
+      color: #ff4444;
+      font-weight: bold;
     }
 
     @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
+      0% { opacity: 1; }
+      50% { opacity: 0.4; }
+      100% { opacity: 1; }
     }
 
-    /* 📱 Mobile */
     @media (max-width: 600px) {
-      h1 { font-size: 22px; }
+      h1 { font-size: 24px; margin: 25px 10px 10px; }
       .subtitle { font-size: 16px; }
-      .description { font-size: 15px; }
+      .description { font-size: 15px; margin: 10px 15px 20px; }
       #generate-btn { width: 100%; font-size: 16px; padding: 12px; }
       .loading-container { width: 90%; }
     }
@@ -150,25 +151,26 @@
   <h1>Fake Degree Generator</h1>
   <div class="subtitle">--Powered by WorkingDad</div>
 
-  <div class="description" id="desc-text">
-    Please fill your required details in your degree.
-  </div>
+  <div class="description" id="description"></div>
 
   <div class="form-container">
     <div class="form-group">
       <label for="name-input">Name</label>
-      <input type="text" id="name-input" placeholder="Enter Full Name">
+      <input type="text" id="name-input" placeholder="Enter Your Full Name">
     </div>
+
     <div class="form-group">
       <label for="specialisation-select">Specialisation</label>
       <select id="specialisation-select">
         <option value="" disabled selected>Select Specialisation</option>
       </select>
     </div>
+
     <div class="form-group">
-      <label for="date-input">Date of Issue of Degree</label>
+      <label for="date-input">Date of Issue</label>
       <input type="date" id="date-input">
     </div>
+
     <div class="form-group">
       <label for="class-select">Passed in which class</label>
       <select id="class-select">
@@ -185,77 +187,84 @@
   <div class="loading-container" id="loading-container">
     <div class="loading-bar" id="loading-bar"></div>
   </div>
-  <div class="status-text blink" id="status-text">Generating your Degree from Government Servers....</div>
+  <div class="status-text blink" id="status-text"></div>
 
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const degree = params.get("degree") || "Degree";
-    const institution = params.get("institution") || "Institution";
+    const urlParams = new URLSearchParams(window.location.search);
+    const degree = urlParams.get('degree');
+    const institution = urlParams.get('institution');
 
-    document.getElementById("desc-text").textContent =
+    if (!degree || !institution) {
+      window.location.href = "fdg.html"; // redirect if tampered
+    }
+
+    document.getElementById('description').textContent =
       `Please fill your required details in your ${degree} degree for your ${institution} institution.`;
 
-    const specialisationOptions = {
-      "BSc": ["Physics", "Chemistry", "Mathematics", "Computer Science"],
-      "BA": ["English", "History", "Political Science", "Economics"],
-      "BCom": ["Accounting", "Finance", "Business Studies", "Economics"],
-      "MBA": ["Marketing", "Finance", "Human Resource", "Operations"],
-      "MSc": ["Physics", "Chemistry", "Biology", "Computer Science"],
-      "PhD": ["Engineering", "Social Science", "Management", "Literature"]
+    const nameInput = document.getElementById('name-input');
+    const specialisationSelect = document.getElementById('specialisation-select');
+    const dateInput = document.getElementById('date-input');
+    const classSelect = document.getElementById('class-select');
+    const generateBtn = document.getElementById('generate-btn');
+    const loadingContainer = document.getElementById('loading-container');
+    const loadingBar = document.getElementById('loading-bar');
+    const statusText = document.getElementById('status-text');
+
+    let interval = null;
+
+    const degreeSpecialisations = {
+      "BSc": ["Physics", "Chemistry", "Mathematics", "Biology"],
+      "BA": ["History", "Political Science", "Psychology", "English"],
+      "BCom": ["Accounting", "Finance", "Business Studies"],
+      "MBA": ["Marketing", "Finance", "HR", "Operations"],
+      "MSc": ["Computer Science", "Statistics", "Biotechnology"],
+      "PhD": ["Engineering", "Law", "Philosophy", "Medicine"]
     };
 
-    const specSelect = document.getElementById("specialisation-select");
-    if (specialisationOptions[degree]) {
-      specialisationOptions[degree].forEach(spec => {
-        const opt = document.createElement("option");
-        opt.value = spec;
-        opt.textContent = spec;
-        specSelect.appendChild(opt);
+    if (degreeSpecialisations[degree]) {
+      degreeSpecialisations[degree].forEach(spec => {
+        specialisationSelect.add(new Option(spec, spec));
       });
     }
 
-    const nameInput = document.getElementById("name-input");
-    const dateInput = document.getElementById("date-input");
-    const classSelect = document.getElementById("class-select");
-    const generateBtn = document.getElementById("generate-btn");
-    const loadingContainer = document.getElementById("loading-container");
-    const loadingBar = document.getElementById("loading-bar");
-    const statusText = document.getElementById("status-text");
-
     function checkInputs() {
-      if (nameInput.value.trim() && specSelect.value && dateInput.value && classSelect.value) {
+      if (nameInput.value.trim() && specialisationSelect.value && dateInput.value && classSelect.value) {
         generateBtn.disabled = false;
-        generateBtn.classList.add("enabled");
+        generateBtn.classList.add('enabled');
       } else {
         generateBtn.disabled = true;
-        generateBtn.classList.remove("enabled");
+        generateBtn.classList.remove('enabled');
       }
     }
 
-    [nameInput, specSelect, dateInput, classSelect].forEach(el =>
-      el.addEventListener("input", checkInputs)
-    );
+    nameInput.addEventListener('input', checkInputs);
+    specialisationSelect.addEventListener('change', checkInputs);
+    dateInput.addEventListener('change', checkInputs);
+    classSelect.addEventListener('change', checkInputs);
 
-    generateBtn.addEventListener("click", () => {
+    generateBtn.addEventListener('click', () => {
+      if (interval) clearInterval(interval);
       generateBtn.disabled = true;
-      generateBtn.classList.remove("enabled");
+      generateBtn.classList.remove('enabled');
 
       loadingBar.style.transition = "none";
       loadingBar.style.width = "0%";
-      loadingContainer.style.display = "block";
-      statusText.style.display = "block";
+      loadingContainer.style.display = 'block';
+
+      statusText.textContent = "Generating your Degree from Government Servers....";
 
       let progress = 0;
       const duration = 60000;
-      const stepTime = 200;
+      const stepTime = 100;
       const increment = (stepTime / duration) * 100;
 
-      loadingBar.style.transition = "width 0.2s linear";
-      const interval = setInterval(() => {
+      loadingBar.style.transition = "width 0.1s linear";
+
+      interval = setInterval(() => {
         progress += increment;
         if (progress >= 100) {
           clearInterval(interval);
-          loadingBar.style.width = "100%";
+          loadingBar.style.width = '100%';
           window.location.href = "fdg3.html";
         } else {
           loadingBar.style.width = progress + "%";
@@ -263,14 +272,29 @@
       }, stepTime);
     });
 
-    // Prevent back navigation
-    history.pushState(null, "", location.href);
-    window.onpopstate = () => history.go(1);
+    // 🚫 Disable Back Button
+    history.pushState(null, null, location.href);
+    window.onpopstate = () => {
+      history.go(1);
+    };
 
-    // Reset if user leaves tab
+    // 🔄 Reset if user switches tab or reloads
     document.addEventListener("visibilitychange", () => {
-      if (document.hidden) location.reload();
+      if (document.hidden) {
+        window.location.reload();
+      }
     });
+
+    // 🚫 Disable right-click & shortcuts
+    document.addEventListener("contextmenu", e => e.preventDefault());
+    document.onkeydown = function(e) {
+      if (e.keyCode === 123 || // F12
+          (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || // Ctrl+Shift+I/J
+          (e.ctrlKey && e.keyCode === 85)) { // Ctrl+U
+        e.preventDefault();
+        return false;
+      }
+    };
   </script>
 </body>
 </html>
