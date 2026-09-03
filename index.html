@@ -177,6 +177,8 @@ select {
 ctx.beginPath();
 ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
 ctx.fillStyle = `rgba(${p.color},${p.opacity})`;
+ctx.shadowBlur = 8;                          // more blur effect
+ctx.shadowColor = `rgba(${p.color},1)`;      // more blur effect
 ctx.fill();
 });
       requestAnimationFrame(animate);
