@@ -162,7 +162,7 @@ select {
       speedX: (Math.random() - 0.5) * 0.7,
       speedY: -Math.random() * 0.8 - 0.2,
       opacity: Math.random() * 0.5 + 0.1
-      color: Math.random() < 0.5 ? '0,170,255' : '204,0,0'   // 50/50 blue or red colour dust
+      color: Math.random() < 0.7 ? '0,170,255' : '204,0,0'   // 70/30 blue and red colour dust
     }));
 
     function animate() {
@@ -174,11 +174,11 @@ select {
         if (p.x < 0) p.x = canvas.width;
         if (p.x > canvas.width) p.x = 0;
 
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${p.color},${p.opacity})`;
-        ctx.fill();
-      });
+ctx.beginPath();
+ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+ctx.fillStyle = `rgba(${p.color},${p.opacity})`;
+ctx.fill();
+});
       requestAnimationFrame(animate);
     }
     animate();
