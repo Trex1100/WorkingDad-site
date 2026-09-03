@@ -162,6 +162,7 @@ select {
       speedX: (Math.random() - 0.5) * 0.7,
       speedY: -Math.random() * 0.8 - 0.2,
       opacity: Math.random() * 0.5 + 0.1
+      color: Math.random() < 0.5 ? '0,170,255' : '204,0,0'   // 50/50 blue or red colour dust
     }));
 
     function animate() {
@@ -175,7 +176,7 @@ select {
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(0,170,255,${p.opacity})`;
+        ctx.fillStyle = `rgba(${p.color},${p.opacity})`;
         ctx.fill();
       });
       requestAnimationFrame(animate);
