@@ -81,17 +81,27 @@
        Image file: FrontPG.png, placed beside dwa.html.
        The overlay dims the image without hiding its detail.
        ========================================================= */
-    .background-scene {
-      position: fixed;
-      inset: 0;
-      z-index: -3;
-      background-image: url("FrontPG.png");
-      background-position: center top;
-      background-size: cover;
-      background-repeat: no-repeat;
-      transform: scale(1.025);
-      will-change: transform;
-    }
+    
+/* >>> BACKGROUND SCENE — PARALLAX SETTINGS */
+.background-scene {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+
+    background-image: url("./FrontPG.png");
+    background-position: center top;
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    transform: translateY(var(--scroll-shift, 0px)) scale(1.025);
+    will-change: transform;
+    pointer-events: none;
+}
+
+/* >>> KEEP THE OVERLAY ABOVE THE IMAGE */
+.background-scene::after {
+    pointer-events: none;
+}
 
     .background-scene::after {
       content: "";
@@ -1065,6 +1075,35 @@
         cursorAura.style.opacity = "0";
       });
     }
+
+/* >>> BACKGROUND SCROLL PARALLAX */
+(() => {
+    const scene = document.querySelector(".background-scene");
+    if (!scene) return;
+
+    let ticking = false;
+
+    function updateBackground() {
+        const scrollY = window.scrollY;
+        const shift = scrollY * -0.12;
+
+        scene.style.setProperty(
+            "--scroll-shift",
+            `${shift}px`
+        );
+
+        ticking = false;
+    }
+
+    window.addEventListener("scroll", () => {
+        if (!ticking) {
+            window.requestAnimationFrame(updateBackground);
+            ticking = true;
+        }
+    }, { passive: true });
+
+    updateBackground();
+})();
 
     /* =========================================================
        19. FOOTER YEAR
