@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Path to Nexus | Restricted Entry</title>
+
+  <style>
+    /* =========================================================
+       01. OPTIONAL FONTS
+       Put Algol.otf and Digital Glitch Demo.otf inside /fonts/
+       If your filenames differ, edit the two URLs below.
+       ========================================================= */
+    @font-face {
+      font-family: "Algol";
+      src: url("fonts/Algol.otf") format("opentype");
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "Digital Glitch Demo";
+      src: url("fonts/Digital Glitch Demo.otf") format("opentype");
+      font-display: swap;
+    }
+
+    /* =========================================================
+       02. EASY CUSTOMIZATION VARIABLES
+       Change these values to adjust the whole page.
+       ========================================================= */
+    :root {
+      --page-bg: #03050c;
+      --text: #e8f2ff;
+      --muted: #9db4d3;
+      --red: #ff244b;
+      --red-hot: #ff173f;
+      --blue: #24baff;
+      --blue-hot: #008dff;
+      --panel: rgba(4, 8, 19, 0.78);
+      --panel-border: rgba(65, 157, 255, 0.32);
+
+      /* >>> EDIT THIS to change the gender selection width */
+      --gender-select-width: 270px;
+
+      /* >>> EDIT THIS to change the maximum width of the notice */
+      --notice-max-width: 440px;
+
+      /* >>> EDIT THIS to change the background darkness */
+      --background-dim: 0.46;
+
+      /* >>> EDIT THIS to change particle density */
+      --particle-count: 58;
+    }
+
+    /* =========================================================
+       03. GLOBAL PAGE / SCROLLING
+       ========================================================= */
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--page-bg);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background: var(--page-bg);
+      font-family: Arial, Helvetica, sans-serif; /* Default font */
+      overflow-x: hidden;
+    }
+
+    button, select, a { font: inherit; }
+
+    button, a, select {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* =========================================================
+       04. FIXED BACKGROUND IMAGE + DARK OVERLAY
+       Image file: FrontPG.png, placed beside dwa.html.
+       The overlay dims the image without hiding its detail.
+       ========================================================= */
+    .background-scene {
+      position: fixed;
+      inset: 0;
+      z-index: -3;
+      background-image: url("FrontPG.png");
+      background-position: center top;
+      background-size: cover;
+      background-repeat: no-repeat;
+      transform: scale(1.025);
+      will-change: transform;
+    }
+
+    .background-scene::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 50% 32%, rgba(3, 7, 18, 0.10), rgba(1, 3, 10, var(--background-dim)) 75%),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.22), rgba(0, 2, 9, 0.55));
+    }
+
+    /* Light atmospheric tint. */
+    .ambient-light {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 18% 20%, rgba(0, 111, 255, 0.08), transparent 33%),
+        radial-gradient(circle at 82% 32%, rgba(255, 0, 55, 0.07), transparent 32%);
+      mix-blend-mode: screen;
+    }
+
+    /* =========================================================
+       05. TOP HEADER / ADMIN PROFILE
+       ========================================================= */
+    .site-header {
+      width: 100%;
+      min-height: 76px;
+      padding: 15px clamp(16px, 3vw, 42px);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 18px;
+      position: relative;
+      z-index: 10;
+      background: linear-gradient(to bottom, rgba(1, 3, 10, 0.82), rgba(1, 3, 10, 0.12));
+      border-bottom: 1px solid rgba(100, 175, 255, 0.10);
+    }
+
+    .admin-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      justify-self: start;
+      color: #fff;
+      text-decoration: none;
+      letter-spacing: 0.16em;
+      font-family: "Algol", Arial, sans-serif; /* Only ADMIN uses Algol */
+      font-size: 16px; /* >>> ADMIN font size */
+      text-shadow: 0 0 12px rgba(255,255,255,0.22);
+    }
+
+    /* >>> Profile placeholder: adjust width/height here */
+    .profile-placeholder {
+      width: 34px;
+      height: 34px;
+      flex: 0 0 34px;
+      display: grid;
+      place-items: center;
+      color: #111827;
+      background: #f7f9ff;
+      border: 1px solid #dbe6ff;
+      box-shadow: 0 0 13px rgba(255,255,255,0.20);
+      border-radius: 3px;
+      font-size: 9px;
+      letter-spacing: 0;
+      text-shadow: none;
+    }
+
+    .main-nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(4px, 1.5vw, 22px);
+    }
+
+    /* Transparent until hover/focus; no bulky navigation boxes. */
+    .nav-link {
+      color: rgba(235, 244, 255, 0.76);
+      text-decoration: none;
+      padding: 9px 10px;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      font-size: 12px; /* >>> Navigation font size */
+      letter-spacing: 0.035em;
+      transition: color .22s ease, border-color .22s ease, text-shadow .22s ease, box-shadow .22s ease;
+    }
+
+    .nav-link:hover,
+    .nav-link:focus-visible,
+    .nav-link.is-active {
+      outline: none;
+      color: #fff;
+      border-color: rgba(255, 45, 78, 0.48);
+      text-shadow: 0 0 8px rgba(255, 35, 72, 0.9);
+      box-shadow: 0 0 14px rgba(255, 24, 64, 0.25), inset 0 0 12px rgba(255, 24, 64, 0.08);
+    }
+
+    .header-action {
+      justify-self: end;
+    }
+
+    /* Shared neon button appearance */
+    .neon-button {
+      position: relative;
+      isolation: isolate;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 40px;
+      padding: 10px 19px;
+      border: 1px solid rgba(39, 178, 255, 0.85);
+      border-radius: 4px;
+      color: #effaff;
+      background: rgba(2, 15, 35, 0.76);
+      text-decoration: none;
+      font-size: 12px; /* >>> Button font size */
+      letter-spacing: 0.10em;
+      cursor: pointer;
+      box-shadow: 0 0 11px rgba(0, 145, 255, 0.28), inset 0 0 10px rgba(0, 145, 255, 0.09);
+      transition: border-color .2s ease, color .2s ease, box-shadow .2s ease, transform .2s ease;
+    }
+
+    /* Backside emission creates the active-button light. */
+    .neon-button::before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      inset: -7px;
+      border-radius: inherit;
+      background: rgba(0, 135, 255, 0.24);
+      filter: blur(15px);
+      opacity: .65;
+      transition: background .2s ease, opacity .2s ease;
+    }
+
+    .neon-button:hover,
+    .neon-button:focus-visible {
+      outline: none;
+      border-color: #8de5ff;
+      box-shadow: 0 0 7px #1db8ff, 0 0 22px rgba(0, 144, 255, .55), inset 0 0 13px rgba(0, 160, 255, .18);
+    }
+
+    .neon-button:active { transform: translateY(1px) scale(.985); }
+
+    .neon-button.is-red,
+    .neon-button[aria-pressed="true"] {
+      border-color: var(--red);
+      color: #fff;
+      box-shadow: 0 0 8px rgba(255, 30, 66, .75), 0 0 22px rgba(255, 20, 55, .45), inset 0 0 13px rgba(255, 20, 55, .16);
+    }
+
+    .neon-button.is-red::before,
+    .neon-button[aria-pressed="true"]::before {
+      background: rgba(255, 20, 55, .26);
+      opacity: .85;
+    }
+
+    /* =========================================================
+       06. MAIN CONTENT / PATH TO NEXUS
+       ========================================================= */
+    main {
+      width: min(100% - 30px, 900px);
+      margin: 0 auto;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: clamp(22px, 4vh, 42px) 0 68px;
+      position: relative;
+    }
+
+    .nexus-title {
+      margin: 0 0 21px;
+      text-align: center;
+      font-family: "Digital Glitch Demo", "Courier New", monospace; /* Only PATH TO NEXUS uses this font */
+      font-size: clamp(22px, 3.2vw, 32px); /* >>> Title size */
+      font-weight: 400;
+      letter-spacing: .14em;
+      line-height: 1.35;
+      color: #f4f8ff;
+      background: linear-gradient(90deg, #ff304f 0%, #fff 26%, #2aaeff 48%, #fff 68%, #ff304f 100%);
+      background-size: 220% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 8px rgba(20, 155, 255, .55)) drop-shadow(0 0 12px rgba(255, 30, 60, .32));
+      animation: titleLightSweep 5.5s linear infinite;
+    }
+
+    @keyframes titleLightSweep {
+      0% { background-position: 100% 0; }
+      100% { background-position: -120% 0; }
+    }
+
+    /* =========================================================
+       07. CENTRAL RESTRICTED NOTICE
+       We add a soft halo behind the panel so the rest stays dim.
+       ========================================================= */
+    .notice-wrap {
+      width: min(100%, var(--notice-max-width));
+      position: relative;
+      isolation: isolate;
+      margin: 0 auto;
+    }
+
+    .notice-halo {
+      position: absolute;
+      inset: -22px;
+      z-index: -1;
+      border-radius: 16px;
+      background:
+        radial-gradient(ellipse at center, rgba(255, 17, 55, .22), transparent 63%),
+        radial-gradient(ellipse at 45% 35%, rgba(0, 136, 255, .15), transparent 72%);
+      filter: blur(19px);
+      animation: haloPulse 4s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes haloPulse {
+      0%, 100% { opacity: .58; transform: scale(.98); }
+      50% { opacity: 1; transform: scale(1.035); }
+    }
+
+    .notice-panel {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(20px, 3.2vw, 29px) clamp(17px, 3vw, 26px) 21px;
+      background: linear-gradient(145deg, rgba(2, 6, 16, .93), rgba(5, 8, 20, .88));
+      border: 1px solid rgba(255, 39, 71, .78);
+      border-radius: 7px;
+      box-shadow:
+        0 0 7px rgba(255, 25, 62, .7),
+        0 0 23px rgba(255, 25, 62, .35),
+        0 0 52px rgba(0, 106, 255, .15),
+        inset 0 0 24px rgba(255, 20, 55, .08);
+      animation: noticeGlow 3.5s ease-in-out infinite;
+    }
+
+    @keyframes noticeGlow {
+      0%, 100% { box-shadow: 0 0 7px rgba(255,25,62,.62), 0 0 22px rgba(255,25,62,.28), 0 0 48px rgba(0,106,255,.13), inset 0 0 24px rgba(255,20,55,.07); }
+      50% { box-shadow: 0 0 11px rgba(255,25,62,.9), 0 0 30px rgba(255,25,62,.42), 0 0 55px rgba(0,106,255,.22), inset 0 0 28px rgba(255,20,55,.12); }
+    }
+
+    .notice-panel::before,
+    .notice-panel::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .notice-panel::before {
+      inset: 7px;
+      border: 1px solid rgba(44, 155, 255, .18);
+      border-radius: 4px;
+    }
+
+    .notice-panel::after {
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--blue), white, var(--red), transparent);
+      opacity: .85;
+      animation: scanLine 4s linear infinite;
+    }
+
+    @keyframes scanLine {
+      0% { transform: translateY(0); opacity: .35; }
+      50% { opacity: .9; }
+      100% { transform: translateY(290px); opacity: .25; }
+    }
+
+    .warning-symbol {
+      display: block;
+      text-align: center;
+      font-size: 39px; /* >>> Warning symbol size */
+      line-height: 1;
+      color: #ff3a54;
+      text-shadow: 0 0 8px #ff233f, 0 0 24px rgba(255, 35, 63, .7);
+      margin-bottom: 12px;
+    }
+
+    .notice-heading {
+      margin: 0;
+      text-align: center;
+      text-transform: uppercase;
+      line-height: 1.02;
+      letter-spacing: .045em;
+      font-size: clamp(29px, 5.4vw, 43px); /* >>> Restricted Entry heading size */
+      font-weight: 900;
+      text-shadow: 0 0 9px rgba(57, 155, 255, .95), 0 0 22px rgba(255, 30, 60, .35);
+    }
+
+    .notice-heading span { display: block; }
+    .notice-heading .restricted { color: #dbeeff; }
+    .notice-heading .entry {
+      margin-top: 3px;
+      color: #ff3150;
+      text-shadow: 0 0 7px rgba(255, 35, 63, .95), 0 0 20px rgba(255, 35, 63, .55);
+    }
+
+    .notice-intro {
+      margin: 16px 0 0;
+      text-align: center;
+      color: #d5e8ff;
+      font-size: 12px; /* >>> Notice body font size */
+      line-height: 1.65;
+      letter-spacing: .035em;
+    }
+
+    .notice-intro strong {
+      display: block;
+      color: #ff3b57;
+      font-size: 13px;
+    }
+
+    .notice-rule {
+      margin: 17px 0 13px;
+      text-align: center;
+      color: #ff3451;
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1.5;
+      letter-spacing: .045em;
+    }
+
+    .notice-rule::before,
+    .notice-rule::after {
+      content: "━━━━";
+      color: #ff3451;
+      font-size: 10px;
+      margin: 0 8px;
+      text-shadow: 0 0 8px #ff3451;
+    }
+
+    .protocol-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 7px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .protocol-item {
+      min-height: 77px;
+      padding: 11px 4px 8px;
+      text-align: center;
+      border: 1px solid rgba(255, 45, 78, .25);
+      border-radius: 4px;
+      background: rgba(5, 11, 25, .72);
+    }
+
+    .protocol-icon {
+      display: block;
+      margin-bottom: 7px;
+      color: #ff3654;
+      font-size: 22px;
+      text-shadow: 0 0 9px rgba(255, 30, 65, .72);
+    }
+
+    .protocol-item small {
+      display: block;
+      color: #d7e6ff;
+      font-size: 9px; /* >>> Protocol label size */
+      line-height: 1.4;
+      letter-spacing: .04em;
+    }
+
+    /* =========================================================
+       08. RED + BLUE PARTICLES
+       Spawn near the notice and travel toward viewport edges.
+       ========================================================= */
+    #particle-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 3;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      left: var(--start-x);
+      top: var(--start-y);
+      width: var(--size);
+      height: var(--size);
+      border-radius: 50%;
+      opacity: 0;
+      background: var(--particle-color);
+      box-shadow: 0 0 var(--glow) var(--particle-color), 0 0 calc(var(--glow) * 2.2) var(--particle-color);
+      animation: particleTravel var(--duration) linear var(--delay) infinite;
+      will-change: transform, opacity;
+    }
+
+    @keyframes particleTravel {
+      0% {
+        transform: translate3d(0, 0, 0) scale(.5);
+        opacity: 0;
+      }
+      8% { opacity: var(--peak-opacity); }
+      75% { opacity: calc(var(--peak-opacity) * .72); }
+      100% {
+        transform: translate3d(var(--travel-x), var(--travel-y), 0) scale(.1);
+        opacity: 0;
+      }
+    }
+
+    /* =========================================================
+       09. GENDER SELECT + PROCEED / COUNTDOWN
+       >>> Change --gender-select-width above to resize the select.
+       The option list opens below using the native select control.
+       ========================================================= */
+    .selection-section {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 25px;
+      position: relative;
+      z-index: 5;
+    }
+
+    .selection-label {
+      display: block;
+      margin-bottom: 9px;
+      text-align: center;
+      color: #e9f4ff;
+      font-size: 12px; /* >>> Selection label size */
+      letter-spacing: .13em;
+      text-transform: uppercase;
+      text-shadow: 0 0 10px rgba(0, 128, 255, .5);
+    }
+
+    .gender-select {
+      width: min(var(--gender-select-width), calc(100vw - 42px));
+      min-height: 42px;
+      padding: 10px 38px 10px 13px;
+      border: 1px solid rgba(45, 172, 255, .78);
+      border-radius: 4px;
+      color: #f2f8ff;
+      background-color: rgba(3, 10, 25, .94);
+      box-shadow: 0 0 12px rgba(0, 145, 255, .25), inset 0 0 12px rgba(0, 145, 255, .08);
+      outline: none;
+      font-size: 13px; /* >>> Select text size */
+      cursor: pointer;
+    }
+
+    .gender-select:focus,
+    .gender-select:hover {
+      border-color: #8ce4ff;
+      box-shadow: 0 0 7px rgba(36, 186, 255, .8), 0 0 20px rgba(0, 145, 255, .28);
+    }
+
+    .gender-select option {
+      color: #f2f8ff;
+      background: #050b18;
+    }
+
+    .proceed-area {
+      width: min(100%, 340px);
+      min-height: 51px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 14px;
+    }
+
+    .proceed-button {
+      min-width: 155px;
+      display: none;
+    }
+
+    .proceed-button.visible { display: inline-flex; }
+
+    .progress-shell {
+      display: none;
+      width: min(100%, 320px);
+      margin-top: 3px;
+    }
+
+    .progress-shell.visible { display: block; }
+
+    .progress-track {
+      height: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(41, 170, 255, .85);
+      border-radius: 3px;
+      background: rgba(0, 5, 15, .9);
+      box-shadow: 0 0 10px rgba(0, 140, 255, .22);
+    }
+
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #087bff, #72e5ff, #ff2b4e);
+      box-shadow: 0 0 13px rgba(47, 186, 255, .8);
+      transition: width .12s linear;
+    }
+
+    .progress-caption {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 7px;
+      color: #d8eaff;
+      font-size: 10px;
+      letter-spacing: .05em;
+    }
+
+    .experimental-message {
+      margin: 14px 12px 0;
+      max-width: 420px;
+      text-align: center;
+      color: rgba(220, 231, 247, .82);
+      font-size: 11px; /* >>> Small message size */
+      line-height: 1.5;
+      letter-spacing: .025em;
+    }
+
+    /* =========================================================
+       10. FOOTER / EXPERIMENTAL CONTACT AREA
+       Replace sample details when ready.
+       ========================================================= */
+    .site-footer {
+      position: relative;
+      padding: 27px 20px 23px;
+      border-top: 1px solid rgba(75, 157, 255, .22);
+      background: rgba(1, 3, 10, .87);
+      box-shadow: 0 -10px 35px rgba(0, 0, 0, .22);
+    }
+
+    .footer-inner {
+      width: min(100%, 1000px);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr;
+      gap: 25px;
+    }
+
+    .footer-title {
+      margin: 0 0 9px;
+      color: #f3f8ff;
+      font-size: 12px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .footer-copy, .footer-link {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.7;
+    }
+
+    .footer-link {
+      display: block;
+      width: fit-content;
+      text-decoration: none;
+    }
+
+    .footer-link:hover {
+      color: #fff;
+      text-shadow: 0 0 8px rgba(0, 156, 255, .75);
+    }
+
+    .footer-bottom {
+      width: min(100%, 1000px);
+      margin: 21px auto 0;
+      padding-top: 13px;
+      border-top: 1px solid rgba(100, 155, 220, .12);
+      color: #7187a6;
+      font-size: 10px;
+      text-align: center;
+    }
+
+    /* =========================================================
+       11. DESKTOP CUSTOM CURSOR AURA
+       Native cursor stays visible for accessibility/usability.
+       ========================================================= */
+    .cursor-aura {
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 100;
+      width: 19px; /* >>> Aura circle size */
+      height: 19px;
+      border: 1px solid rgba(121, 219, 255, .78);
+      border-radius: 50%;
+      box-shadow: 0 0 7px rgba(44, 173, 255, .62), 0 0 15px rgba(44, 173, 255, .25);
+      pointer-events: none;
+      opacity: 0;
+      transform: translate(-50%, -50%);
+      transition: width .18s ease, height .18s ease, border-color .18s ease, box-shadow .18s ease, opacity .2s ease;
+    }
+
+    .cursor-aura::after {
+      content: "✦";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -54%);
+      color: #e9fbff;
+      font-size: 8px;
+      text-shadow: 0 0 8px #4bc8ff;
+    }
+
+    .cursor-aura.hovering {
+      width: 29px;
+      height: 29px;
+      border-color: rgba(255, 58, 86, .92);
+      box-shadow: 0 0 8px rgba(255, 40, 70, .72), 0 0 20px rgba(255, 40, 70, .35);
+    }
+
+    .cursor-aura.hovering::after {
+      color: #fff;
+      text-shadow: 0 0 8px #ff3556;
+    }
+
+    /* =========================================================
+       12. MOBILE RESPONSIVE RULES
+       Keeps the select compact and leaves background visible.
+       ========================================================= */
+    @media (max-width: 760px) {
+      .site-header {
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+        padding: 12px 14px;
+      }
+
+      .admin-brand { font-size: 14px; }
+
+      .main-nav {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        order: 3;
+        width: 100%;
+        gap: 3px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .nav-link {
+        padding: 8px 7px;
+        font-size: 10px;
+      }
+
+      .header-action { grid-column: 2; grid-row: 1; }
+      .neon-button { min-height: 37px; padding: 9px 12px; font-size: 10px; }
+
+      main {
+        width: min(100% - 24px, 520px);
+        min-height: auto;
+        padding-top: 25px;
+        padding-bottom: 54px;
+      }
+
+      .nexus-title {
+        margin-bottom: 19px;
+        letter-spacing: .08em;
+      }
+
+      .notice-panel { padding: 21px 15px 17px; }
+      .warning-symbol { font-size: 34px; }
+      .notice-heading { font-size: clamp(28px, 8vw, 37px); }
+      .notice-intro { font-size: 11px; }
+      .notice-rule { font-size: 10px; }
+      .notice-rule::before, .notice-rule::after { content: "━━"; margin: 0 4px; }
+      .protocol-grid { gap: 5px; }
+      .protocol-item { min-height: 70px; padding: 9px 2px 6px; }
+      .protocol-icon { font-size: 19px; }
+      .protocol-item small { font-size: 8px; }
+
+      .selection-section { margin-top: 22px; }
+      .gender-select { width: min(var(--gender-select-width), calc(100vw - 42px)); }
+
+      .footer-inner { grid-template-columns: 1fr 1fr; gap: 20px; }
+      .footer-inner > section:first-child { grid-column: 1 / -1; }
+      .cursor-aura { display: none; }
+    }
+
+    @media (max-width: 390px) {
+      .profile-placeholder { width: 29px; height: 29px; flex-basis: 29px; }
+      .admin-brand { gap: 7px; font-size: 12px; }
+      .nav-link { font-size: 9px; padding: 7px 5px; }
+      .protocol-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .protocol-item { min-height: 65px; }
+      .footer-inner { grid-template-columns: 1fr; }
+      .footer-inner > section:first-child { grid-column: auto; }
+    }
+
+    /* Respect visitors who prefer reduced motion. */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 04. Background image and dimming layers -->
+  <div class="background-scene" aria-hidden="true"></div>
+  <div class="ambient-light" aria-hidden="true"></div>
+  <div id="particle-layer" aria-hidden="true"></div>
+  <div class="cursor-aura" id="cursorAura" aria-hidden="true"></div>
+
+  <!-- 05. Header -->
+  <header class="site-header" id="home">
+    <a class="admin-brand" href="#home" aria-label="Admin home">
+      <span class="profile-placeholder" aria-label="Profile image placeholder">ICON</span>
+      <span>ADMIN</span>
+    </a>
+
+    <nav class="main-nav" aria-label="Main navigation">
+      <a class="nav-link" href="#home">Home</a>
+      <a class="nav-link" href="#about">About</a>
+      <a class="nav-link" href="#rules">Rules and Regulations</a>
+      <a class="nav-link" href="#support">Support</a>
+    </nav>
+
+    <div class="header-action">
+      <!-- Demo only: this does not collect credentials or log anyone in. -->
+      <button class="neon-button" id="signInButton" type="button" aria-pressed="false">SIGN IN</button>
+    </div>
+  </header>
+
+  <!-- 06–09. Main page -->
+  <main>
+    <h1 class="nexus-title">PATH TO NEXUS</h1>
+
+    <section class="notice-wrap" id="about" aria-labelledby="noticeHeading">
+      <div class="notice-halo" aria-hidden="true"></div>
+      <div class="notice-panel">
+        <span class="warning-symbol" aria-hidden="true">⚠</span>
+
+        <h2 class="notice-heading" id="noticeHeading">
+          <span class="restricted">RESTRICTED</span>
+          <span class="entry">ENTRY</span>
+        </h2>
+
+        <p class="notice-intro">
+          THIS WEBSITE IS UNDER THE CONTROL OF
+          <strong>GUARDIANS &amp; SYSTEM ADMINS.</strong>
+          Unauthorized access, misuse or violation of the rules and regulations is strictly prohibited.
+        </p>
+
+        <p class="notice-rule" id="rules">ALL USERS MUST FOLLOW<br>THE STRICT RULES &amp; REGULATIONS</p>
+
+        <div class="protocol-grid" aria-label="Site protocols">
+          <div class="protocol-item">
+            <span class="protocol-icon" aria-hidden="true">⛨</span>
+            <small>OBEY<br>THE RULES</small>
+          </div>
+          <div class="protocol-item">
+            <span class="protocol-icon" aria-hidden="true">♙</span>
+            <small>NO<br>MISUSE</small>
+          </div>
+          <div class="protocol-item">
+            <span class="protocol-icon" aria-hidden="true">▤</span>
+            <small>FOLLOW<br>PROTOCOLS</small>
+          </div>
+          <div class="protocol-item">
+            <span class="protocol-icon" aria-hidden="true">⚠</span>
+            <small>VIOLATIONS<br>WILL BE LOGGED</small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="selection-section" aria-label="Experimental selection">
+      <label class="selection-label" for="genderSelect">Select your Gender</label>
+      <select class="gender-select" id="genderSelect">
+        <option value="" selected disabled>Choose an option</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+        <option value="other">Other</option>
+      </select>
+
+      <div class="proceed-area">
+        <button class="neon-button proceed-button" id="proceedButton" type="button">PROCEED</button>
+
+        <div class="progress-shell" id="progressShell" aria-live="polite">
+          <div class="progress-track">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+          <div class="progress-caption">
+            <span id="progressStatus">INITIALIZING DEMO</span>
+            <span id="countdown">30s</span>
+          </div>
+        </div>
+      </div>
+
+      <p class="experimental-message">I wish i would terminate some of the excessive species.</p>
+    </section>
+  </main>
+
+  <!-- 10. Footer: sample details are placeholders for later editing -->
+  <footer class="site-footer" id="support">
+    <div class="footer-inner">
+      <section>
+        <h2 class="footer-title">Nexus Control</h2>
+        <p class="footer-copy">Experimental interface concept. Replace this description with your own project information when ready.</p>
+      </section>
+      <section>
+        <h2 class="footer-title">Quick Links</h2>
+        <a class="footer-link" href="#home">Home</a>
+        <a class="footer-link" href="#about">About this page</a>
+        <a class="footer-link" href="#rules">Rules and Regulations</a>
+      </section>
+      <section>
+        <h2 class="footer-title">Contact / Support</h2>
+        <a class="footer-link" href="mailto:example@example.com">example@example.com</a>
+        <span class="footer-copy">Sample contact — replace later</span>
+      </section>
+    </div>
+    <div class="footer-bottom">EXPERIMENTAL PAGE • SAMPLE UI ONLY • © <span id="year"></span></div>
+  </footer>
+
+  <script>
+    /* =========================================================
+       13. NAVIGATION CLICK GLOW
+       Clicking a nav item makes its red glow persist as a demo.
+       ========================================================= */
+    const navLinks = document.querySelectorAll(".nav-link");
+    navLinks.forEach(link => {
+      link.addEventListener("click", () => {
+        navLinks.forEach(item => item.classList.remove("is-active"));
+        link.classList.add("is-active");
+      });
+    });
+
+    /* =========================================================
+       14. SIGN-IN BUTTON VISUAL STATE
+       Demo only: no real sign-in or credentials are processed.
+       ========================================================= */
+    const signInButton = document.getElementById("signInButton");
+    signInButton.addEventListener("click", () => {
+      const active = signInButton.getAttribute("aria-pressed") !== "true";
+      signInButton.setAttribute("aria-pressed", String(active));
+      signInButton.classList.toggle("is-red", active);
+      signInButton.textContent = active ? "SIGN IN • DEMO" : "SIGN IN";
+    });
+
+    /* =========================================================
+       15. PARTICLE GENERATOR
+       Particles begin around the notice and drift toward edges.
+       Different color, size, glow, speed, angle, and delay.
+       ========================================================= */
+    const particleLayer = document.getElementById("particle-layer");
+    const particleCount = Math.max(10, Math.min(100, 58)); // >>> Change 58 to adjust particle amount
+    const particleColors = [
+      { color: "#ff244b", glowMin: 5, glowMax: 13, opacity: 0.82 },
+      { color: "#2abaff", glowMin: 6, glowMax: 16, opacity: 0.9 }
+    ];
+
+    function createParticle() {
+      const particle = document.createElement("span");
+      particle.className = "particle";
+
+      const colorData = particleColors[Math.floor(Math.random() * particleColors.length)];
+      const startX = 34 + Math.random() * 32; // spawn zone horizontally around center notice
+      const startY = 27 + Math.random() * 29; // spawn zone vertically around notice
+      const angle = Math.random() * Math.PI * 2;
+      const travelDistance = 180 + Math.random() * Math.max(window.innerWidth, window.innerHeight) * 0.78;
+      const travelX = Math.cos(angle) * travelDistance;
+      const travelY = Math.sin(angle) * travelDistance;
+      const size = 1 + Math.random() * 3.2;
+      const glow = colorData.glowMin + Math.random() * (colorData.glowMax - colorData.glowMin);
+      const duration = 4.5 + Math.random() * 8.5;
+      const delay = Math.random() * -duration;
+
+      particle.style.setProperty("--start-x", `${startX}vw`);
+      particle.style.setProperty("--start-y", `${startY}vh`);
+      particle.style.setProperty("--travel-x", `${travelX}px`);
+      particle.style.setProperty("--travel-y", `${travelY}px`);
+      particle.style.setProperty("--size", `${size}px`);
+      particle.style.setProperty("--glow", `${glow}px`);
+      particle.style.setProperty("--particle-color", colorData.color);
+      particle.style.setProperty("--duration", `${duration}s`);
+      particle.style.setProperty("--delay", `${delay}s`);
+      particle.style.setProperty("--peak-opacity", `${0.35 + Math.random() * colorData.opacity}`);
+
+      particleLayer.appendChild(particle);
+    }
+
+    for (let i = 0; i < particleCount; i++) createParticle();
+
+    /* =========================================================
+       16. GENDER SELECT -> REVEAL PROCEED
+       ========================================================= */
+    const genderSelect = document.getElementById("genderSelect");
+    const proceedButton = document.getElementById("proceedButton");
+    const progressShell = document.getElementById("progressShell");
+    const progressFill = document.getElementById("progressFill");
+    const countdown = document.getElementById("countdown");
+    const progressStatus = document.getElementById("progressStatus");
+
+    genderSelect.addEventListener("change", () => {
+      proceedButton.classList.toggle("visible", Boolean(genderSelect.value));
+      // Reset the countdown UI if the selection is changed before proceeding.
+      if (!progressShell.classList.contains("visible")) {
+        progressFill.style.width = "0%";
+        countdown.textContent = "30s";
+        progressStatus.textContent = "READY WHEN YOU ARE";
+      }
+    });
+
+    /* =========================================================
+       17. 30-SECOND DEMO COUNTDOWN
+       This is a visual demonstration; it does not redirect.
+       ========================================================= */
+    let countdownTimer = null;
+    let countdownStart = 0;
+    const countdownDuration = 30000;
+
+    proceedButton.addEventListener("click", () => {
+      if (!genderSelect.value) return;
+
+      clearInterval(countdownTimer);
+      proceedButton.classList.remove("visible");
+      progressShell.classList.add("visible");
+      progressStatus.textContent = "PROCESSING DEMO";
+      progressFill.style.width = "0%";
+
+      countdownStart = Date.now();
+
+      function updateCountdown() {
+        const elapsed = Date.now() - countdownStart;
+        const remaining = Math.max(0, countdownDuration - elapsed);
+        const percent = Math.min(100, (elapsed / countdownDuration) * 100);
+
+        progressFill.style.width = `${percent}%`;
+        countdown.textContent = `${Math.ceil(remaining / 1000)}s`;
+
+        if (remaining <= 0) {
+          clearInterval(countdownTimer);
+          progressStatus.textContent = "DEMO COMPLETE";
+          countdown.textContent = "00s";
+          progressFill.style.width = "100%";
+          // No redirect is set until you decide what the next page should do.
+        }
+      }
+
+      updateCountdown();
+      countdownTimer = setInterval(updateCountdown, 100);
+    });
+
+    /* =========================================================
+       18. DESKTOP CURSOR AURA
+       Only enabled for mouse/trackpad devices.
+       The normal OS cursor remains visible.
+       ========================================================= */
+    const cursorAura = document.getElementById("cursorAura");
+    const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+
+    if (finePointer.matches) {
+      document.addEventListener("mousemove", event => {
+        cursorAura.style.left = `${event.clientX}px`;
+        cursorAura.style.top = `${event.clientY}px`;
+        cursorAura.style.opacity = "1";
+
+        const target = event.target.closest("a, button, select, .protocol-item");
+        cursorAura.classList.toggle("hovering", Boolean(target));
+      });
+
+      document.addEventListener("mouseleave", () => {
+        cursorAura.style.opacity = "0";
+      });
+    }
+
+    /* =========================================================
+       19. FOOTER YEAR
+       ========================================================= */
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
