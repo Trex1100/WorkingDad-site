@@ -82,23 +82,22 @@
        The overlay dims the image without hiding its detail.
        ========================================================= */
     
-/* >>> BACKGROUND SCENE — LONG SCROLLING IMAGE
-       FrontPG.png fills the full page height so the portrait artwork
-       can be explored while scrolling. Adjust background sizing here. */
-    body { position: relative; }
+/* >>> BACKGROUND SCENE — FULL PORTRAIT IMAGE */
+body {
+    position: relative;
+}
 
-   .background-scene {
+.background-scene {
     position: absolute;
     inset: 0;
     z-index: 0;
 
-    /* Let the background cover the full page height */
-    min-height: 100%;
+    /* Allow the scene to extend through the page */
     height: 100%;
 
     background-image: url("./FrontPG.png");
     background-position: center top;
-    background-size: 100% auto; /* Preserve full image proportions */
+    background-size: 100% auto;
     background-repeat: no-repeat;
 
     pointer-events: none;
