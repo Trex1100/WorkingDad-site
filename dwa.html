@@ -45,10 +45,10 @@
       --notice-max-width: 440px;
 
       /* >>> EDIT THIS to change the background darkness */
-      --background-dim: 0.46;
+      --background-dim: 0.20;
 
       /* >>> EDIT THIS to change particle density */
-      --particle-count: 58;
+      --particle-count: 48;
     }
 
     /* =========================================================
@@ -82,41 +82,38 @@
        The overlay dims the image without hiding its detail.
        ========================================================= */
     
-/* >>> BACKGROUND SCENE — PARALLAX SETTINGS */
-.background-scene {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
+/* >>> BACKGROUND SCENE — LONG SCROLLING IMAGE
+       FrontPG.png fills the full page height so the portrait artwork
+       can be explored while scrolling. Adjust background sizing here. */
+    body { position: relative; }
 
-    background-image: url("./FrontPG.png");
-    background-position: center top;
-    background-size: cover;
-    background-repeat: no-repeat;
-
-    transform: translateY(var(--scroll-shift, 0px)) scale(1.025);
-    will-change: transform;
-    pointer-events: none;
-}
-
-/* >>> KEEP THE OVERLAY ABOVE THE IMAGE */
-.background-scene::after {
-    pointer-events: none;
-}
+    .background-scene {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      min-height: 100%;
+      background-image: url("./FrontPG.png");
+      background-position: center top;
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      pointer-events: none;
+    }
 
     .background-scene::after {
       content: "";
       position: absolute;
       inset: 0;
       background:
-        radial-gradient(ellipse at 50% 32%, rgba(3, 7, 18, 0.10), rgba(1, 3, 10, var(--background-dim)) 75%),
-        linear-gradient(to bottom, rgba(0, 0, 0, 0.22), rgba(0, 2, 9, 0.55));
+        radial-gradient(ellipse at 50% 25%, rgba(3, 7, 18, 0.02), rgba(1, 3, 10, var(--background-dim)) 88%),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.06), rgba(0, 2, 9, 0.16));
+      pointer-events: none;
     }
 
     /* Light atmospheric tint. */
     .ambient-light {
       position: fixed;
       inset: 0;
-      z-index: -2;
+      z-index: 1;
       pointer-events: none;
       background:
         radial-gradient(circle at 18% 20%, rgba(0, 111, 255, 0.08), transparent 33%),
@@ -136,8 +133,8 @@
       align-items: center;
       gap: 18px;
       position: relative;
-      z-index: 10;
-      background: linear-gradient(to bottom, rgba(1, 3, 10, 0.82), rgba(1, 3, 10, 0.12));
+      z-index: 5;
+      background: linear-gradient(to bottom, rgba(1, 3, 10, 0.52), rgba(1, 3, 10, 0.04));
       border-bottom: 1px solid rgba(100, 175, 255, 0.10);
     }
 
@@ -273,6 +270,8 @@
       align-items: center;
       padding: clamp(22px, 4vh, 42px) 0 68px;
       position: relative;
+      z-index: 2;
+      min-height: 138vh; /* >>> Increase this value for a longer scroll */
     }
 
     .nexus-title {
@@ -291,6 +290,55 @@
       -webkit-text-fill-color: transparent;
       filter: drop-shadow(0 0 8px rgba(20, 155, 255, .55)) drop-shadow(0 0 12px rgba(255, 30, 60, .32));
       animation: titleLightSweep 5.5s linear infinite;
+    }
+
+    /* >>> TITLE GLITCH: offset color channels + intermittent slicing */
+    .nexus-title {
+      position: relative;
+      isolation: isolate;
+      animation: titleLightSweep 5.5s linear infinite, titleGlitchFlicker 6.8s steps(1, end) infinite;
+    }
+
+    .nexus-title::before,
+    .nexus-title::after {
+      content: attr(data-text);
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      -webkit-text-fill-color: currentColor;
+      opacity: 0;
+    }
+
+    .nexus-title::before {
+      color: #ff244b;
+      text-shadow: -2px 0 #ff244b;
+      animation: titleGlitchRed 4.6s steps(1, end) infinite;
+    }
+
+    .nexus-title::after {
+      color: #24baff;
+      text-shadow: 2px 0 #24baff;
+      animation: titleGlitchBlue 3.9s steps(1, end) infinite;
+    }
+
+    @keyframes titleGlitchRed {
+      0%, 88%, 92%, 100% { opacity: 0; clip-path: inset(0 0 0 0); transform: translateX(0); }
+      89% { opacity: .8; clip-path: inset(12% 0 66% 0); transform: translateX(-3px); }
+      90% { opacity: .75; clip-path: inset(58% 0 18% 0); transform: translateX(3px); }
+      91% { opacity: .5; clip-path: inset(35% 0 43% 0); transform: translateX(-1px); }
+    }
+
+    @keyframes titleGlitchBlue {
+      0%, 73%, 77%, 100% { opacity: 0; clip-path: inset(0 0 0 0); transform: translateX(0); }
+      74% { opacity: .8; clip-path: inset(42% 0 36% 0); transform: translateX(3px); }
+      75% { opacity: .7; clip-path: inset(8% 0 72% 0); transform: translateX(-2px); }
+      76% { opacity: .55; clip-path: inset(69% 0 8% 0); transform: translateX(2px); }
+    }
+
+    @keyframes titleGlitchFlicker {
+      0%, 91%, 93%, 100% { filter: drop-shadow(0 0 8px rgba(20,155,255,.55)) drop-shadow(0 0 12px rgba(255,30,60,.32)); }
+      92% { filter: drop-shadow(-2px 0 2px rgba(255,30,60,.9)) drop-shadow(2px 0 3px rgba(20,155,255,.9)); transform: translateX(1px); }
     }
 
     @keyframes titleLightSweep {
@@ -472,6 +520,44 @@
       letter-spacing: .04em;
     }
 
+    /* >>> FULL-SCREEN GLITCH: subtle scanlines and brief RGB interference */
+    .screen-glitch {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      pointer-events: none;
+      opacity: .16;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,.035) 0,
+        rgba(255,255,255,.035) 1px,
+        transparent 2px,
+        transparent 5px
+      );
+      mix-blend-mode: screen;
+      animation: screenGlitchPulse 9s steps(1, end) infinite;
+    }
+
+    .screen-glitch::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      background: linear-gradient(90deg, transparent 0 18%, rgba(255,20,60,.10) 19% 20%, transparent 21% 67%, rgba(30,170,255,.12) 68% 69%, transparent 70%);
+      animation: screenGlitchSlice 7.5s steps(1, end) infinite;
+    }
+
+    @keyframes screenGlitchPulse {
+      0%, 87%, 89%, 100% { opacity: .10; transform: translateX(0); }
+      88% { opacity: .26; transform: translateX(1px); }
+    }
+
+    @keyframes screenGlitchSlice {
+      0%, 76%, 79%, 100% { opacity: 0; transform: translateY(0); }
+      77% { opacity: .7; transform: translateY(-3px); }
+      78% { opacity: .35; transform: translateY(2px); }
+    }
+
     /* =========================================================
        08. RED + BLUE PARTICLES
        Spawn near the notice and travel toward viewport edges.
@@ -479,7 +565,7 @@
     #particle-layer {
       position: fixed;
       inset: 0;
-      z-index: 3;
+      z-index: 15;
       pointer-events: none;
       overflow: hidden;
     }
@@ -493,7 +579,7 @@
       border-radius: 50%;
       opacity: 0;
       background: var(--particle-color);
-      box-shadow: 0 0 var(--glow) var(--particle-color), 0 0 calc(var(--glow) * 2.2) var(--particle-color);
+      box-shadow: 0 0 calc(var(--glow) * 1.15) var(--particle-color), 0 0 calc(var(--glow) * 2.8) var(--particle-color);
       animation: particleTravel var(--duration) linear var(--delay) infinite;
       will-change: transform, opacity;
     }
@@ -517,6 +603,8 @@
        The option list opens below using the native select control.
        ========================================================= */
     .selection-section {
+      position: relative;
+      z-index: 4;
       width: 100%;
       display: flex;
       flex-direction: column;
@@ -613,6 +701,8 @@
       letter-spacing: .05em;
     }
 
+    .experimental-message[hidden] { display: none !important; }
+
     .experimental-message {
       margin: 14px 12px 0;
       max-width: 420px;
@@ -629,6 +719,7 @@
        ========================================================= */
     .site-footer {
       position: relative;
+      z-index: 5;
       padding: 27px 20px 23px;
       border-top: 1px solid rgba(75, 157, 255, .22);
       background: rgba(1, 3, 10, .87);
@@ -696,6 +787,38 @@
       opacity: 0;
       transform: translate(-50%, -50%);
       transition: width .18s ease, height .18s ease, border-color .18s ease, box-shadow .18s ease, opacity .2s ease;
+    }
+
+    .cursor-aura::before {
+      content: "";
+      position: absolute;
+      inset: -4px;
+      border: 1px solid rgba(255, 42, 78, .62);
+      border-radius: 50%;
+      opacity: 0;
+      transform: translate(2px, -1px);
+      mix-blend-mode: screen;
+    }
+
+    .cursor-aura.glitching {
+      animation: cursorJitter .22s steps(2, end) infinite;
+    }
+
+    .cursor-aura.glitching::before {
+      opacity: .85;
+      animation: cursorRingFlicker .32s steps(2, end) infinite;
+    }
+
+    @keyframes cursorJitter {
+      0% { transform: translate(-50%, -50%) translate(0, 0); }
+      50% { transform: translate(-50%, -50%) translate(2px, -1px); }
+      100% { transform: translate(-50%, -50%) translate(-1px, 1px); }
+    }
+
+    @keyframes cursorRingFlicker {
+      0% { clip-path: inset(0 0 65% 0); transform: translate(2px, -1px); }
+      50% { clip-path: inset(35% 0 20% 0); transform: translate(-2px, 1px); }
+      100% { clip-path: inset(70% 0 0 0); transform: translate(1px, 2px); }
     }
 
     .cursor-aura::after {
@@ -809,6 +932,7 @@
   <!-- 04. Background image and dimming layers -->
   <div class="background-scene" aria-hidden="true"></div>
   <div class="ambient-light" aria-hidden="true"></div>
+  <div class="screen-glitch" aria-hidden="true"></div>
   <div id="particle-layer" aria-hidden="true"></div>
   <div class="cursor-aura" id="cursorAura" aria-hidden="true"></div>
 
@@ -833,47 +957,8 @@
   </header>
 
   <!-- 06–09. Main page -->
-  <main>
-    <h1 class="nexus-title">PATH TO NEXUS</h1>
-
-    <section class="notice-wrap" id="about" aria-labelledby="noticeHeading">
-      <div class="notice-halo" aria-hidden="true"></div>
-      <div class="notice-panel">
-        <span class="warning-symbol" aria-hidden="true">⚠</span>
-
-        <h2 class="notice-heading" id="noticeHeading">
-          <span class="restricted">RESTRICTED</span>
-          <span class="entry">ENTRY</span>
-        </h2>
-
-        <p class="notice-intro">
-          THIS WEBSITE IS UNDER THE CONTROL OF
-          <strong>GUARDIANS &amp; SYSTEM ADMINS.</strong>
-          Unauthorized access, misuse or violation of the rules and regulations is strictly prohibited.
-        </p>
-
-        <p class="notice-rule" id="rules">ALL USERS MUST FOLLOW<br>THE STRICT RULES &amp; REGULATIONS</p>
-
-        <div class="protocol-grid" aria-label="Site protocols">
-          <div class="protocol-item">
-            <span class="protocol-icon" aria-hidden="true">⛨</span>
-            <small>OBEY<br>THE RULES</small>
-          </div>
-          <div class="protocol-item">
-            <span class="protocol-icon" aria-hidden="true">♙</span>
-            <small>NO<br>MISUSE</small>
-          </div>
-          <div class="protocol-item">
-            <span class="protocol-icon" aria-hidden="true">▤</span>
-            <small>FOLLOW<br>PROTOCOLS</small>
-          </div>
-          <div class="protocol-item">
-            <span class="protocol-icon" aria-hidden="true">⚠</span>
-            <small>VIOLATIONS<br>WILL BE LOGGED</small>
-          </div>
-        </div>
-      </div>
-    </section>
+  <main id="about">
+    <h1 class="nexus-title" data-text="PATH TO NEXUS">PATH TO NEXUS</h1>
 
     <section class="selection-section" aria-label="Experimental selection">
       <label class="selection-label" for="genderSelect">Select your Gender</label>
@@ -898,7 +983,7 @@
         </div>
       </div>
 
-      <p class="experimental-message">I wish i would terminate some of the excessive species.</p>
+      <p class="experimental-message" id="experimentalMessage" hidden>I wish i would terminate some of the excessive species.</p>
     </section>
   </main>
 
@@ -955,10 +1040,10 @@
        Different color, size, glow, speed, angle, and delay.
        ========================================================= */
     const particleLayer = document.getElementById("particle-layer");
-    const particleCount = Math.max(10, Math.min(100, 58)); // >>> Change 58 to adjust particle amount
+    const particleCount = Math.max(10, Math.min(100, 48)); // >>> Change 48 to adjust particle amount
     const particleColors = [
-      { color: "#ff244b", glowMin: 5, glowMax: 13, opacity: 0.82 },
-      { color: "#2abaff", glowMin: 6, glowMax: 16, opacity: 0.9 }
+      { color: "#ff244b", glowMin: 7, glowMax: 16, opacity: 0.88 },
+      { color: "#2abaff", glowMin: 8, glowMax: 19, opacity: 0.95 }
     ];
 
     function createParticle() {
@@ -969,12 +1054,12 @@
       const startX = 34 + Math.random() * 32; // spawn zone horizontally around center notice
       const startY = 27 + Math.random() * 29; // spawn zone vertically around notice
       const angle = Math.random() * Math.PI * 2;
-      const travelDistance = 180 + Math.random() * Math.max(window.innerWidth, window.innerHeight) * 0.78;
+      const travelDistance = 220 + Math.random() * Math.max(window.innerWidth, window.innerHeight) * 0.95;
       const travelX = Math.cos(angle) * travelDistance;
       const travelY = Math.sin(angle) * travelDistance;
       const size = 1 + Math.random() * 3.2;
       const glow = colorData.glowMin + Math.random() * (colorData.glowMax - colorData.glowMin);
-      const duration = 4.5 + Math.random() * 8.5;
+      const duration = 9 + Math.random() * 10; // >>> Slower particles: 9–19 seconds
       const delay = Math.random() * -duration;
 
       particle.style.setProperty("--start-x", `${startX}vw`);
@@ -997,6 +1082,7 @@
        16. GENDER SELECT -> REVEAL PROCEED
        ========================================================= */
     const genderSelect = document.getElementById("genderSelect");
+    const experimentalMessage = document.getElementById("experimentalMessage");
     const proceedButton = document.getElementById("proceedButton");
     const progressShell = document.getElementById("progressShell");
     const progressFill = document.getElementById("progressFill");
@@ -1005,6 +1091,7 @@
 
     genderSelect.addEventListener("change", () => {
       proceedButton.classList.toggle("visible", Boolean(genderSelect.value));
+      experimentalMessage.hidden = genderSelect.value !== "other";
       // Reset the countdown UI if the selection is changed before proceeding.
       if (!progressShell.classList.contains("visible")) {
         progressFill.style.width = "0%";
@@ -1067,8 +1154,13 @@
         cursorAura.style.top = `${event.clientY}px`;
         cursorAura.style.opacity = "1";
 
-        const target = event.target.closest("a, button, select, .protocol-item");
+        const target = event.target.closest("a, button, select, .nav-link");
         cursorAura.classList.toggle("hovering", Boolean(target));
+        cursorAura.classList.add("glitching");
+        window.clearTimeout(cursorAura._glitchTimer);
+        cursorAura._glitchTimer = window.setTimeout(() => {
+          cursorAura.classList.remove("glitching");
+        }, 140);
       });
 
       document.addEventListener("mouseleave", () => {
@@ -1076,34 +1168,7 @@
       });
     }
 
-/* >>> BACKGROUND SCROLL PARALLAX */
-(() => {
-    const scene = document.querySelector(".background-scene");
-    if (!scene) return;
-
-    let ticking = false;
-
-    function updateBackground() {
-        const scrollY = window.scrollY;
-        const shift = scrollY * -0.12;
-
-        scene.style.setProperty(
-            "--scroll-shift",
-            `${shift}px`
-        );
-
-        ticking = false;
-    }
-
-    window.addEventListener("scroll", () => {
-        if (!ticking) {
-            window.requestAnimationFrame(updateBackground);
-            ticking = true;
-        }
-    }, { passive: true });
-
-    updateBackground();
-})();
+    /* Background image scrolls with the document; no fixed-layer parallax needed. */
 
     /* =========================================================
        19. FOOTER YEAR
