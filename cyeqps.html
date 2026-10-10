@@ -6,8 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Impossible Cube</title>
 
-<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
-
 <style>
 /* =========================================
    1. PAGE SETUP
@@ -23,34 +21,27 @@ html, body {
     height: 100%;
     overflow: hidden;
     background: #090a0d;
-}
-
-body {
     font-family: Arial, sans-serif;
 }
 
 #stage {
     position: relative;
     width: 100%;
-    height: 100%;
     height: 100dvh;
     overflow: hidden;
     background:
         radial-gradient(ellipse at 50% 42%,
-            rgba(40, 48, 64, 0.13), transparent 52%),
+            rgba(35, 43, 60, 0.14), transparent 53%),
         linear-gradient(#0b0c10, #050507);
 }
 
 #cube-canvas {
     position: absolute;
     inset: 0;
-    width: 100%;
-    height: 100%;
-    display: block;
 }
 
 /* =========================================
-   2. BUTTON POSITION
+   2. BIG RED START BUTTON
 ========================================= */
 #button-area {
     position: absolute;
@@ -59,13 +50,10 @@ body {
     bottom: 8%;
     transform: translateX(-50%);
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
 }
 
-/* =========================================
-   3. BIG RED CARTOON BUTTON
-========================================= */
 #solve-button {
     position: relative;
     width: 154px;
@@ -73,7 +61,7 @@ body {
     border: 0;
     border-radius: 50% / 42%;
     cursor: pointer;
-    color: #fff1e8;
+    color: #fff5ed;
     font-size: 12px;
     font-weight: 900;
     letter-spacing: 1.5px;
@@ -82,10 +70,10 @@ body {
 
     background:
         radial-gradient(ellipse at 35% 20%,
-            #ffaaa0 0%, #ff5b50 17%,
-            #ed171f 48%, #bd0610 78%, #77030a 100%);
+            #ffb0a5 0%, #ff5a50 17%,
+            #f20e1b 48%, #c60010 78%, #79030a 100%);
 
-    border-top: 7px solid #ff5a50;
+    border-top: 7px solid #ff665b;
     border-bottom: 10px solid #79050a;
 
     box-shadow:
@@ -93,14 +81,9 @@ body {
         inset 0 -9px 10px rgba(65,0,0,.5),
         0 8px 0 #3c2922,
         0 13px 0 #17120f,
-        0 19px 24px rgba(0,0,0,.65),
-        0 0 25px rgba(255,25,20,.12);
+        0 19px 24px rgba(0,0,0,.65);
 
-    transform: translateY(0);
-    transition:
-        transform 120ms ease,
-        filter 160ms ease,
-        box-shadow 120ms ease;
+    transition: transform 120ms ease, filter 160ms ease;
 }
 
 #solve-button::before {
@@ -114,9 +97,7 @@ body {
     border-radius: 50%;
     background: linear-gradient(180deg, #5a554b, #24221e 55%, #11110f);
     border: 2px solid #777064;
-    box-shadow:
-        inset 0 3px 5px rgba(255,255,255,.15),
-        0 9px 13px rgba(0,0,0,.6);
+    box-shadow: 0 9px 13px rgba(0,0,0,.6);
 }
 
 #solve-button::after {
@@ -133,16 +114,11 @@ body {
 }
 
 #solve-button:hover {
-    filter: brightness(1.13);
+    filter: brightness(1.15) saturate(1.15);
 }
 
 #solve-button:active {
     transform: translateY(9px) scale(.97);
-    box-shadow:
-        inset 0 6px 11px rgba(65,0,0,.55),
-        0 2px 0 #3c2922,
-        0 4px 0 #17120f,
-        0 8px 13px rgba(0,0,0,.65);
 }
 
 #solve-button.disappearing {
@@ -154,13 +130,12 @@ body {
     to {
         opacity: 0;
         transform: translateY(35px) scale(.72);
-        filter: brightness(.6);
         visibility: hidden;
     }
 }
 
 /* =========================================
-   4. DIGITAL COUNTDOWN DISPLAY
+   3. DIGITAL COUNTDOWN
 ========================================= */
 #timer-panel {
     display: none;
@@ -168,10 +143,7 @@ body {
     padding: 15px 16px 12px;
     border: 3px solid #4c2b38;
     border-radius: 4px;
-
-    background:
-        linear-gradient(180deg, #3b1828, #210d19 60%, #180a12);
-
+    background: linear-gradient(180deg, #3b1828, #210d19 60%, #180a12);
     box-shadow:
         inset 0 0 0 2px rgba(255, 100, 120, .08),
         0 0 22px rgba(0,0,0,.6),
@@ -184,14 +156,8 @@ body {
 }
 
 @keyframes timerAppear {
-    from {
-        opacity: 0;
-        transform: translateY(10px) scale(.96);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
+    from { opacity: 0; transform: translateY(10px) scale(.96); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .timer-labels,
@@ -210,22 +176,17 @@ body {
     letter-spacing: 1px;
 }
 
-.timer-values {
-    align-items: center;
-}
-
 .timer-number {
-    color: #ff313b;
+    color: #ff303b;
     font-family: "Courier New", monospace;
     font-size: clamp(23px, 5vw, 38px);
     font-weight: 900;
     line-height: 1;
     letter-spacing: 1px;
-
     text-shadow:
         0 0 3px #ff172a,
-        0 0 8px rgba(255, 0, 20, .9),
-        0 0 17px rgba(255, 0, 20, .45);
+        0 0 8px rgba(255,0,20,.9),
+        0 0 17px rgba(255,0,20,.45);
     font-variant-numeric: tabular-nums;
 }
 
@@ -243,7 +204,7 @@ body {
 }
 
 /* =========================================
-   5. FOOTNOTE
+   4. FOOTNOTE
 ========================================= */
 #footnote {
     display: none;
@@ -265,12 +226,10 @@ body {
 }
 
 /* =========================================
-   6. SMALL SCREENS
+   5. RESPONSIVE LAYOUT
 ========================================= */
 @media (max-width: 600px) {
-    #button-area {
-        bottom: 10%;
-    }
+    #button-area { bottom: 10%; }
 
     #solve-button {
         width: 132px;
@@ -278,14 +237,10 @@ body {
         font-size: 11px;
     }
 
-    #timer-panel {
-        padding: 12px 9px 10px;
-    }
+    #timer-panel { padding: 12px 9px 10px; }
 
     .timer-labels,
-    .timer-values {
-        gap: 4px;
-    }
+    .timer-values { gap: 4px; }
 
     #footnote {
         bottom: 3%;
@@ -294,29 +249,21 @@ body {
 }
 
 @media (max-height: 600px) {
-    #button-area {
-        bottom: 4%;
-    }
+    #button-area { bottom: 4%; }
 
     #solve-button {
         width: 118px;
         height: 70px;
     }
 
-    #timer-panel {
-        padding: 8px 10px;
-    }
-
-    #footnote {
-        bottom: 1%;
-    }
+    #timer-panel { padding: 8px 10px; }
+    #footnote { bottom: 1%; }
 }
 </style>
 </head>
 
 <body>
 <div id="stage">
-
     <div id="cube-canvas"></div>
 
     <div id="button-area">
@@ -324,7 +271,7 @@ body {
             START<br>SOLVING
         </button>
 
-        <div id="timer-panel" aria-live="off">
+        <div id="timer-panel">
             <div class="timer-labels">
                 <span>DAYS</span>
                 <span>HOURS</span>
@@ -346,12 +293,21 @@ body {
     <div id="footnote">
         Once the cube is solved you can proceed to the next page.
     </div>
-
 </div>
 
-<script>
+<!-- =========================================
+     THREE.JS MODULES
+     RoundedBoxGeometry provides curved edges.
+========================================= -->
+<script type="module">
+import * as THREE from
+    "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
+
+import { RoundedBoxGeometry } from
+    "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/geometries/RoundedBoxGeometry.js";
+
 /* =========================================
-   7. THREE.JS SCENE
+   6. SCENE AND CAMERA
 ========================================= */
 const canvasHost = document.getElementById("cube-canvas");
 
@@ -359,12 +315,8 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x090a0d);
 
 const camera = new THREE.PerspectiveCamera(
-    36,
-    window.innerWidth / window.innerHeight,
-    0.1,
-    100
+    36, window.innerWidth / window.innerHeight, 0.1, 100
 );
-
 camera.position.set(5.4, 4.6, 7.5);
 camera.lookAt(0, 0, 0);
 
@@ -377,130 +329,214 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.45;
+renderer.toneMappingExposure = 1.5;
 canvasHost.appendChild(renderer.domElement);
 
 /* =========================================
-   8. NEUTRAL LIGHTING
+   7. NEUTRAL LIGHTING
    No yellow overhead spotlight.
-   Balanced lighting makes the six colours vivid.
 ========================================= */
+scene.add(new THREE.AmbientLight(0xffffff, 1.7));
 
-// General illumination across all visible cube faces.
-scene.add(new THREE.AmbientLight(0xffffff, 1.65));
-
-// Soft, neutral-white key light.
-const keyLight = new THREE.DirectionalLight(0xffffff, 2.1);
+const keyLight = new THREE.DirectionalLight(0xffffff, 2.2);
 keyLight.position.set(4, 5, 6);
 scene.add(keyLight);
 
-// Front fill light reduces overly dark faces.
-const frontFill = new THREE.DirectionalLight(0xffffff, 1.0);
+const frontFill = new THREE.DirectionalLight(0xffffff, 1.15);
 frontFill.position.set(-4, 2, 5);
 scene.add(frontFill);
 
-// Cool blue rim light for separation from the background.
-const blueFill = new THREE.PointLight(0x416bff, 10, 18);
+const blueFill = new THREE.PointLight(0x416bff, 9, 18);
 blueFill.position.set(4, 1, -4);
 scene.add(blueFill);
 
-// Subtle neutral fill from the opposite side.
 const neutralFill = new THREE.PointLight(0xffffff, 5, 16);
 neutralFill.position.set(-5, 0, 2);
 scene.add(neutralFill);
 
 /* =========================================
-   9. SIX CUBE COLOURS
-   White, red, yellow, green, dark blue, orange
+   8. SATURATED RUBIK'S CUBE COLOURS
+   >>> EDIT HERE: CHANGE THESE HEX COLOURS
 ========================================= */
-const FACE_COLORS = {
-    right:  0xe92727, // Red
-    left:   0xff791e, // Orange
-    top:    0xffd92f, // Yellow
-    bottom: 0xf5f0df, // White
-    front:  0x153b9a, // Dark blue
-    back:   0x16864b  // Green
+const COLORS = {
+    red:    0xff101b,
+    orange: 0xff6500,
+    yellow: 0xffe600,
+    green:  0x00e85d,
+    blue:   0x073cff,
+    white:  0xffffff
 };
 
-function stickerMaterial(color) {
+/*
+    The six colours are assigned to the six original faces.
+    Each cubie keeps its own stickers as it rotates.
+*/
+function makeSticker(color) {
     return new THREE.MeshStandardMaterial({
         color,
-        roughness: 0.48,
-        metalness: 0.015
+        roughness: 0.32,
+        metalness: 0.01
     });
 }
 
-// Graphite casing between the stickers.
-const innerMaterial = new THREE.MeshStandardMaterial({
-    color: 0x30312f,
-    roughness: 0.65,
-    metalness: 0.025
+const blackPlastic = new THREE.MeshStandardMaterial({
+    color: 0x242521,
+    roughness: 0.48,
+    metalness: 0.035
 });
 
-const faceMaterials = [
-    stickerMaterial(FACE_COLORS.right),
-    stickerMaterial(FACE_COLORS.left),
-    stickerMaterial(FACE_COLORS.top),
-    stickerMaterial(FACE_COLORS.bottom),
-    stickerMaterial(FACE_COLORS.front),
-    stickerMaterial(FACE_COLORS.back)
-];
-
 /* =========================================
-   10. BUILD THE CUBELET GRID
+   9. ROUNDED CUBELET GEOMETRY
 ========================================= */
 const cubies = [];
 const spacing = 1.015;
 const cubieSize = 0.965;
 
-const cubeGeometry = new THREE.BoxGeometry(
-    cubieSize, cubieSize, cubieSize
+const cubeGeometry = new RoundedBoxGeometry(
+    cubieSize, cubieSize, cubieSize,
+    4,       // Smoothness segments
+    0.075    // Corner radius
 );
 
 const edgeGeometry = new THREE.EdgesGeometry(cubeGeometry);
 const edgeMaterial = new THREE.LineBasicMaterial({
     color: 0x11120f,
     transparent: true,
-    opacity: 0.95
+    opacity: 0.7
 });
+
+/*
+    Box face order:
+    +X, -X, +Y, -Y, +Z, -Z
+*/
+function createCubie(x, y, z) {
+    const materials = [
+        x ===  1 ? makeSticker(COLORS.red)    : blackPlastic,
+        x === -1 ? makeSticker(COLORS.orange) : blackPlastic,
+        y ===  1 ? makeSticker(COLORS.yellow) : blackPlastic,
+        y === -1 ? makeSticker(COLORS.white)  : blackPlastic,
+        z ===  1 ? makeSticker(COLORS.blue)   : blackPlastic,
+        z === -1 ? makeSticker(COLORS.green)  : blackPlastic
+    ];
+
+    const cubie = new THREE.Mesh(cubeGeometry, materials);
+
+    cubie.position.set(
+        x * spacing,
+        y * spacing,
+        z * spacing
+    );
+
+    cubie.userData.grid = { x, y, z };
+
+    const edges = new THREE.LineSegments(edgeGeometry, edgeMaterial);
+    cubie.add(edges);
+
+    scene.add(cubie);
+    cubies.push(cubie);
+}
 
 for (let x = -1; x <= 1; x++) {
     for (let y = -1; y <= 1; y++) {
         for (let z = -1; z <= 1; z++) {
-
-            const materials = [
-                x === 1  ? faceMaterials[0] : innerMaterial,
-                x === -1 ? faceMaterials[1] : innerMaterial,
-                y === 1  ? faceMaterials[2] : innerMaterial,
-                y === -1 ? faceMaterials[3] : innerMaterial,
-                z === 1  ? faceMaterials[4] : innerMaterial,
-                z === -1 ? faceMaterials[5] : innerMaterial
-            ];
-
-            const cubie = new THREE.Mesh(cubeGeometry, materials);
-
-            cubie.position.set(
-                x * spacing,
-                y * spacing,
-                z * spacing
-            );
-
-            cubie.userData.grid = { x, y, z };
-
-            const edges = new THREE.LineSegments(
-                edgeGeometry,
-                edgeMaterial
-            );
-
-            cubie.add(edges);
-            scene.add(cubie);
-            cubies.push(cubie);
+            createCubie(x, y, z);
         }
     }
 }
 
 /* =========================================
-   11. SHADOW UNDER THE CUBE
+   10. APPLY EXACT QUARTER-TURN ROTATIONS
+   Used to scramble the cube before display.
+========================================= */
+function rotateGridPosition(grid, axis, direction) {
+    const { x, y, z } = grid;
+
+    if (axis === "x") {
+        return direction === 1
+            ? { x, y: -z, z: y }
+            : { x, y: z, z: -y };
+    }
+
+    if (axis === "y") {
+        return direction === 1
+            ? { x: z, y, z: -x }
+            : { x: -z, y, z: x };
+    }
+
+    return direction === 1
+        ? { x: -y, y: x, z }
+        : { x: y, y: -x, z };
+}
+
+function applyInstantTurn(move) {
+    const selected = cubies.filter(cubie =>
+        cubie.userData.grid[move.axis] === move.layer
+    );
+
+    const rotationAxis = new THREE.Vector3(
+        move.axis === "x" ? 1 : 0,
+        move.axis === "y" ? 1 : 0,
+        move.axis === "z" ? 1 : 0
+    );
+
+    const rotation = new THREE.Quaternion().setFromAxisAngle(
+        rotationAxis,
+        move.direction * Math.PI / 2
+    );
+
+    selected.forEach(cubie => {
+        cubie.userData.grid = rotateGridPosition(
+            cubie.userData.grid,
+            move.axis,
+            move.direction
+        );
+
+        cubie.position.set(
+            cubie.userData.grid.x * spacing,
+            cubie.userData.grid.y * spacing,
+            cubie.userData.grid.z * spacing
+        );
+
+        // Rotate the cubie's sticker orientation as well.
+        cubie.quaternion.premultiply(rotation);
+        cubie.quaternion.normalize();
+    });
+}
+
+/* =========================================
+   11. SCRAMBLE BEFORE THE PAGE APPEARS
+   >>> EDIT HERE: Increase 24 for more scrambling.
+========================================= */
+function scrambleStartingCube() {
+    const axes = ["x", "y", "z"];
+    const layers = [-1, 0, 1];
+
+    let previousMove = null;
+
+    for (let i = 0; i < 24; i++) {
+        let move;
+
+        do {
+            move = {
+                axis: axes[Math.floor(Math.random() * axes.length)],
+                layer: layers[Math.floor(Math.random() * layers.length)],
+                direction: Math.random() < 0.5 ? 1 : -1
+            };
+        } while (
+            previousMove &&
+            move.axis === previousMove.axis &&
+            move.layer === previousMove.layer
+        );
+
+        applyInstantTurn(move);
+        previousMove = move;
+    }
+}
+
+scrambleStartingCube();
+
+/* =========================================
+   12. SOFT SHADOW
 ========================================= */
 const shadowCanvas = document.createElement("canvas");
 shadowCanvas.width = 256;
@@ -532,7 +568,7 @@ shadow.position.y = -1.9;
 scene.add(shadow);
 
 /* =========================================
-   12. FACE-TURN ANIMATION ENGINE
+   13. ANIMATED FACE-TURN ENGINE
 ========================================= */
 const pivot = new THREE.Group();
 scene.add(pivot);
@@ -566,16 +602,16 @@ function beginTurn(move, timestamp) {
 }
 
 function finishTurn() {
+    const move = activeTurn.move;
+
     activeTurn.selected.forEach(cubie => {
         scene.attach(cubie);
 
-        const p = cubie.position;
-
-        cubie.userData.grid = {
-            x: Math.round(p.x / spacing),
-            y: Math.round(p.y / spacing),
-            z: Math.round(p.z / spacing)
-        };
+        cubie.userData.grid = rotateGridPosition(
+            cubie.userData.grid,
+            move.axis,
+            move.direction
+        );
 
         cubie.position.set(
             cubie.userData.grid.x * spacing,
@@ -583,6 +619,7 @@ function finishTurn() {
             cubie.userData.grid.z * spacing
         );
 
+        // Keep orientation clean and aligned to quarter turns.
         const euler = new THREE.Euler().setFromQuaternion(
             cubie.quaternion, "XYZ"
         );
@@ -602,6 +639,7 @@ function finishTurn() {
 function randomMove(previous = null) {
     const axes = ["x", "y", "z"];
     const layers = [-1, 0, 1];
+
     let move;
 
     do {
@@ -628,7 +666,7 @@ function inverseMove(move) {
 }
 
 /* =========================================
-   13. START BUTTON
+   14. BUTTON, COUNTDOWN AND FOOTNOTE
 ========================================= */
 const button = document.getElementById("solve-button");
 const timerPanel = document.getElementById("timer-panel");
@@ -651,7 +689,7 @@ button.addEventListener("click", () => {
 });
 
 /* =========================================
-   14. 100-YEAR COUNTDOWN
+   15. 100-YEAR COUNTDOWN
 ========================================= */
 let remainingSeconds = 36500 * 24 * 60 * 60;
 let countdownInterval = null;
@@ -695,13 +733,13 @@ function startCountdown() {
     }, 1000);
 }
 
-// Reset when returning through browser history.
+// Reset if the page is restored from browser history.
 window.addEventListener("pageshow", event => {
     if (event.persisted) location.reload();
 });
 
 /* =========================================
-   15. ENDLESS SOLVING ATTEMPTS
+   16. ENDLESS SOLVING ATTEMPTS
 ========================================= */
 function runAttempt() {
     if (!solvingStarted) return;
@@ -717,6 +755,7 @@ function runAttempt() {
 
     scramble.forEach(move => moveQueue.push(move));
 
+    // Attempt to reverse most of the recent turns.
     const partialSolution = scramble
         .slice(0, -2)
         .reverse()
@@ -724,7 +763,7 @@ function runAttempt() {
 
     partialSolution.forEach(move => moveQueue.push(move));
 
-    // Interrupt each attempt with new turns.
+    // Interrupt the attempt before it can finish.
     moveQueue.push(randomMove());
     moveQueue.push(randomMove());
 
@@ -742,15 +781,16 @@ function waitForAttemptEnd() {
 }
 
 /* =========================================
-   16. MAIN ANIMATION LOOP
+   17. MAIN RENDER LOOP
 ========================================= */
 function animate(timestamp) {
     requestAnimationFrame(animate);
 
     const time = timestamp * 0.001;
 
+    // Very subtle idle movement while waiting for the button.
     if (!solvingStarted) {
-        scene.rotation.y = Math.sin(time * 0.22) * 0.035;
+        scene.rotation.y = Math.sin(time * 0.22) * 0.025;
     }
 
     if (!isTurning && moveQueue.length > 0) {
@@ -761,6 +801,7 @@ function animate(timestamp) {
         const elapsed = timestamp - activeTurn.start;
         const progress = Math.min(elapsed / TURN_DURATION, 1);
 
+        // Smooth acceleration and deceleration.
         const eased = progress < 0.5
             ? 4 * progress * progress * progress
             : 1 - Math.pow(-2 * progress + 2, 3) / 2;
@@ -770,9 +811,7 @@ function animate(timestamp) {
             (activeTurn.to - activeTurn.from) * eased;
 
         if (progress >= 1) {
-            pivot.rotation[activeTurn.move.axis] =
-                activeTurn.to;
-
+            pivot.rotation[activeTurn.move.axis] = activeTurn.to;
             finishTurn();
         }
     }
@@ -783,7 +822,7 @@ function animate(timestamp) {
 requestAnimationFrame(animate);
 
 /* =========================================
-   17. RESPONSIVE CAMERA
+   18. RESPONSIVE CAMERA
 ========================================= */
 function resize() {
     camera.aspect = window.innerWidth / window.innerHeight;
