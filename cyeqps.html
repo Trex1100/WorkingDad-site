@@ -1,849 +1,789 @@
-```html
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Impossible Cube</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Impossible Cube</title>
 
-<style>
-/* =========================================
-   1. PAGE SETUP
-========================================= */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-html, body {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background: #090a0d;
-    font-family: Arial, sans-serif;
-}
-
-#stage {
-    position: relative;
-    width: 100%;
-    height: 100dvh;
-    overflow: hidden;
-    background:
-        radial-gradient(ellipse at 50% 42%,
-            rgba(35, 43, 60, 0.14), transparent 53%),
-        linear-gradient(#0b0c10, #050507);
-}
-
-#cube-canvas {
-    position: absolute;
-    inset: 0;
-}
-
-/* =========================================
-   2. BIG RED START BUTTON
-========================================= */
-#button-area {
-    position: absolute;
-    z-index: 5;
-    left: 50%;
-    bottom: 8%;
-    transform: translateX(-50%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#solve-button {
-    position: relative;
-    width: 154px;
-    height: 94px;
-    border: 0;
-    border-radius: 50% / 42%;
-    cursor: pointer;
-    color: #fff5ed;
-    font-size: 12px;
-    font-weight: 900;
-    letter-spacing: 1.5px;
-    line-height: 1.5;
-    text-shadow: 0 2px 3px #790b10;
-
-    background:
-        radial-gradient(ellipse at 35% 20%,
-            #ffb0a5 0%, #ff5a50 17%,
-            #f20e1b 48%, #c60010 78%, #79030a 100%);
-
-    border-top: 7px solid #ff665b;
-    border-bottom: 10px solid #79050a;
-
-    box-shadow:
-        inset 0 4px 5px rgba(255,255,255,.38),
-        inset 0 -9px 10px rgba(65,0,0,.5),
-        0 8px 0 #3c2922,
-        0 13px 0 #17120f,
-        0 19px 24px rgba(0,0,0,.65);
-
-    transition: transform 120ms ease, filter 160ms ease;
-}
-
-#solve-button::before {
-    content: "";
-    position: absolute;
-    z-index: -1;
-    left: -15px;
-    right: -15px;
-    top: -9px;
-    bottom: -16px;
-    border-radius: 50%;
-    background: linear-gradient(180deg, #5a554b, #24221e 55%, #11110f);
-    border: 2px solid #777064;
-    box-shadow: 0 9px 13px rgba(0,0,0,.6);
-}
-
-#solve-button::after {
-    content: "";
-    position: absolute;
-    pointer-events: none;
-    left: 17%;
-    top: 12%;
-    width: 40%;
-    height: 15%;
-    border-radius: 50%;
-    background: rgba(255,255,255,.3);
-    filter: blur(4px);
-}
-
-#solve-button:hover {
-    filter: brightness(1.15) saturate(1.15);
-}
-
-#solve-button:active {
-    transform: translateY(9px) scale(.97);
-}
-
-#solve-button.disappearing {
-    pointer-events: none;
-    animation: buttonVanish 350ms ease forwards;
-}
-
-@keyframes buttonVanish {
-    to {
-        opacity: 0;
-        transform: translateY(35px) scale(.72);
-        visibility: hidden;
+  <!--
+    THREE.JS IMPORT MAP
+    Keep this inside <head>, before the module script.
+    It fixes the "Failed to resolve module specifier 'three'" error.
+  -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
     }
-}
+  }
+  </script>
 
-/* =========================================
-   3. DIGITAL COUNTDOWN
-========================================= */
-#timer-panel {
-    display: none;
-    width: min(520px, 92vw);
-    padding: 15px 16px 12px;
-    border: 3px solid #4c2b38;
-    border-radius: 4px;
-    background: linear-gradient(180deg, #3b1828, #210d19 60%, #180a12);
-    box-shadow:
-        inset 0 0 0 2px rgba(255, 100, 120, .08),
-        0 0 22px rgba(0,0,0,.6),
-        0 0 20px rgba(255,0,45,.08);
-}
-
-#timer-panel.visible {
-    display: block;
-    animation: timerAppear .65s ease both;
-}
-
-@keyframes timerAppear {
-    from { opacity: 0; transform: translateY(10px) scale(.96); }
-    to   { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-.timer-labels,
-.timer-values {
-    display: grid;
-    grid-template-columns: 1.35fr 1fr 1fr 1fr;
-    gap: 8px;
-    text-align: center;
-}
-
-.timer-labels {
-    margin-bottom: 7px;
-    color: #e5d9db;
-    font-family: Impact, "Arial Narrow", sans-serif;
-    font-size: clamp(10px, 2.1vw, 15px);
-    letter-spacing: 1px;
-}
-
-.timer-number {
-    color: #ff303b;
-    font-family: "Courier New", monospace;
-    font-size: clamp(23px, 5vw, 38px);
-    font-weight: 900;
-    line-height: 1;
-    letter-spacing: 1px;
-    text-shadow:
-        0 0 3px #ff172a,
-        0 0 8px rgba(255,0,20,.9),
-        0 0 17px rgba(255,0,20,.45);
-    font-variant-numeric: tabular-nums;
-}
-
-.timer-number.days {
-    font-size: clamp(25px, 5.4vw, 42px);
-}
-
-.timer-brand {
-    margin-top: 10px;
-    text-align: center;
-    color: #cbb8bd;
-    font-size: 9px;
-    font-style: italic;
-    letter-spacing: 1.5px;
-}
-
-/* =========================================
-   4. FOOTNOTE
-========================================= */
-#footnote {
-    display: none;
-    position: absolute;
-    left: 50%;
-    bottom: 3%;
-    width: 94%;
-    transform: translateX(-50%);
-    text-align: center;
-    color: #b9b2a3;
-    font-family: Georgia, serif;
-    font-size: clamp(10px, 1.5vw, 13px);
-    letter-spacing: .35px;
-    text-shadow: 0 2px 5px #000;
-}
-
-#footnote.visible {
-    display: block;
-}
-
-/* =========================================
-   5. RESPONSIVE LAYOUT
-========================================= */
-@media (max-width: 600px) {
-    #button-area { bottom: 10%; }
-
-    #solve-button {
-        width: 132px;
-        height: 82px;
-        font-size: 11px;
+  <style>
+    * {
+      box-sizing: border-box;
     }
 
-    #timer-panel { padding: 12px 9px 10px; }
-
-    .timer-labels,
-    .timer-values { gap: 4px; }
-
-    #footnote {
-        bottom: 3%;
-        line-height: 1.5;
-    }
-}
-
-@media (max-height: 600px) {
-    #button-area { bottom: 4%; }
-
-    #solve-button {
-        width: 118px;
-        height: 70px;
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
     }
 
-    #timer-panel { padding: 8px 10px; }
-    #footnote { bottom: 1%; }
-}
-</style>
+    body {
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at center, #202432 0%, #0a0b10 68%, #030407 100%);
+      color: white;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    #app {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      min-height: 500px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* >>> EDIT HERE: Main heading */
+    .heading {
+      position: absolute;
+      top: 3.5%;
+      z-index: 2;
+      width: 100%;
+      padding: 0 12px;
+      text-align: center;
+      font-size: clamp(20px, 3.2vw, 36px);
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #ffffff;
+      text-shadow:
+        0 0 8px rgba(255, 255, 255, 0.35),
+        0 0 24px rgba(68, 126, 255, 0.5);
+    }
+
+    .subtitle {
+      position: absolute;
+      top: 10%;
+      z-index: 2;
+      padding: 0 14px;
+      text-align: center;
+      color: #aeb9d5;
+      font-size: clamp(11px, 1.4vw, 14px);
+      letter-spacing: 0.14em;
+    }
+
+    #cube-container {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+    }
+
+    #cube-container canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      outline: none;
+    }
+
+    .controls {
+      position: absolute;
+      z-index: 3;
+      left: 0;
+      right: 0;
+      bottom: 10%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 17px;
+      padding: 0 16px;
+      pointer-events: none;
+    }
+
+    #start-button {
+      pointer-events: auto;
+      position: relative;
+      border: 4px solid #8b0808;
+      border-radius: 50%;
+      width: clamp(145px, 19vw, 190px);
+      height: clamp(145px, 19vw, 190px);
+      padding: 12px;
+      cursor: pointer;
+      background:
+        radial-gradient(circle at 35% 24%, #ff8585 0%, #ff2929 24%, #e00000 64%, #980000 100%);
+      color: #fff;
+      font-size: clamp(14px, 1.7vw, 18px);
+      line-height: 1.4;
+      font-weight: 1000;
+      letter-spacing: 0.07em;
+      text-shadow: 0 2px 3px #650000;
+      box-shadow:
+        0 12px 0 #650000,
+        0 17px 24px rgba(0, 0, 0, 0.6),
+        0 0 32px rgba(255, 0, 0, 0.22),
+        inset 0 5px 9px rgba(255, 255, 255, 0.32),
+        inset 0 -8px 12px rgba(0, 0, 0, 0.28);
+      transition:
+        transform 0.09s ease,
+        box-shadow 0.09s ease,
+        filter 0.2s ease;
+    }
+
+    #start-button:hover {
+      filter: brightness(1.12);
+    }
+
+    #start-button:active {
+      transform: translateY(9px) scale(0.98);
+      box-shadow:
+        0 3px 0 #650000,
+        0 7px 12px rgba(0, 0, 0, 0.5),
+        inset 0 5px 9px rgba(255, 255, 255, 0.22);
+    }
+
+    #start-button.hidden {
+      display: none;
+    }
+
+    #timer {
+      display: none;
+      padding: 10px 17px;
+      border: 1px solid rgba(91, 255, 175, 0.4);
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.76);
+      color: #72ffae;
+      font-family: "Courier New", monospace;
+      font-size: clamp(16px, 2.2vw, 23px);
+      font-weight: bold;
+      letter-spacing: 0.06em;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+      box-shadow:
+        0 0 15px rgba(0, 255, 128, 0.12),
+        inset 0 0 12px rgba(0, 255, 128, 0.05);
+    }
+
+    #timer.active {
+      display: block;
+    }
+
+    #status {
+      min-height: 17px;
+      color: #b8c4df;
+      font-size: 11px;
+      letter-spacing: 0.13em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .footnote {
+      position: absolute;
+      z-index: 3;
+      bottom: 2.5%;
+      left: 12px;
+      right: 12px;
+      text-align: center;
+      color: #9da8bf;
+      font-size: clamp(10px, 1.2vw, 12px);
+      letter-spacing: 0.04em;
+    }
+
+    #error-message {
+      display: none;
+      position: absolute;
+      z-index: 10;
+      top: 45%;
+      left: 8%;
+      right: 8%;
+      padding: 18px;
+      border: 1px solid #ff6464;
+      border-radius: 10px;
+      background: #200d12;
+      color: #fff;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    @media (max-height: 650px) {
+      .heading {
+        top: 2%;
+      }
+
+      .subtitle {
+        top: 9%;
+      }
+
+      .controls {
+        bottom: 7%;
+        gap: 10px;
+      }
+
+      #start-button {
+        width: 125px;
+        height: 125px;
+        font-size: 13px;
+      }
+
+      .footnote {
+        bottom: 1%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .heading {
+        top: 4%;
+        letter-spacing: 0.06em;
+      }
+
+      .subtitle {
+        top: 10%;
+        letter-spacing: 0.07em;
+      }
+
+      .controls {
+        bottom: 10%;
+      }
+
+      #timer {
+        letter-spacing: 0;
+        padding: 9px 10px;
+      }
+    }
+  </style>
 </head>
 
 <body>
-<div id="stage">
-    <div id="cube-canvas"></div>
+  <main id="app">
+    <div class="heading">The Impossible Cube</div>
+    <div class="subtitle">27 PIECES · 6 COLOURS · INFINITE FRUSTRATION</div>
 
-    <div id="button-area">
-        <button id="solve-button" type="button">
-            START<br>SOLVING
-        </button>
+    <div id="cube-container"></div>
 
-        <div id="timer-panel">
-            <div class="timer-labels">
-                <span>DAYS</span>
-                <span>HOURS</span>
-                <span>MINUTES</span>
-                <span>SECONDS</span>
-            </div>
+    <div id="error-message"></div>
 
-            <div class="timer-values">
-                <span class="timer-number days" id="days">36500</span>
-                <span class="timer-number" id="hours">00</span>
-                <span class="timer-number" id="minutes">00</span>
-                <span class="timer-number" id="seconds">00</span>
-            </div>
+    <div class="controls">
+      <button id="start-button" type="button">
+        START<br />SOLVING
+      </button>
 
-            <div class="timer-brand">THE IMPOSSIBLE CUBE</div>
-        </div>
+      <div id="timer" aria-live="off">100Y 000D 00:00:00</div>
+      <div id="status">Waiting for your challenge...</div>
     </div>
 
-    <div id="footnote">
-        Once the cube is solved you can proceed to the next page.
+    <div class="footnote">
+      Once the cube is solved you can proceed to the next page.
     </div>
-</div>
+  </main>
 
-<!-- =========================================
-     THREE.JS MODULES
-     RoundedBoxGeometry provides curved edges.
-========================================= -->
-<script type="module">
-import * as THREE from
-    "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
+  <script type="module">
+    import * as THREE from "three";
+    import { RoundedBoxGeometry } from
+      "three/addons/geometries/RoundedBoxGeometry.js";
 
-import { RoundedBoxGeometry } from
-    "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/geometries/RoundedBoxGeometry.js";
+    // =========================================================
+    // >>> EDIT HERE: BASIC CUBE SETTINGS
+    // =========================================================
 
-/* =========================================
-   6. SCENE AND CAMERA
-========================================= */
-const canvasHost = document.getElementById("cube-canvas");
+    const CUBE_SIZE = 3;
+    const SPACING = 1.02;
+    const CUBIE_SIZE = 0.96;
 
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x090a0d);
+    // Each colour is assigned to one face of the solved cube.
+    const COLORS = {
+      right:  0xff2020, // Red
+      left:   0xff7900, // Orange
+      top:    0xffffff, // White
+      bottom: 0xffe600, // Yellow
+      front:  0x00e84f, // Green
+      back:   0x064bff  // Dark blue
+    };
 
-const camera = new THREE.PerspectiveCamera(
-    36, window.innerWidth / window.innerHeight, 0.1, 100
-);
-camera.position.set(5.4, 4.6, 7.5);
-camera.lookAt(0, 0, 0);
+    const container = document.getElementById("cube-container");
+    const startButton = document.getElementById("start-button");
+    const timerElement = document.getElementById("timer");
+    const statusElement = document.getElementById("status");
+    const errorElement = document.getElementById("error-message");
 
-const renderer = new THREE.WebGLRenderer({
-    antialias: true,
-    alpha: false
-});
+    let scene;
+    let camera;
+    let renderer;
+    let cubeGroup;
+    let cubies = [];
+    let activeTurn = null;
+    let nextTurnAt = 0;
+    let started = false;
+    let startTime = 0;
+    let timerFrame = 0;
+    let elapsedTurns = 0;
 
-renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.outputColorSpace = THREE.SRGBColorSpace;
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.5;
-canvasHost.appendChild(renderer.domElement);
+    const clock = new THREE.Clock();
 
-/* =========================================
-   7. NEUTRAL LIGHTING
-   No yellow overhead spotlight.
-========================================= */
-scene.add(new THREE.AmbientLight(0xffffff, 1.7));
+    // =========================================================
+    // SCENE, CAMERA AND LIGHTING
+    // =========================================================
 
-const keyLight = new THREE.DirectionalLight(0xffffff, 2.2);
-keyLight.position.set(4, 5, 6);
-scene.add(keyLight);
+    try {
+      init();
+      animate();
+    } catch (error) {
+      showError(error);
+    }
 
-const frontFill = new THREE.DirectionalLight(0xffffff, 1.15);
-frontFill.position.set(-4, 2, 5);
-scene.add(frontFill);
+    function init() {
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x090b12);
 
-const blueFill = new THREE.PointLight(0x416bff, 9, 18);
-blueFill.position.set(4, 1, -4);
-scene.add(blueFill);
+      camera = new THREE.PerspectiveCamera(
+        36,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        100
+      );
 
-const neutralFill = new THREE.PointLight(0xffffff, 5, 16);
-neutralFill.position.set(-5, 0, 2);
-scene.add(neutralFill);
+      camera.position.set(5.8, 5.5, 8.2);
+      camera.lookAt(0, 0, 0);
 
-/* =========================================
-   8. SATURATED RUBIK'S CUBE COLOURS
-   >>> EDIT HERE: CHANGE THESE HEX COLOURS
-========================================= */
-const COLORS = {
-    red:    0xff101b,
-    orange: 0xff6500,
-    yellow: 0xffe600,
-    green:  0x00e85d,
-    blue:   0x073cff,
-    white:  0xffffff
-};
+      renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        alpha: false
+      });
 
-/*
-    The six colours are assigned to the six original faces.
-    Each cubie keeps its own stickers as it rotates.
-*/
-function makeSticker(color) {
-    return new THREE.MeshStandardMaterial({
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.25;
+
+      container.appendChild(renderer.domElement);
+
+      // Balanced lighting, without a harsh yellow spotlight.
+      scene.add(new THREE.AmbientLight(0xffffff, 1.5));
+
+      const keyLight = new THREE.DirectionalLight(0xffffff, 2.1);
+      keyLight.position.set(5, 8, 7);
+      scene.add(keyLight);
+
+      const fillLight = new THREE.DirectionalLight(0xb6ccff, 0.8);
+      fillLight.position.set(-6, 2, -5);
+      scene.add(fillLight);
+
+      const rimLight = new THREE.DirectionalLight(0xffffff, 1.0);
+      rimLight.position.set(1, -4, 5);
+      scene.add(rimLight);
+
+      cubeGroup = new THREE.Group();
+      scene.add(cubeGroup);
+
+      createCube();
+
+      window.addEventListener("resize", onResize);
+
+      startButton.addEventListener("click", startChallenge);
+
+      // A fresh page visit starts a fresh challenge.
+      window.addEventListener("pageshow", (event) => {
+        if (event.persisted) {
+          window.location.reload();
+        }
+      });
+    }
+
+    // =========================================================
+    // CREATE THE 3 × 3 × 3 RUBIK'S CUBE
+    // =========================================================
+
+    function createCube() {
+      const bodyMaterial = new THREE.MeshStandardMaterial({
+        color: 0x101116,
+        roughness: 0.31,
+        metalness: 0.08
+      });
+
+      const stickerMaterials = {
+        right: makeStickerMaterial(COLORS.right),
+        left: makeStickerMaterial(COLORS.left),
+        top: makeStickerMaterial(COLORS.top),
+        bottom: makeStickerMaterial(COLORS.bottom),
+        front: makeStickerMaterial(COLORS.front),
+        back: makeStickerMaterial(COLORS.back)
+      };
+
+      for (let x = -1; x <= 1; x++) {
+        for (let y = -1; y <= 1; y++) {
+          for (let z = -1; z <= 1; z++) {
+            const cubie = new THREE.Group();
+
+            cubie.position.set(
+              x * SPACING,
+              y * SPACING,
+              z * SPACING
+            );
+
+            cubie.userData.grid = { x, y, z };
+
+            // Rounded dark cubie body.
+            const bodyGeometry = new RoundedBoxGeometry(
+              CUBIE_SIZE,
+              CUBIE_SIZE,
+              CUBIE_SIZE,
+              4,
+              0.075
+            );
+
+            const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
+            body.castShadow = true;
+            body.receiveShadow = true;
+            cubie.add(body);
+
+            const stickerSize = 0.755;
+            const stickerDepth = 0.025;
+            const stickerOffset = CUBIE_SIZE / 2 + 0.012;
+
+            // Stickers are added only to the original outside faces.
+            if (x === 1) {
+              addSticker(
+                cubie, stickerMaterials.right,
+                stickerSize, stickerDepth,
+                stickerOffset, 0, 0,
+                0, Math.PI / 2, 0
+              );
+            }
+
+            if (x === -1) {
+              addSticker(
+                cubie, stickerMaterials.left,
+                stickerSize, stickerDepth,
+                -stickerOffset, 0, 0,
+                0, -Math.PI / 2, 0
+              );
+            }
+
+            if (y === 1) {
+              addSticker(
+                cubie, stickerMaterials.top,
+                stickerSize, stickerDepth,
+                0, stickerOffset, 0,
+                -Math.PI / 2, 0, 0
+              );
+            }
+
+            if (y === -1) {
+              addSticker(
+                cubie, stickerMaterials.bottom,
+                stickerSize, stickerDepth,
+                0, -stickerOffset, 0,
+                Math.PI / 2, 0, 0
+              );
+            }
+
+            if (z === 1) {
+              addSticker(
+                cubie, stickerMaterials.front,
+                stickerSize, stickerDepth,
+                0, 0, stickerOffset,
+                0, 0, 0
+              );
+            }
+
+            if (z === -1) {
+              addSticker(
+                cubie, stickerMaterials.back,
+                stickerSize, stickerDepth,
+                0, 0, -stickerOffset,
+                0, Math.PI, 0
+              );
+            }
+
+            cubeGroup.add(cubie);
+            cubies.push(cubie);
+          }
+        }
+      }
+
+      // A slight overall tilt makes the cube easier to read visually.
+      cubeGroup.rotation.set(-0.13, 0.25, 0);
+    }
+
+    function makeStickerMaterial(color) {
+      return new THREE.MeshStandardMaterial({
         color,
-        roughness: 0.32,
-        metalness: 0.01
-    });
-}
+        roughness: 0.28,
+        metalness: 0.02,
+        emissive: new THREE.Color(color),
+        emissiveIntensity: 0.045
+      });
+    }
 
-const blackPlastic = new THREE.MeshStandardMaterial({
-    color: 0x242521,
-    roughness: 0.48,
-    metalness: 0.035
-});
+    function addSticker(
+      parent,
+      material,
+      size,
+      depth,
+      x,
+      y,
+      z,
+      rotationX,
+      rotationY,
+      rotationZ
+    ) {
+      const geometry = new RoundedBoxGeometry(
+        size,
+        size,
+        depth,
+        3,
+        0.045
+      );
 
-/* =========================================
-   9. ROUNDED CUBELET GEOMETRY
-========================================= */
-const cubies = [];
-const spacing = 1.015;
-const cubieSize = 0.965;
+      const sticker = new THREE.Mesh(geometry, material);
 
-const cubeGeometry = new RoundedBoxGeometry(
-    cubieSize, cubieSize, cubieSize,
-    4,       // Smoothness segments
-    0.075    // Corner radius
-);
+      sticker.position.set(x, y, z);
+      sticker.rotation.set(rotationX, rotationY, rotationZ);
 
-const edgeGeometry = new THREE.EdgesGeometry(cubeGeometry);
-const edgeMaterial = new THREE.LineBasicMaterial({
-    color: 0x11120f,
-    transparent: true,
-    opacity: 0.7
-});
+      sticker.castShadow = false;
+      sticker.receiveShadow = true;
 
-/*
-    Box face order:
-    +X, -X, +Y, -Y, +Z, -Z
-*/
-function createCubie(x, y, z) {
-    const materials = [
-        x ===  1 ? makeSticker(COLORS.red)    : blackPlastic,
-        x === -1 ? makeSticker(COLORS.orange) : blackPlastic,
-        y ===  1 ? makeSticker(COLORS.yellow) : blackPlastic,
-        y === -1 ? makeSticker(COLORS.white)  : blackPlastic,
-        z ===  1 ? makeSticker(COLORS.blue)   : blackPlastic,
-        z === -1 ? makeSticker(COLORS.green)  : blackPlastic
-    ];
+      parent.add(sticker);
+    }
 
-    const cubie = new THREE.Mesh(cubeGeometry, materials);
+    // =========================================================
+    // RANDOM LAYER TURNS
+    // The cube keeps moving and never receives a solving routine.
+    // =========================================================
 
-    cubie.position.set(
-        x * spacing,
-        y * spacing,
-        z * spacing
-    );
+    function beginRandomTurn(now) {
+      if (activeTurn) return;
 
-    cubie.userData.grid = { x, y, z };
+      const axes = ["x", "y", "z"];
+      const axis = axes[Math.floor(Math.random() * axes.length)];
+      const layer = Math.floor(Math.random() * 3) - 1;
 
-    const edges = new THREE.LineSegments(edgeGeometry, edgeMaterial);
-    cubie.add(edges);
+      // Quarter turns only.
+      const direction = Math.random() < 0.5 ? -1 : 1;
+      const targetAngle = direction * Math.PI / 2;
 
-    scene.add(cubie);
-    cubies.push(cubie);
-}
+      const pivot = new THREE.Group();
+      const layerPosition = layer * SPACING;
 
-for (let x = -1; x <= 1; x++) {
-    for (let y = -1; y <= 1; y++) {
-        for (let z = -1; z <= 1; z++) {
-            createCubie(x, y, z);
+      if (axis === "x") {
+        pivot.position.set(layerPosition, 0, 0);
+      } else if (axis === "y") {
+        pivot.position.set(0, layerPosition, 0);
+      } else {
+        pivot.position.set(0, 0, layerPosition);
+      }
+
+      // Add the pivot under the cube group so turns respect the cube's
+      // overall orientation.
+      cubeGroup.add(pivot);
+      pivot.position.set(
+        axis === "x" ? layerPosition : 0,
+        axis === "y" ? layerPosition : 0,
+        axis === "z" ? layerPosition : 0
+      );
+
+      const selectedCubies = cubies.filter((cubie) => {
+        const grid = cubie.userData.grid;
+        return grid[axis] === layer;
+      });
+
+      // Preserve each cubie's world transform as it enters the pivot.
+      selectedCubies.forEach((cubie) => {
+        pivot.attach(cubie);
+      });
+
+      activeTurn = {
+        pivot,
+        selectedCubies,
+        axis,
+        targetAngle,
+        progress: 0,
+        duration: 420 + Math.random() * 180,
+        startTime: now
+      };
+    }
+
+    function updateTurn(now) {
+      if (!activeTurn) {
+        if (now >= nextTurnAt) {
+          beginRandomTurn(now);
         }
+        return;
+      }
+
+      const turn = activeTurn;
+      const rawProgress = Math.min(
+        1,
+        (now - turn.startTime) / turn.duration
+      );
+
+      // Smooth but mechanical quarter-turn animation.
+      const eased = rawProgress < 0.5
+        ? 4 * rawProgress * rawProgress * rawProgress
+        : 1 - Math.pow(-2 * rawProgress + 2, 3) / 2;
+
+      turn.pivot.rotation[turn.axis] =
+        turn.targetAngle * eased;
+
+      if (rawProgress >= 1) {
+        finishTurn(turn);
+        activeTurn = null;
+        elapsedTurns++;
+
+        statusElement.textContent =
+          started
+            ? `Attempt ${elapsedTurns} · Still unsolved`
+            : "The cube is getting nowhere...";
+
+        // Short pause before the next turn.
+        nextTurnAt = now + 100 + Math.random() * 180;
+      }
     }
-}
 
-/* =========================================
-   10. APPLY EXACT QUARTER-TURN ROTATIONS
-   Used to scramble the cube before display.
-========================================= */
-function rotateGridPosition(grid, axis, direction) {
-    const { x, y, z } = grid;
+    function finishTurn(turn) {
+      const pivot = turn.pivot;
 
-    if (axis === "x") {
-        return direction === 1
-            ? { x, y: -z, z: y }
-            : { x, y: z, z: -y };
-    }
+      // Detach pieces back to the cube group, preserving world transforms.
+      turn.selectedCubies.forEach((cubie) => {
+        cubeGroup.attach(cubie);
+      });
 
-    if (axis === "y") {
-        return direction === 1
-            ? { x: z, y, z: -x }
-            : { x: -z, y, z: x };
-    }
+      cubeGroup.remove(pivot);
 
-    return direction === 1
-        ? { x: -y, y: x, z }
-        : { x: y, y: -x, z };
-}
+      // Remove tiny floating-point errors from positions and rotations.
+      turn.selectedCubies.forEach((cubie) => {
+        cubie.position.x = snapPosition(cubie.position.x);
+        cubie.position.y = snapPosition(cubie.position.y);
+        cubie.position.z = snapPosition(cubie.position.z);
 
-function applyInstantTurn(move) {
-    const selected = cubies.filter(cubie =>
-        cubie.userData.grid[move.axis] === move.layer
-    );
+        cubie.rotation.x = snapAngle(cubie.rotation.x);
+        cubie.rotation.y = snapAngle(cubie.rotation.y);
+        cubie.rotation.z = snapAngle(cubie.rotation.z);
 
-    const rotationAxis = new THREE.Vector3(
-        move.axis === "x" ? 1 : 0,
-        move.axis === "y" ? 1 : 0,
-        move.axis === "z" ? 1 : 0
-    );
+        cubie.updateMatrix();
+      });
 
-    const rotation = new THREE.Quaternion().setFromAxisAngle(
-        rotationAxis,
-        move.direction * Math.PI / 2
-    );
-
-    selected.forEach(cubie => {
-        cubie.userData.grid = rotateGridPosition(
-            cubie.userData.grid,
-            move.axis,
-            move.direction
-        );
-
-        cubie.position.set(
-            cubie.userData.grid.x * spacing,
-            cubie.userData.grid.y * spacing,
-            cubie.userData.grid.z * spacing
-        );
-
-        // Rotate the cubie's sticker orientation as well.
-        cubie.quaternion.premultiply(rotation);
-        cubie.quaternion.normalize();
-    });
-}
-
-/* =========================================
-   11. SCRAMBLE BEFORE THE PAGE APPEARS
-   >>> EDIT HERE: Increase 24 for more scrambling.
-========================================= */
-function scrambleStartingCube() {
-    const axes = ["x", "y", "z"];
-    const layers = [-1, 0, 1];
-
-    let previousMove = null;
-
-    for (let i = 0; i < 24; i++) {
-        let move;
-
-        do {
-            move = {
-                axis: axes[Math.floor(Math.random() * axes.length)],
-                layer: layers[Math.floor(Math.random() * layers.length)],
-                direction: Math.random() < 0.5 ? 1 : -1
-            };
-        } while (
-            previousMove &&
-            move.axis === previousMove.axis &&
-            move.layer === previousMove.layer
-        );
-
-        applyInstantTurn(move);
-        previousMove = move;
-    }
-}
-
-scrambleStartingCube();
-
-/* =========================================
-   12. SOFT SHADOW
-========================================= */
-const shadowCanvas = document.createElement("canvas");
-shadowCanvas.width = 256;
-shadowCanvas.height = 256;
-
-const shadowCtx = shadowCanvas.getContext("2d");
-const shadowGradient = shadowCtx.createRadialGradient(
-    128, 128, 8, 128, 128, 125
-);
-
-shadowGradient.addColorStop(0, "rgba(0,0,0,0.65)");
-shadowGradient.addColorStop(0.45, "rgba(0,0,0,0.3)");
-shadowGradient.addColorStop(1, "rgba(0,0,0,0)");
-
-shadowCtx.fillStyle = shadowGradient;
-shadowCtx.fillRect(0, 0, 256, 256);
-
-const shadow = new THREE.Mesh(
-    new THREE.PlaneGeometry(6.5, 5),
-    new THREE.MeshBasicMaterial({
-        map: new THREE.CanvasTexture(shadowCanvas),
-        transparent: true,
-        depthWrite: false
-    })
-);
-
-shadow.rotation.x = -Math.PI / 2;
-shadow.position.y = -1.9;
-scene.add(shadow);
-
-/* =========================================
-   13. ANIMATED FACE-TURN ENGINE
-========================================= */
-const pivot = new THREE.Group();
-scene.add(pivot);
-
-let isTurning = false;
-let activeTurn = null;
-let moveQueue = [];
-let solvingStarted = false;
-
-const TURN_DURATION = 460;
-
-function beginTurn(move, timestamp) {
-    pivot.rotation.set(0, 0, 0);
-    pivot.position.set(0, 0, 0);
-
-    const selected = cubies.filter(cubie =>
-        cubie.userData.grid[move.axis] === move.layer
-    );
-
-    selected.forEach(cubie => pivot.attach(cubie));
-
-    activeTurn = {
-        move,
-        selected,
-        start: timestamp,
-        from: 0,
-        to: move.direction * Math.PI / 2
-    };
-
-    isTurning = true;
-}
-
-function finishTurn() {
-    const move = activeTurn.move;
-
-    activeTurn.selected.forEach(cubie => {
-        scene.attach(cubie);
-
-        cubie.userData.grid = rotateGridPosition(
-            cubie.userData.grid,
-            move.axis,
-            move.direction
-        );
-
-        cubie.position.set(
-            cubie.userData.grid.x * spacing,
-            cubie.userData.grid.y * spacing,
-            cubie.userData.grid.z * spacing
-        );
-
-        // Keep orientation clean and aligned to quarter turns.
-        const euler = new THREE.Euler().setFromQuaternion(
-            cubie.quaternion, "XYZ"
-        );
-
-        euler.x = Math.round(euler.x / (Math.PI / 2)) * Math.PI / 2;
-        euler.y = Math.round(euler.y / (Math.PI / 2)) * Math.PI / 2;
-        euler.z = Math.round(euler.z / (Math.PI / 2)) * Math.PI / 2;
-
-        cubie.quaternion.setFromEuler(euler);
-    });
-
-    pivot.rotation.set(0, 0, 0);
-    activeTurn = null;
-    isTurning = false;
-}
-
-function randomMove(previous = null) {
-    const axes = ["x", "y", "z"];
-    const layers = [-1, 0, 1];
-
-    let move;
-
-    do {
-        move = {
-            axis: axes[Math.floor(Math.random() * axes.length)],
-            layer: layers[Math.floor(Math.random() * layers.length)],
-            direction: Math.random() < 0.5 ? 1 : -1
+      // Refresh logical grid coordinates for the next random layer turn.
+      cubies.forEach((cubie) => {
+        cubie.userData.grid = {
+          x: Math.round(cubie.position.x / SPACING),
+          y: Math.round(cubie.position.y / SPACING),
+          z: Math.round(cubie.position.z / SPACING)
         };
-    } while (
-        previous &&
-        move.axis === previous.axis &&
-        move.layer === previous.layer
-    );
-
-    return move;
-}
-
-function inverseMove(move) {
-    return {
-        axis: move.axis,
-        layer: move.layer,
-        direction: -move.direction
-    };
-}
-
-/* =========================================
-   14. BUTTON, COUNTDOWN AND FOOTNOTE
-========================================= */
-const button = document.getElementById("solve-button");
-const timerPanel = document.getElementById("timer-panel");
-const footnote = document.getElementById("footnote");
-
-button.addEventListener("click", () => {
-    if (solvingStarted) return;
-
-    solvingStarted = true;
-    button.classList.add("disappearing");
-
-    setTimeout(() => {
-        button.style.display = "none";
-        timerPanel.classList.add("visible");
-        footnote.classList.add("visible");
-    }, 350);
-
-    startCountdown();
-    runAttempt();
-});
-
-/* =========================================
-   15. 100-YEAR COUNTDOWN
-========================================= */
-let remainingSeconds = 36500 * 24 * 60 * 60;
-let countdownInterval = null;
-
-const daysElement = document.getElementById("days");
-const hoursElement = document.getElementById("hours");
-const minutesElement = document.getElementById("minutes");
-const secondsElement = document.getElementById("seconds");
-
-function renderCountdown() {
-    daysElement.textContent = String(
-        Math.floor(remainingSeconds / 86400)
-    ).padStart(5, "0");
-
-    hoursElement.textContent = String(
-        Math.floor((remainingSeconds % 86400) / 3600)
-    ).padStart(2, "0");
-
-    minutesElement.textContent = String(
-        Math.floor((remainingSeconds % 3600) / 60)
-    ).padStart(2, "0");
-
-    secondsElement.textContent = String(
-        remainingSeconds % 60
-    ).padStart(2, "0");
-}
-
-function startCountdown() {
-    if (countdownInterval) clearInterval(countdownInterval);
-
-    remainingSeconds = 36500 * 24 * 60 * 60;
-    renderCountdown();
-
-    countdownInterval = setInterval(() => {
-        if (remainingSeconds > 0) {
-            remainingSeconds--;
-            renderCountdown();
-        } else {
-            clearInterval(countdownInterval);
-        }
-    }, 1000);
-}
-
-// Reset if the page is restored from browser history.
-window.addEventListener("pageshow", event => {
-    if (event.persisted) location.reload();
-});
-
-/* =========================================
-   16. ENDLESS SOLVING ATTEMPTS
-========================================= */
-function runAttempt() {
-    if (!solvingStarted) return;
-
-    const scramble = [];
-    let previous = null;
-
-    for (let i = 0; i < 8; i++) {
-        const move = randomMove(previous);
-        scramble.push(move);
-        previous = move;
+      });
     }
 
-    scramble.forEach(move => moveQueue.push(move));
-
-    // Attempt to reverse most of the recent turns.
-    const partialSolution = scramble
-        .slice(0, -2)
-        .reverse()
-        .map(inverseMove);
-
-    partialSolution.forEach(move => moveQueue.push(move));
-
-    // Interrupt the attempt before it can finish.
-    moveQueue.push(randomMove());
-    moveQueue.push(randomMove());
-
-    waitForAttemptEnd();
-}
-
-function waitForAttemptEnd() {
-    if (!solvingStarted) return;
-
-    if (!isTurning && moveQueue.length === 0) {
-        runAttempt();
-    } else {
-        requestAnimationFrame(waitForAttemptEnd);
-    }
-}
-
-/* =========================================
-   17. MAIN RENDER LOOP
-========================================= */
-function animate(timestamp) {
-    requestAnimationFrame(animate);
-
-    const time = timestamp * 0.001;
-
-    // Very subtle idle movement while waiting for the button.
-    if (!solvingStarted) {
-        scene.rotation.y = Math.sin(time * 0.22) * 0.025;
+    function snapPosition(value) {
+      return Math.round(value / SPACING) * SPACING;
     }
 
-    if (!isTurning && moveQueue.length > 0) {
-        beginTurn(moveQueue.shift(), timestamp);
+    function snapAngle(value) {
+      const quarterTurn = Math.PI / 2;
+      return Math.round(value / quarterTurn) * quarterTurn;
     }
 
-    if (activeTurn) {
-        const elapsed = timestamp - activeTurn.start;
-        const progress = Math.min(elapsed / TURN_DURATION, 1);
+    // =========================================================
+    // START BUTTON AND 100-YEAR COUNTDOWN
+    // =========================================================
 
-        // Smooth acceleration and deceleration.
-        const eased = progress < 0.5
-            ? 4 * progress * progress * progress
-            : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+    function startChallenge() {
+      if (started) return;
 
-        pivot.rotation[activeTurn.move.axis] =
-            activeTurn.from +
-            (activeTurn.to - activeTurn.from) * eased;
+      started = true;
+      startTime = Date.now();
 
-        if (progress >= 1) {
-            pivot.rotation[activeTurn.move.axis] = activeTurn.to;
-            finishTurn();
-        }
+      startButton.classList.add("hidden");
+      timerElement.classList.add("active");
+
+      statusElement.textContent = "Solving in progress · Good luck!";
+
+      updateTimer();
+      timerFrame = window.setInterval(updateTimer, 1000);
     }
 
-    renderer.render(scene, camera);
-}
+    function updateTimer() {
+      const hundredYears = 100 * 365.25 * 24 * 60 * 60 * 1000;
+      const remaining = Math.max(
+        0,
+        hundredYears - (Date.now() - startTime)
+      );
 
-requestAnimationFrame(animate);
+      const totalSeconds = Math.floor(remaining / 1000);
+      const years = Math.floor(totalSeconds / (365.25 * 24 * 3600));
+      const afterYears = totalSeconds - Math.floor(
+        years * 365.25 * 24 * 3600
+      );
 
-/* =========================================
-   18. RESPONSIVE CAMERA
-========================================= */
-function resize() {
-    camera.aspect = window.innerWidth / window.innerHeight;
+      const days = Math.floor(afterYears / 86400);
+      const hours = Math.floor((afterYears % 86400) / 3600);
+      const minutes = Math.floor((afterYears % 3600) / 60);
+      const seconds = afterYears % 60;
 
-    if (window.innerWidth < 600) {
-        camera.position.set(5.9, 5.1, 8.3);
-    } else {
-        camera.position.set(5.4, 4.6, 7.5);
+      timerElement.textContent =
+        `${String(years).padStart(3, "0")}Y ` +
+        `${String(days).padStart(3, "0")}D ` +
+        `${String(hours).padStart(2, "0")}:` +
+        `${String(minutes).padStart(2, "0")}:` +
+        `${String(seconds).padStart(2, "0")}`;
+
+      if (remaining <= 0) {
+        clearInterval(timerFrame);
+        timerElement.textContent = "TIME IS UP!";
+        statusElement.textContent =
+          "Still unsolved. Truly impossible!";
+      }
     }
 
-    camera.lookAt(0, 0, 0);
-    camera.updateProjectionMatrix();
+    // =========================================================
+    // MAIN ANIMATION LOOP
+    // =========================================================
 
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-    renderer.setSize(window.innerWidth, window.innerHeight);
-}
+    function animate() {
+      requestAnimationFrame(animate);
 
-window.addEventListener("resize", resize);
-resize();
+      const delta = Math.min(clock.getDelta(), 0.05);
+      const now = performance.now();
 
-</script>
+      // Slow, continuous whole-cube movement.
+      cubeGroup.rotation.y += delta * 0.16;
+      cubeGroup.rotation.x += delta * 0.035;
+
+      updateTurn(now);
+
+      renderer.render(scene, camera);
+    }
+
+    // =========================================================
+    // RESIZE AND ERROR HANDLING
+    // =========================================================
+
+    function onResize() {
+      if (!camera || !renderer) return;
+
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    }
+
+    function showError(error) {
+      console.error("Cube initialization failed:", error);
+
+      errorElement.style.display = "block";
+      errorElement.innerHTML =
+        "<strong>The cube could not load.</strong><br>" +
+        "Check your internet connection and make sure this page is " +
+        "running through VS Code Live Server, not file:///.<br>" +
+        "<small>Open the browser console for the exact error.</small>";
+    }
+  </script>
 </body>
 </html>
-```
