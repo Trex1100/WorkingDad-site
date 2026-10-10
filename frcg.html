@@ -5,16 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PATH TO NEXUS</title>
 
-    <!-- >>> FONT IMPORTS — EDIT HERE -->
+    <!-- ==================================================
+         >>> FONT IMPORTS — EDIT HERE
+    =================================================== -->
     <style>
         @font-face {
             font-family: 'Algol';
-            src: url('fonts/Algol.otf') format('opentype');
+            src: url('./fonts/Algol.otf') format('opentype');
+            font-display: swap;
         }
 
         @font-face {
             font-family: 'DigitalGlitch';
-            src: url('fonts/Digital Glitch Demo.otf') format('opentype');
+            src: url('./fonts/Digital Glitch Demo.otf') format('opentype');
+            font-display: swap;
         }
 
         /* >>> GLOBAL RESET */
@@ -38,16 +42,25 @@
             overflow-x: hidden;
         }
 
-        /* >>> NEXUS GIF BACKGROUND — EDIT HERE */
+        /* ==================================================
+           >>> NEXUS GIF BACKGROUND
+           File: assets/NEXUS.gif
+        =================================================== */
         .background-scene {
             position: fixed;
             inset: 0;
             z-index: -3;
-            background: #030000 url('./assets/NEXUS.gif') center center / 100% 100% no-repeat;
+
+            background-color: #030000;
+            background-image: url('./assets/NEXUS.gif');
+            background-position: center center;
+            background-size: cover;
+            background-repeat: no-repeat;
+
             pointer-events: none;
         }
 
-        /* >>> DARK / RED COLOR ENHANCEMENT */
+        /* >>> BACKGROUND COLOR ENHANCEMENT */
         .background-overlay {
             position: fixed;
             inset: 0;
@@ -59,124 +72,369 @@
                     ellipse at center,
                     rgba(255, 0, 55, 0.04) 0%,
                     rgba(0, 0, 0, 0.12) 48%,
-                    rgba(0, 0, 0, 0.48) 100%
+                    rgba(0, 0, 0, 0.42) 100%
                 );
 
             backdrop-filter: saturate(1.3) contrast(1.08);
+            -webkit-backdrop-filter: saturate(1.3) contrast(1.08);
         }
 
-        /* >>> MAIN PAGE LAYOUT */
+        /* ==================================================
+           >>> MAIN PAGE LAYOUT
+        =================================================== */
         .page-wrapper {
             position: relative;
             z-index: 1;
+
             min-height: 100vh;
+
             display: flex;
             flex-direction: column;
         }
 
-        /* >>> HEADER */
+        /* ==================================================
+           >>> ADMIN IDENTITY — TOP LEFT
+           File: assets/ADMIN.gif
+        =================================================== */
+        .admin-section {
+            position: absolute;
+            top: 18px;
+            left: 5%;
+            z-index: 10;
+
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            padding: 0;
+        }
+
+        .admin-gif {
+            display: block;
+            width: 48px;
+            height: 48px;
+
+            object-fit: contain;
+
+            filter:
+                drop-shadow(0 0 5px rgba(255, 0, 45, 0.85))
+                drop-shadow(0 0 13px rgba(255, 0, 45, 0.45));
+        }
+
+        /* >>> ADMIN NAME */
+        .admin-name {
+            font-family: 'Algol', sans-serif;
+            font-size: 16px;
+            font-weight: normal;
+            letter-spacing: 3px;
+
+            color: #ff304f;
+
+            text-shadow:
+                0 0 3px #000,
+                1px 1px 2px #000,
+                -1px -1px 2px #000,
+                0 0 9px rgba(255, 0, 45, 0.85);
+        }
+
+        /* ==================================================
+           >>> HEADER AND NAVIGATION
+        =================================================== */
         .site-header {
             width: 100%;
             min-height: 90px;
             padding: 18px 5%;
+
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: flex-end;
             gap: 20px;
+
             background: rgba(0, 0, 0, 0.45);
-            border-bottom: 1px solid rgba(255, 0, 55, 0.35);
-            box-shadow: 0 5px 25px rgba(255, 0, 40, 0.12);
+
+            border-bottom:
+                1px solid rgba(255, 0, 55, 0.35);
+
+            box-shadow:
+                0 5px 25px rgba(255, 0, 40, 0.12);
         }
 
-        .site-title {
-            font-family: 'DigitalGlitch', sans-serif;
-            font-size: clamp(20px, 3vw, 36px);
-            color: #ff173d;
-            letter-spacing: 3px;
-            text-shadow:
-                0 0 5px #ff002b,
-                0 0 16px rgba(255, 0, 45, 0.75);
-        }
-
-        /* >>> NAVIGATION */
+        /* >>> NAVIGATION LINKS */
         .navigation {
             display: flex;
             align-items: center;
             justify-content: center;
             flex-wrap: wrap;
+
             gap: clamp(12px, 2vw, 28px);
         }
 
         .navigation a {
             position: relative;
+
             color: #f4eaea;
+            font-family: 'Algol', sans-serif;
             font-size: 13px;
             letter-spacing: 1px;
+
             text-decoration: none;
-            transition: color 0.25s, text-shadow 0.25s;
+
+            transition:
+                color 0.25s ease,
+                text-shadow 0.25s ease;
         }
 
         .navigation a:hover {
             color: #ff2048;
-            text-shadow: 0 0 10px #ff003c;
+
+            text-shadow:
+                0 0 5px #ff003c,
+                0 0 10px #ff003c;
         }
 
-        /* >>> ADMIN GIF */
-        .admin-section {
-            display: flex;
-            justify-content: center;
+        /* ==================================================
+           >>> SIGN IN BUTTON
+        =================================================== */
+        .sign-in-button {
+            display: inline-flex;
             align-items: center;
-            padding: 38px 20px 24px;
+            justify-content: center;
+
+            min-height: 36px;
+            padding: 9px 19px;
+
+            border: 1px solid #ff2348;
+            border-radius: 3px;
+
+            background: rgba(15, 0, 4, 0.72);
+
+            color: #fff;
+            font-family: 'Algol', sans-serif;
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
+
+            box-shadow:
+                0 0 6px rgba(255, 0, 45, 0.30),
+                inset 0 0 7px rgba(255, 0, 45, 0.10);
+
+            transition: all 0.25s ease;
         }
 
-        .admin-gif {
-            display: block;
-            width: clamp(100px, 16vw, 175px);
-            height: auto;
-            max-height: 220px;
-            object-fit: contain;
-            filter:
-                drop-shadow(0 0 8px rgba(255, 0, 45, 0.65))
-                drop-shadow(0 0 22px rgba(255, 0, 45, 0.3));
+        .sign-in-button:hover {
+            color: #fff;
+            background: rgba(255, 0, 45, 0.18);
+            border-color: #ff5470;
+
+            box-shadow:
+                0 0 8px rgba(255, 0, 45, 0.70),
+                0 0 20px rgba(255, 0, 45, 0.35),
+                inset 0 0 10px rgba(255, 0, 45, 0.15);
         }
 
-        /* >>> EMPTY MIDDLE SECTION
-           Intentionally left empty for your next instructions. */
+        /* ==================================================
+           >>> PATH TO NEXUS — CENTERED TITLE
+        =================================================== */
+        .nexus-title-section {
+            position: relative;
+            z-index: 2;
+
+            width: 100%;
+            padding: 35px 15px 20px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            text-align: center;
+        }
+
+        .nexus-title {
+            position: relative;
+
+            font-family: 'DigitalGlitch', sans-serif;
+            font-size: clamp(28px, 5.5vw, 68px);
+            font-weight: normal;
+            line-height: 1.25;
+
+            letter-spacing: clamp(2px, 0.8vw, 9px);
+            color: #ff183d;
+
+            /* >>> BLACK STROKE FOR BETTER READABILITY */
+            -webkit-text-stroke: 1px #080000;
+            paint-order: stroke fill;
+
+            text-shadow:
+                2px 2px 0 #000,
+                -2px -2px 0 #000,
+                2px -2px 0 #000,
+                -2px 2px 0 #000,
+                0 0 5px #000,
+                0 0 12px rgba(255, 0, 40, 0.95),
+                0 0 25px rgba(255, 0, 40, 0.65);
+
+            animation: nexusGlitch 4s infinite;
+        }
+
+        /* >>> CYAN GLITCH LAYER */
+        .nexus-title::before {
+            content: attr(data-text);
+
+            position: absolute;
+            inset: 0;
+
+            width: 100%;
+            height: 100%;
+
+            color: #00d9ff;
+            -webkit-text-stroke: 1px #000;
+
+            text-shadow:
+                -2px 0 #000,
+                0 0 8px rgba(0, 217, 255, 0.65);
+
+            clip-path: inset(0 0 60% 0);
+
+            pointer-events: none;
+
+            animation: nexusGlitchTop 3s infinite steps(1);
+        }
+
+        /* >>> RED GLITCH LAYER */
+        .nexus-title::after {
+            content: attr(data-text);
+
+            position: absolute;
+            inset: 0;
+
+            width: 100%;
+            height: 100%;
+
+            color: #ff003c;
+            -webkit-text-stroke: 1px #000;
+
+            text-shadow:
+                2px 0 #000,
+                0 0 8px rgba(255, 0, 60, 0.8);
+
+            clip-path: inset(65% 0 0 0);
+
+            pointer-events: none;
+
+            animation: nexusGlitchBottom 2.5s infinite steps(1);
+        }
+
+        /* >>> MAIN TITLE GLITCH */
+        @keyframes nexusGlitch {
+            0%, 87%, 92%, 100% {
+                transform: translate(0);
+            }
+
+            88% {
+                transform: translate(-2px, 1px);
+            }
+
+            89% {
+                transform: translate(3px, -1px);
+            }
+
+            90% {
+                transform: translate(-1px, 2px);
+            }
+        }
+
+        /* >>> UPPER TITLE GLITCH */
+        @keyframes nexusGlitchTop {
+            0%, 88%, 94%, 100% {
+                transform: translate(0);
+                opacity: 1;
+            }
+
+            89% {
+                transform: translate(-4px, -1px);
+                opacity: 0.85;
+            }
+
+            91% {
+                transform: translate(4px, 1px);
+                opacity: 0.65;
+            }
+        }
+
+        /* >>> LOWER TITLE GLITCH */
+        @keyframes nexusGlitchBottom {
+            0%, 84%, 91%, 100% {
+                transform: translate(0);
+                opacity: 1;
+            }
+
+            85% {
+                transform: translate(4px, 1px);
+                opacity: 0.8;
+            }
+
+            88% {
+                transform: translate(-3px, -1px);
+                opacity: 0.65;
+            }
+        }
+
+        /* ==================================================
+           >>> EMPTY MIDDLE SECTION
+           Reserved for future content.
+        =================================================== */
         .middle-section {
             flex: 1;
             width: 100%;
-            min-height: 280px;
+            min-height: 420px;
             padding: 20px;
         }
 
-        /* >>> FOOTER — COMPACT HEIGHT */
+        /* ==================================================
+           >>> COMPACT FOOTER
+        =================================================== */
         .site-footer {
             width: 100%;
-            min-height: 48px;
-            padding: 12px 16px;
+            min-height: 44px;
+            padding: 10px 14px;
+
             display: flex;
             align-items: center;
             justify-content: center;
+
             text-align: center;
-            background: rgba(0, 0, 0, 0.72);
-            border-top: 1px solid rgba(255, 0, 55, 0.4);
-            box-shadow: 0 -4px 20px rgba(255, 0, 40, 0.12);
+
+            background: rgba(0, 0, 0, 0.76);
+
+            border-top:
+                1px solid rgba(255, 0, 55, 0.38);
+
+            box-shadow:
+                0 -4px 18px rgba(255, 0, 40, 0.10);
         }
 
         .site-footer p {
-            color: rgba(255, 230, 235, 0.78);
+            color: rgba(255, 230, 235, 0.82);
+
+            font-family: 'Algol', sans-serif;
             font-size: 11px;
             letter-spacing: 1px;
             line-height: 1.5;
         }
 
-        /* >>> CURSOR AURA */
+        /* ==================================================
+           >>> CURSOR AURA
+           No particle system.
+        =================================================== */
         .cursor-aura {
             position: fixed;
             top: 0;
             left: 0;
+
             width: 130px;
             height: 130px;
+
             border-radius: 50%;
             pointer-events: none;
             z-index: 9999;
@@ -196,10 +454,13 @@
         .cursor-aura::before,
         .cursor-aura::after {
             content: "";
+
             position: absolute;
             inset: 12%;
+
             border: 1px solid rgba(255, 0, 55, 0.18);
             border-radius: 50%;
+
             opacity: 0;
             pointer-events: none;
         }
@@ -217,56 +478,138 @@
                 opacity: 0.8;
                 transform: translate(5px, -3px) scale(1.05);
             }
+
             40% {
                 opacity: 0.35;
                 transform: translate(-5px, 2px) scale(0.92);
             }
+
             100% {
                 opacity: 0;
                 transform: translate(0, 0) scale(1);
             }
         }
 
-        /* >>> MOBILE RESPONSIVENESS */
+        /* ==================================================
+           >>> MOBILE RESPONSIVENESS
+        =================================================== */
         @media (max-width: 700px) {
             .site-header {
-                flex-direction: column;
+                min-height: 125px;
+                padding: 65px 14px 18px;
+
                 justify-content: center;
-                padding: 20px 14px;
-                gap: 16px;
+                align-items: center;
             }
 
             .navigation {
-                gap: 14px 20px;
+                gap: 14px 18px;
             }
 
             .navigation a {
-                font-size: 12px;
+                font-size: 11px;
             }
 
+            .sign-in-button {
+                min-height: 32px;
+                padding: 7px 13px;
+                font-size: 11px;
+            }
+
+            /* >>> MOBILE ADMIN IDENTITY */
             .admin-section {
-                padding: 28px 16px 18px;
+                top: 12px;
+                left: 12px;
+                gap: 7px;
             }
 
+            .admin-gif {
+                width: 34px;
+                height: 34px;
+            }
+
+            .admin-name {
+                font-size: 11px;
+                letter-spacing: 1.5px;
+            }
+
+            /* >>> MOBILE TITLE */
+            .nexus-title-section {
+                padding: 28px 12px 18px;
+            }
+
+            .nexus-title {
+                font-size: clamp(25px, 7vw, 42px);
+                letter-spacing: 2px;
+
+                -webkit-text-stroke: 0.8px #080000;
+
+                text-shadow:
+                    1px 1px 0 #000,
+                    -1px -1px 0 #000,
+                    0 0 8px rgba(255, 0, 40, 0.8),
+                    0 0 16px rgba(255, 0, 40, 0.5);
+            }
+
+            .nexus-title::before,
+            .nexus-title::after {
+                -webkit-text-stroke: 0.8px #000;
+            }
+
+            /* >>> MOBILE MIDDLE SECTION */
             .middle-section {
-                min-height: 240px;
+                min-height: 350px;
+                padding: 14px;
             }
 
+            /* >>> MOBILE FOOTER */
             .site-footer {
-                min-height: 42px;
-                padding: 10px 12px;
+                min-height: 40px;
+                padding: 8px 10px;
             }
 
+            .site-footer p {
+                font-size: 9px;
+                letter-spacing: 0.5px;
+            }
+
+            /* >>> MOBILE CURSOR AURA */
             .cursor-aura {
                 width: 95px;
                 height: 95px;
             }
         }
 
-        /* >>> REDUCE MOTION FOR ACCESSIBILITY */
+        /* >>> SMALL PHONE SCREENS */
+        @media (max-width: 380px) {
+            .navigation {
+                gap: 12px;
+            }
+
+            .navigation a {
+                font-size: 10px;
+            }
+
+            .nexus-title {
+                font-size: 24px;
+                letter-spacing: 1px;
+            }
+
+            .admin-name {
+                font-size: 10px;
+            }
+        }
+
+        /* >>> REDUCE MOTION WHEN REQUESTED */
         @media (prefers-reduced-motion: reduce) {
             html {
                 scroll-behavior: auto;
+            }
+
+            .nexus-title,
+            .nexus-title::before,
+            .nexus-title::after {
+                animation: none;
             }
         }
     </style>
@@ -274,62 +617,94 @@
 
 <body>
 
-    <!-- >>> BACKGROUND GIF -->
-    <div class="background-scene"></div>
-    <div class="background-overlay"></div>
+    <!-- ==================================================
+         >>> BACKGROUND GIF
+    =================================================== -->
+    <div class="background-scene" aria-hidden="true"></div>
+    <div class="background-overlay" aria-hidden="true"></div>
 
     <div class="page-wrapper">
 
-        <!-- >>> HEADER -->
-        <header class="site-header">
-            <h1 class="site-title">PATH TO NEXUS</h1>
-
-            <nav class="navigation">
-                <a href="#">Home</a>
-                <a href="#">About</a>
-                <a href="#">Rules &amp; Regulations</a>
-                <a href="#">Support</a>
-            </nav>
-        </header>
-
-        <!-- >>> ADMIN GIF -->
+        <!-- ==================================================
+             >>> ADMIN IDENTITY — TOP LEFT
+        =================================================== -->
         <section class="admin-section">
             <img
                 src="./assets/ADMIN.gif"
                 alt="Admin"
                 class="admin-gif"
             >
+
+            <span class="admin-name">ADMIN</span>
         </section>
 
-        <!-- >>> MIDDLE SECTION
-             Keep empty until the next design instructions. -->
+        <!-- ==================================================
+             >>> HEADER / NAVIGATION / SIGN IN
+        =================================================== -->
+        <header class="site-header">
+            <nav class="navigation" aria-label="Main navigation">
+                <a href="#">Home</a>
+                <a href="#">About</a>
+                <a href="#">Rules &amp; Regulations</a>
+                <a href="#">Support</a>
+                <a href="#" class="sign-in-button">Sign In</a>
+            </nav>
+        </header>
+
+        <!-- ==================================================
+             >>> PATH TO NEXUS TITLE
+        =================================================== -->
+        <section class="nexus-title-section">
+            <h1
+                class="nexus-title"
+                data-text="PATH TO NEXUS"
+            >PATH TO NEXUS</h1>
+        </section>
+
+        <!-- ==================================================
+             >>> EMPTY MIDDLE SECTION
+             Content will be added later.
+        =================================================== -->
         <main class="middle-section">
         </main>
 
-        <!-- >>> FOOTER -->
+        <!-- ==================================================
+             >>> FOOTER
+        =================================================== -->
         <footer class="site-footer">
             <p>PATH TO NEXUS &copy; 2026 — ALL RIGHTS RESERVED</p>
         </footer>
 
     </div>
 
-    <!-- >>> CURSOR AURA ELEMENT -->
-    <div class="cursor-aura" id="cursorAura"></div>
+    <!-- ==================================================
+         >>> CURSOR AURA ELEMENT
+    =================================================== -->
+    <div
+        class="cursor-aura"
+        id="cursorAura"
+        aria-hidden="true"
+    ></div>
 
-    <!-- >>> CURSOR GLITCH EFFECT — NO PARTICLE SYSTEM -->
+    <!-- ==================================================
+         >>> CURSOR GLITCH EFFECT — NO PARTICLES
+    =================================================== -->
     <script>
         const cursorAura = document.getElementById('cursorAura');
 
         let cursorX = window.innerWidth / 2;
         let cursorY = window.innerHeight / 2;
+
         let auraX = cursorX;
         let auraY = cursorY;
 
+        /* >>> TRACK MOUSE MOVEMENT */
         document.addEventListener('mousemove', (event) => {
             cursorX = event.clientX;
             cursorY = event.clientY;
         });
 
+        /* >>> SMOOTH CURSOR AURA */
         function animateCursorAura() {
             auraX += (cursorX - auraX) * 0.18;
             auraY += (cursorY - auraY) * 0.18;
@@ -353,7 +728,10 @@
                 cursorAura.classList.add('glitch');
             }
 
-            setTimeout(triggerCursorGlitch, 700 + Math.random() * 1800);
+            setTimeout(
+                triggerCursorGlitch,
+                700 + Math.random() * 1800
+            );
         }
 
         triggerCursorGlitch();
