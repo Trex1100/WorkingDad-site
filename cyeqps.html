@@ -2,161 +2,371 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Code Rain</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Infinite Cube</title>
 
-    <style>
-        /* ===== PAGE SETUP ===== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<style>
+/* =========================================
+   PAGE — PURE BLACK, NO TEXT OR CONTROLS
+========================================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        html,
-        body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background: #000;
-        }
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #030504;
+}
 
-        /* ===== ANIMATION CANVAS ===== */
-        #code-rain {
-            display: block;
-            width: 100%;
-            height: 100%;
-            background: #000;
-        }
-    </style>
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#cube-container {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+</style>
 </head>
 
 <body>
+<div id="cube-container"></div>
 
-    <canvas id="code-rain"></canvas>
+<!-- Three.js 3D engine -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 
-    <script>
-        /* ==========================================
-           MATRIX CODE RAIN — ANIMATION SETTINGS
-           >>> EDIT HERE to customize the effect
-        ========================================== */
+<script>
+/* =========================================
+   INFINITE RUBIK'S CUBE
+   >>> EDIT HERE: VISUAL SETTINGS
+========================================= */
 
-        const canvas = document.getElementById("code-rain");
-        const ctx = canvas.getContext("2d");
+const container = document.getElementById("cube-container");
 
-        // >>> EDIT HERE: Main green color
-        const GREEN = "#00ff41";
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x030504);
 
-        // >>> EDIT HERE: Symbol size
-        const FONT_SIZE = 18;
+/* ===== CAMERA ===== */
+const camera = new THREE.PerspectiveCamera(
+    38,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    100
+);
 
-        // >>> EDIT HERE: Density of falling columns
-        const COLUMN_SPACING = 20;
+camera.position.set(5, 5, 7);
+camera.lookAt(0, 0, 0);
 
-        // >>> EDIT HERE: Speed of the animation
-        const SPEED = 0.75;
+/* ===== RENDERER ===== */
+const renderer = new THREE.WebGLRenderer({
+    antialias: true,
+    alpha: false
+});
 
-        // Characters inspired by the reference image
-        const characters =
-            "アイウエオカキクケコサシスセソタチツテト" +
-            "ナニヌネノハヒフヘホマミムメモヤユヨラリルレロ" +
-            "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
-            "!@#$%^&*+-=<>";
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.35;
 
-        let columns = [];
-        let animationFrame;
-        let lastFrameTime = 0;
+container.appendChild(renderer.domElement);
 
-        /* ===== RESPONSIVE CANVAS ===== */
-        function resizeCanvas() {
-            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+/* =========================================
+   LIGHTING — SOFT ARCADE GLOW
+========================================= */
+scene.add(new THREE.AmbientLight(0xffffff, 1.8));
 
-            canvas.width = Math.floor(window.innerWidth * dpr);
-            canvas.height = Math.floor(window.innerHeight * dpr);
+function addLight(color, intensity, position) {
+    const light = new THREE.PointLight(color, intensity, 30);
+    light.position.set(...position);
+    scene.add(light);
+}
 
-            canvas.style.width = window.innerWidth + "px";
-            canvas.style.height = window.innerHeight + "px";
+addLight(0x4488ff, 30, [4, 5, 5]);
+addLight(0xff3344, 22, [-5, 2, 3]);
+addLight(0x33ff88, 18, [1, -4, -3]);
 
-            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+/* =========================================
+   CUBE MATERIALS
+   Material order: +X, -X, +Y, -Y, +Z, -Z
+========================================= */
 
-            const columnCount = Math.ceil(
-                window.innerWidth / COLUMN_SPACING
+const COLORS = {
+    right:  0xe53935,  // Red
+    left:   0xff8c24,  // Orange
+    top:    0x3277ff,  // Blue
+    bottom: 0xf5d642,  // Yellow
+    front:  0xf4f0e8,  // White
+    back:   0x29d96b   // Green
+};
+
+const BLACK = new THREE.MeshStandardMaterial({
+    color: 0x101211,
+    roughness: 0.42,
+    metalness: 0.12
+});
+
+function stickerMaterial(color) {
+    return new THREE.MeshStandardMaterial({
+        color,
+        roughness: 0.3,
+        metalness: 0.02
+    });
+}
+
+const materials = [
+    stickerMaterial(COLORS.right),
+    stickerMaterial(COLORS.left),
+    stickerMaterial(COLORS.top),
+    stickerMaterial(COLORS.bottom),
+    stickerMaterial(COLORS.front),
+    stickerMaterial(COLORS.back)
+];
+
+const cubies = [];
+const cubieSize = 0.96;
+const spacing = 1.02;
+
+const geometry = new THREE.BoxGeometry(
+    cubieSize,
+    cubieSize,
+    cubieSize
+);
+
+/* =========================================
+   BUILD 27 SMALL CUBES
+========================================= */
+
+for (let x = -1; x <= 1; x++) {
+    for (let y = -1; y <= 1; y++) {
+        for (let z = -1; z <= 1; z++) {
+
+            const faceMaterials = [
+                x === 1  ? materials[0] : BLACK,
+                x === -1 ? materials[1] : BLACK,
+                y === 1  ? materials[2] : BLACK,
+                y === -1 ? materials[3] : BLACK,
+                z === 1  ? materials[4] : BLACK,
+                z === -1 ? materials[5] : BLACK
+            ];
+
+            const cubie = new THREE.Mesh(
+                geometry,
+                faceMaterials
             );
 
-            columns = Array.from(
-                { length: columnCount },
-                () => Math.random() * -window.innerHeight / FONT_SIZE
+            cubie.position.set(
+                x * spacing,
+                y * spacing,
+                z * spacing
             );
+
+            cubie.userData.grid = { x, y, z };
+
+            scene.add(cubie);
+            cubies.push(cubie);
         }
+    }
+}
 
-        /* ===== DRAW THE FALLING SYMBOLS ===== */
-        function drawCodeRain(timestamp = 0) {
-            animationFrame = requestAnimationFrame(drawCodeRain);
+/* =========================================
+   FACE-TURN ENGINE
+   Each turn rotates an entire layer by 90°.
+========================================= */
 
-            // Limit drawing frequency for a smoother, lighter animation.
-            if (timestamp - lastFrameTime < 33) return;
-            lastFrameTime = timestamp;
+const pivot = new THREE.Group();
+scene.add(pivot);
 
-            const width = window.innerWidth;
-            const height = window.innerHeight;
+let busy = false;
+let moveQueue = [];
+let activeTurn = null;
 
-            // Transparent black trail creates the fading effect.
-            ctx.fillStyle = "rgba(0, 0, 0, 0.13)";
-            ctx.fillRect(0, 0, width, height);
+const TURN_DURATION = 180; // milliseconds
 
-            ctx.font = `bold ${FONT_SIZE}px monospace`;
-            ctx.textAlign = "center";
+function enqueueTurn(axis, layer, direction) {
+    moveQueue.push({ axis, layer, direction });
+}
 
-            for (let i = 0; i < columns.length; i++) {
-                const x = i * COLUMN_SPACING;
-                const y = columns[i] * FONT_SIZE;
+function beginTurn(move, timestamp) {
+    pivot.rotation.set(0, 0, 0);
+    pivot.position.set(0, 0, 0);
 
-                const char = characters[
-                    Math.floor(Math.random() * characters.length)
-                ];
+    const selected = cubies.filter(cubie => {
+        return Math.round(cubie.position[move.axis] / spacing) === move.layer;
+    });
 
-                // Random brightness makes the columns feel alive.
-                const brightness = Math.random();
+    selected.forEach(cubie => pivot.attach(cubie));
 
-                if (brightness > 0.97) {
-                    // Bright green-white highlights
-                    ctx.fillStyle = "#d6ffdf";
-                    ctx.shadowColor = "#00ff41";
-                    ctx.shadowBlur = 18;
-                } else if (brightness > 0.65) {
-                    // Neon green symbols
-                    ctx.fillStyle = "#39ff55";
-                    ctx.shadowColor = "#00ff41";
-                    ctx.shadowBlur = 9;
-                } else {
-                    // Darker green symbols
-                    ctx.fillStyle = GREEN;
-                    ctx.shadowColor = "#00ff41";
-                    ctx.shadowBlur = 4;
-                }
+    activeTurn = {
+        move,
+        selected,
+        start: timestamp,
+        from: 0,
+        to: move.direction * Math.PI / 2
+    };
 
-                ctx.fillText(char, x, y);
+    busy = true;
+}
 
-                // Each column falls at a slightly different rate.
-                columns[i] += SPEED * (0.65 + Math.random() * 0.7);
+function finishTurn() {
+    // Return the rotated cubies to the main scene.
+    activeTurn.selected.forEach(cubie => scene.attach(cubie));
 
-                // Restart a column after it passes the bottom.
-                if (y > height && Math.random() > 0.975) {
-                    columns[i] = Math.random() * -20;
-                }
-            }
+    // Snap coordinates to the cube grid to prevent drift.
+    activeTurn.selected.forEach(cubie => {
+        cubie.position.set(
+            Math.round(cubie.position.x / spacing) * spacing,
+            Math.round(cubie.position.y / spacing) * spacing,
+            Math.round(cubie.position.z / spacing) * spacing
+        );
 
-            ctx.shadowBlur = 0;
+        cubie.position.x = Math.max(-spacing, Math.min(spacing, cubie.position.x));
+        cubie.position.y = Math.max(-spacing, Math.min(spacing, cubie.position.y));
+        cubie.position.z = Math.max(-spacing, Math.min(spacing, cubie.position.z));
+
+        // Snap the orientation to exact 90-degree rotations.
+        const euler = new THREE.Euler().setFromQuaternion(
+            cubie.quaternion,
+            "XYZ"
+        );
+
+        euler.x = Math.round(euler.x / (Math.PI / 2)) * Math.PI / 2;
+        euler.y = Math.round(euler.y / (Math.PI / 2)) * Math.PI / 2;
+        euler.z = Math.round(euler.z / (Math.PI / 2)) * Math.PI / 2;
+
+        cubie.quaternion.setFromEuler(euler);
+
+        cubie.userData.grid = {
+            x: Math.round(cubie.position.x / spacing),
+            y: Math.round(cubie.position.y / spacing),
+            z: Math.round(cubie.position.z / spacing)
+        };
+    });
+
+    pivot.rotation.set(0, 0, 0);
+    activeTurn = null;
+    busy = false;
+}
+
+/* =========================================
+   INFINITE SCRAMBLE → SOLVE ATTEMPT → DISRUPT
+========================================= */
+
+const axes = ["x", "y", "z"];
+const layers = [-1, 0, 1];
+
+function randomMove() {
+    return {
+        axis: axes[Math.floor(Math.random() * axes.length)],
+        layer: layers[Math.floor(Math.random() * layers.length)],
+        direction: Math.random() < 0.5 ? 1 : -1
+    };
+}
+
+function inverseMove(move) {
+    return {
+        axis: move.axis,
+        layer: move.layer,
+        direction: -move.direction
+    };
+}
+
+function addAttempt() {
+    // Create a short random scramble.
+    const scramble = [];
+
+    for (let i = 0; i < 12; i++) {
+        const move = randomMove();
+        scramble.push(move);
+        moveQueue.push(move);
+    }
+
+    // Begin the reverse sequence, as if trying to solve the cube.
+    // Deliberately leave the final moves unfinished.
+    const solvingMoves = scramble
+        .slice(0, -2)
+        .reverse()
+        .map(inverseMove);
+
+    solvingMoves.forEach(move => moveQueue.push(move));
+
+    // Disrupt the near-solved state and begin another attempt.
+    moveQueue.push(randomMove());
+    moveQueue.push(randomMove());
+
+    // Continue indefinitely.
+    setTimeout(() => {
+        addAttempt();
+    }, 100);
+}
+
+addAttempt();
+
+/* =========================================
+   ANIMATION LOOP
+========================================= */
+
+function animate(timestamp) {
+    requestAnimationFrame(animate);
+
+    if (!busy && moveQueue.length > 0) {
+        beginTurn(moveQueue.shift(), timestamp);
+    }
+
+    if (activeTurn) {
+        const elapsed = timestamp - activeTurn.start;
+        const progress = Math.min(elapsed / TURN_DURATION, 1);
+
+        // Smooth, mechanical turn motion.
+        const eased = progress < 0.5
+            ? 4 * progress * progress * progress
+            : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+        pivot.rotation[activeTurn.move.axis] =
+            activeTurn.from +
+            (activeTurn.to - activeTurn.from) * eased;
+
+        if (progress >= 1) {
+            pivot.rotation[activeTurn.move.axis] = activeTurn.to;
+            finishTurn();
         }
+    }
 
-        /* ===== START AND RESIZE ===== */
-        window.addEventListener("resize", resizeCanvas);
+    // Subtle idle motion for a floating 3D presentation.
+    scene.rotation.y = Math.sin(timestamp * 0.00018) * 0.07;
 
-        resizeCanvas();
-        drawCodeRain();
-    </script>
+    renderer.render(scene, camera);
+}
 
+requestAnimationFrame(animate);
+
+/* =========================================
+   RESPONSIVE DISPLAY
+========================================= */
+
+window.addEventListener("resize", () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+});
+</script>
 </body>
 </html>
 ```
