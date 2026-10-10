@@ -2,15 +2,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>The Impossible Cube</title>
 
-  <!--
-    THREE.JS IMPORT MAP
-    Keep this inside <head>, before the module script.
-    It fixes the "Failed to resolve module specifier 'three'" error.
-  -->
+  <!-- Three.js import map -->
   <script type="importmap">
   {
     "imports": {
@@ -25,115 +21,105 @@
       box-sizing: border-box;
     }
 
+    /* >>> EDIT HERE: Entire page background */
     html,
     body {
-      width: 100%;
-      height: 100%;
       margin: 0;
+      min-height: 100%;
+      background: #000000;
     }
 
     body {
-      overflow: hidden;
-      background:
-        radial-gradient(ellipse at center, #202432 0%, #0a0b10 68%, #030407 100%);
-      color: white;
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: #ffffff;
       font-family: Arial, Helvetica, sans-serif;
     }
 
     #app {
-      position: relative;
       width: 100%;
-      height: 100%;
-      min-height: 500px;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      overflow: hidden;
+      padding: 25px 16px 22px;
+      background: #000000;
     }
 
-    /* >>> EDIT HERE: Main heading */
+    /* Main heading */
     .heading {
-      position: absolute;
-      top: 3.5%;
-      z-index: 2;
-      width: 100%;
-      padding: 0 12px;
+      margin: 0;
       text-align: center;
-      font-size: clamp(20px, 3.2vw, 36px);
+      font-size: clamp(23px, 4vw, 38px);
       font-weight: 900;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: #ffffff;
-      text-shadow:
-        0 0 8px rgba(255, 255, 255, 0.35),
-        0 0 24px rgba(68, 126, 255, 0.5);
+      letter-spacing: 0.1em;
+      text-shadow: 0 0 16px rgba(130, 160, 255, 0.45);
     }
 
-    .subtitle {
-      position: absolute;
-      top: 10%;
-      z-index: 2;
-      padding: 0 14px;
-      text-align: center;
-      color: #aeb9d5;
-      font-size: clamp(11px, 1.4vw, 14px);
-      letter-spacing: 0.14em;
-    }
-
+    /* >>> EDIT HERE: Cube size */
     #cube-container {
-      position: absolute;
-      inset: 0;
-      z-index: 1;
+      position: relative;
+      width: 100%;
+      max-width: 1000px;
+      height: clamp(390px, 59vh, 590px);
+      flex: 0 0 auto;
+      margin-top: 8px;
+      background: transparent;
     }
 
     #cube-container canvas {
       display: block;
       width: 100%;
       height: 100%;
-      outline: none;
+      background: transparent;
     }
 
     .controls {
-      position: absolute;
-      z-index: 3;
-      left: 0;
-      right: 0;
-      bottom: 10%;
+      width: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 17px;
-      padding: 0 16px;
-      pointer-events: none;
+      gap: 18px;
+      padding: 8px 0 20px;
+      text-align: center;
+      background: #000000;
     }
 
+    /* Circular red START SOLVING button */
     #start-button {
-      pointer-events: auto;
-      position: relative;
-      border: 4px solid #8b0808;
+      width: 154px;
+      height: 154px;
+      flex: 0 0 auto;
       border-radius: 50%;
-      width: clamp(145px, 19vw, 190px);
-      height: clamp(145px, 19vw, 190px);
+      border: 5px solid #8e0808;
       padding: 12px;
       cursor: pointer;
+
       background:
-        radial-gradient(circle at 35% 24%, #ff8585 0%, #ff2929 24%, #e00000 64%, #980000 100%);
-      color: #fff;
-      font-size: clamp(14px, 1.7vw, 18px);
-      line-height: 1.4;
-      font-weight: 1000;
-      letter-spacing: 0.07em;
-      text-shadow: 0 2px 3px #650000;
+        radial-gradient(
+          circle at 32% 23%,
+          #ff8b8b 0%,
+          #ff3030 22%,
+          #ec0808 55%,
+          #a60000 100%
+        );
+
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: 900;
+      line-height: 1.35;
+      letter-spacing: 0.06em;
+      text-shadow: 0 2px 3px #710000;
+
       box-shadow:
-        0 12px 0 #650000,
-        0 17px 24px rgba(0, 0, 0, 0.6),
-        0 0 32px rgba(255, 0, 0, 0.22),
-        inset 0 5px 9px rgba(255, 255, 255, 0.32),
-        inset 0 -8px 12px rgba(0, 0, 0, 0.28);
+        0 10px 0 #650000,
+        0 15px 22px rgba(0, 0, 0, 0.65),
+        inset 0 5px 9px rgba(255, 255, 255, 0.28),
+        inset 0 -7px 12px rgba(0, 0, 0, 0.25);
+
       transition:
-        transform 0.09s ease,
-        box-shadow 0.09s ease,
+        transform 0.12s ease,
+        box-shadow 0.12s ease,
         filter 0.2s ease;
     }
 
@@ -142,119 +128,135 @@
     }
 
     #start-button:active {
-      transform: translateY(9px) scale(0.98);
+      transform: translateY(8px) scale(0.98);
       box-shadow:
-        0 3px 0 #650000,
-        0 7px 12px rgba(0, 0, 0, 0.5),
-        inset 0 5px 9px rgba(255, 255, 255, 0.22);
+        0 2px 0 #650000,
+        0 5px 10px rgba(0, 0, 0, 0.5),
+        inset 0 4px 8px rgba(255, 255, 255, 0.2);
     }
 
     #start-button.hidden {
       display: none;
     }
 
+    /* Hours : Minutes : Seconds label */
+    #timer-heading {
+      display: none;
+      color: #ff5555;
+      font-family: "Courier New", monospace;
+      font-size: 11px;
+      font-weight: bold;
+      letter-spacing: 0.16em;
+      text-align: center;
+      text-shadow: 0 0 7px #ff0000;
+    }
+
+    #timer-heading.active {
+      display: block;
+    }
+
+    /* Red digital countdown */
     #timer {
       display: none;
-      padding: 10px 17px;
-      border: 1px solid rgba(91, 255, 175, 0.4);
-      border-radius: 8px;
-      background: rgba(0, 0, 0, 0.76);
-      color: #72ffae;
+      max-width: 100%;
+      padding: 13px 17px;
+      border: 2px solid #681010;
+      border-radius: 5px;
+      background: #090303;
+
+      color: #ff2929;
       font-family: "Courier New", monospace;
-      font-size: clamp(16px, 2.2vw, 23px);
+      font-size: clamp(23px, 4.5vw, 38px);
       font-weight: bold;
-      letter-spacing: 0.06em;
-      text-align: center;
+      letter-spacing: 0.07em;
       font-variant-numeric: tabular-nums;
+      text-align: center;
+
+      text-shadow:
+        0 0 4px #ff0000,
+        0 0 11px rgba(255, 0, 0, 0.8);
+
       box-shadow:
-        0 0 15px rgba(0, 255, 128, 0.12),
-        inset 0 0 12px rgba(0, 255, 128, 0.05);
+        0 0 15px rgba(255, 0, 0, 0.12),
+        inset 0 0 12px rgba(255, 0, 0, 0.06);
     }
 
     #timer.active {
       display: block;
     }
 
-    #status {
-      min-height: 17px;
-      color: #b8c4df;
-      font-size: 11px;
-      letter-spacing: 0.13em;
-      text-align: center;
+    #timer-label {
+      display: none;
+      color: #b9c1d3;
+      font-size: 12px;
+      letter-spacing: 0.17em;
       text-transform: uppercase;
     }
 
-    .footnote {
-      position: absolute;
-      z-index: 3;
-      bottom: 2.5%;
-      left: 12px;
-      right: 12px;
+    #timer-label.active {
+      display: block;
+    }
+
+    #status {
+      min-height: 17px;
+      color: #b9c1d3;
+      font-size: 12px;
+      letter-spacing: 0.1em;
       text-align: center;
-      color: #9da8bf;
-      font-size: clamp(10px, 1.2vw, 12px);
-      letter-spacing: 0.04em;
+    }
+
+    .footnote {
+      margin-top: 10px;
+      padding: 0 8px;
+      color: #a6afc4;
+      font-size: 12px;
+      line-height: 1.6;
+      text-align: center;
+      background: #000000;
     }
 
     #error-message {
       display: none;
-      position: absolute;
-      z-index: 10;
-      top: 45%;
-      left: 8%;
-      right: 8%;
-      padding: 18px;
-      border: 1px solid #ff6464;
-      border-radius: 10px;
-      background: #200d12;
-      color: #fff;
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 15px;
+      border: 1px solid #ff5555;
+      border-radius: 8px;
+      color: #ffffff;
+      background: #240c10;
       text-align: center;
       line-height: 1.6;
     }
 
-    @media (max-height: 650px) {
+    /* Mobile adjustments */
+    @media (max-width: 480px) {
+      #app {
+        padding: 23px 10px 18px;
+      }
+
       .heading {
-        top: 2%;
+        letter-spacing: 0.055em;
       }
 
-      .subtitle {
-        top: 9%;
-      }
-
-      .controls {
-        bottom: 7%;
-        gap: 10px;
+      #cube-container {
+        height: 420px;
+        margin-top: 5px;
       }
 
       #start-button {
-        width: 125px;
-        height: 125px;
-        font-size: 13px;
-      }
-
-      .footnote {
-        bottom: 1%;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .heading {
-        top: 4%;
-        letter-spacing: 0.06em;
-      }
-
-      .subtitle {
-        top: 10%;
-        letter-spacing: 0.07em;
-      }
-
-      .controls {
-        bottom: 10%;
+        width: 140px;
+        height: 140px;
+        font-size: 15px;
       }
 
       #timer {
-        letter-spacing: 0;
-        padding: 9px 10px;
+        padding: 12px 9px;
+        letter-spacing: 0.02em;
+      }
+
+      #timer-heading {
+        font-size: 10px;
+        letter-spacing: 0.1em;
       }
     }
   </style>
@@ -262,74 +264,99 @@
 
 <body>
   <main id="app">
-    <div class="heading">The Impossible Cube</div>
-    <div class="subtitle">27 PIECES · 6 COLOURS · INFINITE FRUSTRATION</div>
+
+    <h1 class="heading">THE IMPOSSIBLE CUBE</h1>
 
     <div id="cube-container"></div>
 
     <div id="error-message"></div>
 
-    <div class="controls">
+    <section class="controls">
+
       <button id="start-button" type="button">
-        START<br />SOLVING
+        START<br>SOLVING
       </button>
 
-      <div id="timer" aria-live="off">100Y 000D 00:00:00</div>
-      <div id="status">Waiting for your challenge...</div>
-    </div>
+      <div id="timer-heading">
+        HOURS : MINUTES : SECONDS
+      </div>
 
-    <div class="footnote">
+      <div id="timer">876600:00:00</div>
+
+      <div id="timer-label">
+        TIME LEFT TO SOLVE
+      </div>
+
+      <div id="status">
+        WAITING FOR YOUR CHALLENGE...
+      </div>
+
+    </section>
+
+    <footer class="footnote">
       Once the cube is solved you can proceed to the next page.
-    </div>
+    </footer>
+
   </main>
 
   <script type="module">
     import * as THREE from "three";
-    import { RoundedBoxGeometry } from
-      "three/addons/geometries/RoundedBoxGeometry.js";
 
-    // =========================================================
-    // >>> EDIT HERE: BASIC CUBE SETTINGS
-    // =========================================================
+    import {
+      RoundedBoxGeometry
+    } from "three/addons/geometries/RoundedBoxGeometry.js";
 
-    const CUBE_SIZE = 3;
+
+    // ========================================================
+    // >>> EDIT HERE: CUBE SETTINGS
+    // ========================================================
+
     const SPACING = 1.02;
     const CUBIE_SIZE = 0.96;
 
-    // Each colour is assigned to one face of the solved cube.
-    const COLORS = {
-      right:  0xff2020, // Red
-      left:   0xff7900, // Orange
-      top:    0xffffff, // White
-      bottom: 0xffe600, // Yellow
-      front:  0x00e84f, // Green
-      back:   0x064bff  // Dark blue
-    };
+    const COLORS = [
+      0xffffff, // White
+      0xff2020, // Red
+      0xffe600, // Yellow
+      0x00e84f, // Green
+      0x064bff, // Dark blue
+      0xff7900  // Orange
+    ];
 
+    // 100 years, using an average year of 365.25 days.
+    const TOTAL_HOURS = Math.floor(100 * 365.25 * 24);
+    const TOTAL_SECONDS = TOTAL_HOURS * 3600;
+
+
+    // Page elements
     const container = document.getElementById("cube-container");
     const startButton = document.getElementById("start-button");
+    const timerHeading = document.getElementById("timer-heading");
     const timerElement = document.getElementById("timer");
+    const timerLabel = document.getElementById("timer-label");
     const statusElement = document.getElementById("status");
     const errorElement = document.getElementById("error-message");
 
+
+    // Scene variables
     let scene;
     let camera;
     let renderer;
     let cubeGroup;
+
     let cubies = [];
     let activeTurn = null;
     let nextTurnAt = 0;
+
     let started = false;
     let startTime = 0;
-    let timerFrame = 0;
-    let elapsedTurns = 0;
+    let timerInterval = null;
+    let attempts = 0;
 
     const clock = new THREE.Clock();
 
-    // =========================================================
-    // SCENE, CAMERA AND LIGHTING
-    // =========================================================
 
+    // Initialize the cube
     try {
       init();
       animate();
@@ -337,58 +364,101 @@
       showError(error);
     }
 
+
+    // ========================================================
+    // INITIALIZE THE SCENE
+    // ========================================================
+
     function init() {
+
+      // Transparent scene: the page's black background shows through.
       scene = new THREE.Scene();
-      scene.background = new THREE.Color(0x090b12);
+      scene.background = null;
 
       camera = new THREE.PerspectiveCamera(
         36,
-        window.innerWidth / window.innerHeight,
+        container.clientWidth / container.clientHeight,
         0.1,
         100
       );
 
-      camera.position.set(5.8, 5.5, 8.2);
+      // >>> EDIT HERE: Camera zoom
+      // A closer camera makes the cube larger.
+      camera.position.set(4.8, 4.6, 6.8);
       camera.lookAt(0, 0, 0);
 
+
+      // Transparent WebGL canvas removes the rectangular background.
       renderer = new THREE.WebGLRenderer({
         antialias: true,
-        alpha: false
+        alpha: true
       });
 
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setClearColor(0x000000, 0);
+      renderer.setPixelRatio(
+        Math.min(window.devicePixelRatio, 2)
+      );
+
+      renderer.setSize(
+        container.clientWidth,
+        container.clientHeight
+      );
+
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1.25;
 
       container.appendChild(renderer.domElement);
 
-      // Balanced lighting, without a harsh yellow spotlight.
-      scene.add(new THREE.AmbientLight(0xffffff, 1.5));
 
-      const keyLight = new THREE.DirectionalLight(0xffffff, 2.1);
+      // Lighting: neutral white light, no yellow spotlight.
+      scene.add(
+        new THREE.AmbientLight(0xffffff, 1.5)
+      );
+
+      const keyLight = new THREE.DirectionalLight(
+        0xffffff,
+        2.1
+      );
+
       keyLight.position.set(5, 8, 7);
       scene.add(keyLight);
 
-      const fillLight = new THREE.DirectionalLight(0xb6ccff, 0.8);
+
+      const fillLight = new THREE.DirectionalLight(
+        0xb6ccff,
+        0.8
+      );
+
       fillLight.position.set(-6, 2, -5);
       scene.add(fillLight);
 
-      const rimLight = new THREE.DirectionalLight(0xffffff, 1.0);
+
+      const rimLight = new THREE.DirectionalLight(
+        0xffffff,
+        1.0
+      );
+
       rimLight.position.set(1, -4, 5);
       scene.add(rimLight);
 
+
+      // Main cube group
       cubeGroup = new THREE.Group();
       scene.add(cubeGroup);
 
       createCube();
 
-      window.addEventListener("resize", onResize);
+      // Give the cube a scrambled-looking arrangement immediately.
+      scrambleInitialState(24);
 
+      // Keep the smooth overall rotation.
+      cubeGroup.rotation.set(-0.13, 0.25, 0);
+
+      window.addEventListener("resize", onResize);
       startButton.addEventListener("click", startChallenge);
 
-      // A fresh page visit starts a fresh challenge.
+      // Reset if the browser restores this page from its back-forward cache.
       window.addEventListener("pageshow", (event) => {
         if (event.persisted) {
           window.location.reload();
@@ -396,29 +466,23 @@
       });
     }
 
-    // =========================================================
-    // CREATE THE 3 × 3 × 3 RUBIK'S CUBE
-    // =========================================================
+
+    // ========================================================
+    // CREATE THE 27 CUBIES
+    // ========================================================
 
     function createCube() {
+
       const bodyMaterial = new THREE.MeshStandardMaterial({
         color: 0x101116,
         roughness: 0.31,
         metalness: 0.08
       });
 
-      const stickerMaterials = {
-        right: makeStickerMaterial(COLORS.right),
-        left: makeStickerMaterial(COLORS.left),
-        top: makeStickerMaterial(COLORS.top),
-        bottom: makeStickerMaterial(COLORS.bottom),
-        front: makeStickerMaterial(COLORS.front),
-        back: makeStickerMaterial(COLORS.back)
-      };
-
       for (let x = -1; x <= 1; x++) {
         for (let y = -1; y <= 1; y++) {
           for (let z = -1; z <= 1; z++) {
+
             const cubie = new THREE.Group();
 
             cubie.position.set(
@@ -429,75 +493,75 @@
 
             cubie.userData.grid = { x, y, z };
 
-            // Rounded dark cubie body.
-            const bodyGeometry = new RoundedBoxGeometry(
-              CUBIE_SIZE,
-              CUBIE_SIZE,
-              CUBIE_SIZE,
-              4,
-              0.075
+            // Rounded black cubie body
+            const body = new THREE.Mesh(
+              new RoundedBoxGeometry(
+                CUBIE_SIZE,
+                CUBIE_SIZE,
+                CUBIE_SIZE,
+                4,
+                0.075
+              ),
+              bodyMaterial
             );
 
-            const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
-            body.castShadow = true;
-            body.receiveShadow = true;
             cubie.add(body);
 
             const stickerSize = 0.755;
             const stickerDepth = 0.025;
-            const stickerOffset = CUBIE_SIZE / 2 + 0.012;
+            const offset = CUBIE_SIZE / 2 + 0.012;
 
-            // Stickers are added only to the original outside faces.
+
+            // Right face
             if (x === 1) {
               addSticker(
-                cubie, stickerMaterials.right,
-                stickerSize, stickerDepth,
-                stickerOffset, 0, 0,
+                cubie, stickerSize, stickerDepth,
+                offset, 0, 0,
                 0, Math.PI / 2, 0
               );
             }
 
+            // Left face
             if (x === -1) {
               addSticker(
-                cubie, stickerMaterials.left,
-                stickerSize, stickerDepth,
-                -stickerOffset, 0, 0,
+                cubie, stickerSize, stickerDepth,
+                -offset, 0, 0,
                 0, -Math.PI / 2, 0
               );
             }
 
+            // Top face
             if (y === 1) {
               addSticker(
-                cubie, stickerMaterials.top,
-                stickerSize, stickerDepth,
-                0, stickerOffset, 0,
+                cubie, stickerSize, stickerDepth,
+                0, offset, 0,
                 -Math.PI / 2, 0, 0
               );
             }
 
+            // Bottom face
             if (y === -1) {
               addSticker(
-                cubie, stickerMaterials.bottom,
-                stickerSize, stickerDepth,
-                0, -stickerOffset, 0,
+                cubie, stickerSize, stickerDepth,
+                0, -offset, 0,
                 Math.PI / 2, 0, 0
               );
             }
 
+            // Front face
             if (z === 1) {
               addSticker(
-                cubie, stickerMaterials.front,
-                stickerSize, stickerDepth,
-                0, 0, stickerOffset,
+                cubie, stickerSize, stickerDepth,
+                0, 0, offset,
                 0, 0, 0
               );
             }
 
+            // Back face
             if (z === -1) {
               addSticker(
-                cubie, stickerMaterials.back,
-                stickerSize, stickerDepth,
-                0, 0, -stickerOffset,
+                cubie, stickerSize, stickerDepth,
+                0, 0, -offset,
                 0, Math.PI, 0
               );
             }
@@ -507,95 +571,154 @@
           }
         }
       }
-
-      // A slight overall tilt makes the cube easier to read visually.
-      cubeGroup.rotation.set(-0.13, 0.25, 0);
     }
 
-    function makeStickerMaterial(color) {
-      return new THREE.MeshStandardMaterial({
-        color,
-        roughness: 0.28,
-        metalness: 0.02,
-        emissive: new THREE.Color(color),
-        emissiveIntensity: 0.045
-      });
-    }
+
+    // ========================================================
+    // COLOURED ROUNDED STICKERS
+    // ========================================================
 
     function addSticker(
       parent,
-      material,
       size,
       depth,
       x,
       y,
       z,
-      rotationX,
-      rotationY,
-      rotationZ
+      rx,
+      ry,
+      rz
     ) {
-      const geometry = new RoundedBoxGeometry(
-        size,
-        size,
-        depth,
-        3,
-        0.045
+
+      const colour = COLORS[
+        Math.floor(Math.random() * COLORS.length)
+      ];
+
+      const material = new THREE.MeshStandardMaterial({
+        color: colour,
+        roughness: 0.28,
+        metalness: 0.02,
+        emissive: new THREE.Color(colour),
+        emissiveIntensity: 0.045
+      });
+
+      const sticker = new THREE.Mesh(
+        new RoundedBoxGeometry(
+          size,
+          size,
+          depth,
+          3,
+          0.045
+        ),
+        material
       );
 
-      const sticker = new THREE.Mesh(geometry, material);
-
       sticker.position.set(x, y, z);
-      sticker.rotation.set(rotationX, rotationY, rotationZ);
-
-      sticker.castShadow = false;
-      sticker.receiveShadow = true;
+      sticker.rotation.set(rx, ry, rz);
 
       parent.add(sticker);
     }
 
-    // =========================================================
-    // RANDOM LAYER TURNS
-    // The cube keeps moving and never receives a solving routine.
-    // =========================================================
+
+    // ========================================================
+    // INITIAL RANDOM SCRAMBLE
+    // ========================================================
+
+    function scrambleInitialState(numberOfMoves) {
+
+      const axes = ["x", "y", "z"];
+
+      for (let i = 0; i < numberOfMoves; i++) {
+
+        const axis = axes[
+          Math.floor(Math.random() * axes.length)
+        ];
+
+        const layer = Math.floor(Math.random() * 3) - 1;
+
+        const direction = Math.random() < 0.5 ? -1 : 1;
+
+        const pivot = new THREE.Group();
+
+        const coordinate = layer * SPACING;
+
+        pivot.position.set(
+          axis === "x" ? coordinate : 0,
+          axis === "y" ? coordinate : 0,
+          axis === "z" ? coordinate : 0
+        );
+
+        cubeGroup.add(pivot);
+
+        const selected = cubies.filter(
+          cubie => cubie.userData.grid[axis] === layer
+        );
+
+        selected.forEach(cubie => {
+          pivot.attach(cubie);
+        });
+
+        pivot.rotation[axis] = direction * Math.PI / 2;
+
+        // Apply the turn before displaying the initial cube.
+        pivot.updateMatrixWorld(true);
+
+        selected.forEach(cubie => {
+          cubeGroup.attach(cubie);
+        });
+
+        cubeGroup.remove(pivot);
+
+        selected.forEach(cubie => {
+          cubie.position.x = snapPosition(cubie.position.x);
+          cubie.position.y = snapPosition(cubie.position.y);
+          cubie.position.z = snapPosition(cubie.position.z);
+
+          cubie.rotation.x = snapAngle(cubie.rotation.x);
+          cubie.rotation.y = snapAngle(cubie.rotation.y);
+          cubie.rotation.z = snapAngle(cubie.rotation.z);
+        });
+
+        updateGridPositions();
+      }
+    }
+
+
+    // ========================================================
+    // CONTINUOUS RANDOM LAYER ROTATION
+    // ========================================================
 
     function beginRandomTurn(now) {
+
       if (activeTurn) return;
 
       const axes = ["x", "y", "z"];
-      const axis = axes[Math.floor(Math.random() * axes.length)];
+
+      const axis = axes[
+        Math.floor(Math.random() * axes.length)
+      ];
+
       const layer = Math.floor(Math.random() * 3) - 1;
 
-      // Quarter turns only.
       const direction = Math.random() < 0.5 ? -1 : 1;
-      const targetAngle = direction * Math.PI / 2;
 
       const pivot = new THREE.Group();
-      const layerPosition = layer * SPACING;
 
-      if (axis === "x") {
-        pivot.position.set(layerPosition, 0, 0);
-      } else if (axis === "y") {
-        pivot.position.set(0, layerPosition, 0);
-      } else {
-        pivot.position.set(0, 0, layerPosition);
-      }
+      const coordinate = layer * SPACING;
 
-      // Add the pivot under the cube group so turns respect the cube's
-      // overall orientation.
-      cubeGroup.add(pivot);
       pivot.position.set(
-        axis === "x" ? layerPosition : 0,
-        axis === "y" ? layerPosition : 0,
-        axis === "z" ? layerPosition : 0
+        axis === "x" ? coordinate : 0,
+        axis === "y" ? coordinate : 0,
+        axis === "z" ? coordinate : 0
       );
 
-      const selectedCubies = cubies.filter((cubie) => {
-        const grid = cubie.userData.grid;
-        return grid[axis] === layer;
-      });
+      cubeGroup.add(pivot);
 
-      // Preserve each cubie's world transform as it enters the pivot.
-      selectedCubies.forEach((cubie) => {
+      const selectedCubies = cubies.filter(
+        cubie => cubie.userData.grid[axis] === layer
+      );
+
+      selectedCubies.forEach(cubie => {
         pivot.attach(cubie);
       });
 
@@ -603,75 +726,74 @@
         pivot,
         selectedCubies,
         axis,
-        targetAngle,
-        progress: 0,
-        duration: 420 + Math.random() * 180,
-        startTime: now
+        targetAngle: direction * Math.PI / 2,
+        startTime: now,
+        duration: 420 + Math.random() * 180
       };
     }
 
+
     function updateTurn(now) {
+
       if (!activeTurn) {
         if (now >= nextTurnAt) {
           beginRandomTurn(now);
         }
+
         return;
       }
 
       const turn = activeTurn;
-      const rawProgress = Math.min(
+
+      const progress = Math.min(
         1,
         (now - turn.startTime) / turn.duration
       );
 
-      // Smooth but mechanical quarter-turn animation.
-      const eased = rawProgress < 0.5
-        ? 4 * rawProgress * rawProgress * rawProgress
-        : 1 - Math.pow(-2 * rawProgress + 2, 3) / 2;
+      // Smooth easing for each layer rotation.
+      const eased = progress < 0.5
+        ? 4 * progress * progress * progress
+        : 1 - Math.pow(-2 * progress + 2, 3) / 2;
 
       turn.pivot.rotation[turn.axis] =
         turn.targetAngle * eased;
 
-      if (rawProgress >= 1) {
-        finishTurn(turn);
+
+      if (progress >= 1) {
+
+        turn.pivot.updateMatrixWorld(true);
+
+        turn.selectedCubies.forEach(cubie => {
+          cubeGroup.attach(cubie);
+        });
+
+        cubeGroup.remove(turn.pivot);
+
+        turn.selectedCubies.forEach(cubie => {
+          cubie.position.x = snapPosition(cubie.position.x);
+          cubie.position.y = snapPosition(cubie.position.y);
+          cubie.position.z = snapPosition(cubie.position.z);
+
+          cubie.rotation.x = snapAngle(cubie.rotation.x);
+          cubie.rotation.y = snapAngle(cubie.rotation.y);
+          cubie.rotation.z = snapAngle(cubie.rotation.z);
+        });
+
+        updateGridPositions();
+
         activeTurn = null;
-        elapsedTurns++;
+        attempts++;
 
-        statusElement.textContent =
-          started
-            ? `Attempt ${elapsedTurns} · Still unsolved`
-            : "The cube is getting nowhere...";
+        statusElement.textContent = `ATTEMPT ${attempts}`;
 
-        // Short pause before the next turn.
-        nextTurnAt = now + 100 + Math.random() * 180;
+        nextTurnAt = now + 120 + Math.random() * 160;
       }
     }
 
-    function finishTurn(turn) {
-      const pivot = turn.pivot;
 
-      // Detach pieces back to the cube group, preserving world transforms.
-      turn.selectedCubies.forEach((cubie) => {
-        cubeGroup.attach(cubie);
-      });
+    function updateGridPositions() {
 
-      cubeGroup.remove(pivot);
-
-      // Remove tiny floating-point errors from positions and rotations.
-      turn.selectedCubies.forEach((cubie) => {
-        cubie.position.x = snapPosition(cubie.position.x);
-        cubie.position.y = snapPosition(cubie.position.y);
-        cubie.position.z = snapPosition(cubie.position.z);
-
-        cubie.rotation.x = snapAngle(cubie.rotation.x);
-        cubie.rotation.y = snapAngle(cubie.rotation.y);
-        cubie.rotation.z = snapAngle(cubie.rotation.z);
-
-        cubie.updateMatrix();
-      });
-
-      // Refresh logical grid coordinates for the next random layer turn.
-      cubies.forEach((cubie) => {
+      cubies.forEach(cubie => {
         cubie.userData.grid = {
           x: Math.round(cubie.position.x / SPACING),
           y: Math.round(cubie.position.y / SPACING),
@@ -680,78 +802,91 @@
       });
     }
 
+
     function snapPosition(value) {
       return Math.round(value / SPACING) * SPACING;
     }
 
+
     function snapAngle(value) {
-      const quarterTurn = Math.PI / 2;
-      return Math.round(value / quarterTurn) * quarterTurn;
+      return Math.round(value / (Math.PI / 2)) * (Math.PI / 2);
     }
 
-    // =========================================================
+
+    // ========================================================
     // START BUTTON AND 100-YEAR COUNTDOWN
-    // =========================================================
+    // ========================================================
 
     function startChallenge() {
+
       if (started) return;
 
       started = true;
       startTime = Date.now();
 
+      // Remove the button after clicking.
       startButton.classList.add("hidden");
-      timerElement.classList.add("active");
 
-      statusElement.textContent = "Solving in progress · Good luck!";
+      // Reveal the labels and countdown.
+      timerHeading.classList.add("active");
+      timerElement.classList.add("active");
+      timerLabel.classList.add("active");
+
+      statusElement.textContent = "ATTEMPT 0";
 
       updateTimer();
-      timerFrame = window.setInterval(updateTimer, 1000);
+
+      timerInterval = window.setInterval(updateTimer, 1000);
     }
 
+
     function updateTimer() {
-      const hundredYears = 100 * 365.25 * 24 * 60 * 60 * 1000;
+
+      const elapsed = Math.floor(
+        (Date.now() - startTime) / 1000
+      );
+
       const remaining = Math.max(
         0,
-        hundredYears - (Date.now() - startTime)
+        TOTAL_SECONDS - elapsed
       );
 
-      const totalSeconds = Math.floor(remaining / 1000);
-      const years = Math.floor(totalSeconds / (365.25 * 24 * 3600));
-      const afterYears = totalSeconds - Math.floor(
-        years * 365.25 * 24 * 3600
+      const hours = Math.floor(remaining / 3600);
+
+      const minutes = Math.floor(
+        (remaining % 3600) / 60
       );
 
-      const days = Math.floor(afterYears / 86400);
-      const hours = Math.floor((afterYears % 86400) / 3600);
-      const minutes = Math.floor((afterYears % 3600) / 60);
-      const seconds = afterYears % 60;
+      const seconds = remaining % 60;
 
       timerElement.textContent =
-        `${String(years).padStart(3, "0")}Y ` +
-        `${String(days).padStart(3, "0")}D ` +
-        `${String(hours).padStart(2, "0")}:` +
+        `${String(hours).padStart(6, "0")}:` +
         `${String(minutes).padStart(2, "0")}:` +
         `${String(seconds).padStart(2, "0")}`;
 
-      if (remaining <= 0) {
-        clearInterval(timerFrame);
-        timerElement.textContent = "TIME IS UP!";
-        statusElement.textContent =
-          "Still unsolved. Truly impossible!";
+      if (remaining === 0) {
+        clearInterval(timerInterval);
+
+        timerElement.textContent = "000000:00:00";
+        timerLabel.textContent = "TIME IS UP";
       }
     }
 
-    // =========================================================
-    // MAIN ANIMATION LOOP
-    // =========================================================
+
+    // ========================================================
+    // ANIMATION, RESIZE AND ERROR HANDLING
+    // ========================================================
 
     function animate() {
+
       requestAnimationFrame(animate);
+
+      if (!renderer) return;
 
       const delta = Math.min(clock.getDelta(), 0.05);
       const now = performance.now();
 
-      // Slow, continuous whole-cube movement.
+      // Keep the smooth overall rotation.
       cubeGroup.rotation.y += delta * 0.16;
       cubeGroup.rotation.x += delta * 0.035;
 
@@ -760,29 +895,34 @@
       renderer.render(scene, camera);
     }
 
-    // =========================================================
-    // RESIZE AND ERROR HANDLING
-    // =========================================================
 
     function onResize() {
+
       if (!camera || !renderer) return;
 
-      camera.aspect = window.innerWidth / window.innerHeight;
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+
+      camera.aspect = width / height;
       camera.updateProjectionMatrix();
 
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(width, height);
+
+      renderer.setPixelRatio(
+        Math.min(window.devicePixelRatio, 2)
+      );
     }
 
+
     function showError(error) {
+
       console.error("Cube initialization failed:", error);
 
       errorElement.style.display = "block";
-      errorElement.innerHTML =
-        "<strong>The cube could not load.</strong><br>" +
-        "Check your internet connection and make sure this page is " +
-        "running through VS Code Live Server, not file:///.<br>" +
-        "<small>Open the browser console for the exact error.</small>";
+
+      errorElement.textContent =
+        "The cube could not load. Check your internet connection " +
+        "and the browser console for the exact error.";
     }
   </script>
 </body>
