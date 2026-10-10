@@ -1,0 +1,162 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Rain</title>
+
+    <style>
+        /* ===== PAGE SETUP ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #000;
+        }
+
+        /* ===== ANIMATION CANVAS ===== */
+        #code-rain {
+            display: block;
+            width: 100%;
+            height: 100%;
+            background: #000;
+        }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="code-rain"></canvas>
+
+    <script>
+        /* ==========================================
+           MATRIX CODE RAIN — ANIMATION SETTINGS
+           >>> EDIT HERE to customize the effect
+        ========================================== */
+
+        const canvas = document.getElementById("code-rain");
+        const ctx = canvas.getContext("2d");
+
+        // >>> EDIT HERE: Main green color
+        const GREEN = "#00ff41";
+
+        // >>> EDIT HERE: Symbol size
+        const FONT_SIZE = 18;
+
+        // >>> EDIT HERE: Density of falling columns
+        const COLUMN_SPACING = 20;
+
+        // >>> EDIT HERE: Speed of the animation
+        const SPEED = 0.75;
+
+        // Characters inspired by the reference image
+        const characters =
+            "アイウエオカキクケコサシスセソタチツテト" +
+            "ナニヌネノハヒフヘホマミムメモヤユヨラリルレロ" +
+            "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+            "!@#$%^&*+-=<>";
+
+        let columns = [];
+        let animationFrame;
+        let lastFrameTime = 0;
+
+        /* ===== RESPONSIVE CANVAS ===== */
+        function resizeCanvas() {
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+            canvas.width = Math.floor(window.innerWidth * dpr);
+            canvas.height = Math.floor(window.innerHeight * dpr);
+
+            canvas.style.width = window.innerWidth + "px";
+            canvas.style.height = window.innerHeight + "px";
+
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+            const columnCount = Math.ceil(
+                window.innerWidth / COLUMN_SPACING
+            );
+
+            columns = Array.from(
+                { length: columnCount },
+                () => Math.random() * -window.innerHeight / FONT_SIZE
+            );
+        }
+
+        /* ===== DRAW THE FALLING SYMBOLS ===== */
+        function drawCodeRain(timestamp = 0) {
+            animationFrame = requestAnimationFrame(drawCodeRain);
+
+            // Limit drawing frequency for a smoother, lighter animation.
+            if (timestamp - lastFrameTime < 33) return;
+            lastFrameTime = timestamp;
+
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+
+            // Transparent black trail creates the fading effect.
+            ctx.fillStyle = "rgba(0, 0, 0, 0.13)";
+            ctx.fillRect(0, 0, width, height);
+
+            ctx.font = `bold ${FONT_SIZE}px monospace`;
+            ctx.textAlign = "center";
+
+            for (let i = 0; i < columns.length; i++) {
+                const x = i * COLUMN_SPACING;
+                const y = columns[i] * FONT_SIZE;
+
+                const char = characters[
+                    Math.floor(Math.random() * characters.length)
+                ];
+
+                // Random brightness makes the columns feel alive.
+                const brightness = Math.random();
+
+                if (brightness > 0.97) {
+                    // Bright green-white highlights
+                    ctx.fillStyle = "#d6ffdf";
+                    ctx.shadowColor = "#00ff41";
+                    ctx.shadowBlur = 18;
+                } else if (brightness > 0.65) {
+                    // Neon green symbols
+                    ctx.fillStyle = "#39ff55";
+                    ctx.shadowColor = "#00ff41";
+                    ctx.shadowBlur = 9;
+                } else {
+                    // Darker green symbols
+                    ctx.fillStyle = GREEN;
+                    ctx.shadowColor = "#00ff41";
+                    ctx.shadowBlur = 4;
+                }
+
+                ctx.fillText(char, x, y);
+
+                // Each column falls at a slightly different rate.
+                columns[i] += SPEED * (0.65 + Math.random() * 0.7);
+
+                // Restart a column after it passes the bottom.
+                if (y > height && Math.random() > 0.975) {
+                    columns[i] = Math.random() * -20;
+                }
+            }
+
+            ctx.shadowBlur = 0;
+        }
+
+        /* ===== START AND RESIZE ===== */
+        window.addEventListener("resize", resizeCanvas);
+
+        resizeCanvas();
+        drawCodeRain();
+    </script>
+
+</body>
+</html>
+```
