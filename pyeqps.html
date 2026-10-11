@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JETRAY</title>
+
+<style>
+@font-face {
+  font-family: Transcorner;
+  src: url("fonts/Transcorner.ttf");
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: #080400;
+  color: #fff0b0;
+  font-family: Transcorner, monospace;
+  overflow: hidden;
+}
+
+#game-wrap {
+  width: 100vw;
+  height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #080400;
+}
+
+#screen {
+  width: min(100vw, 160vh);
+  aspect-ratio: 16 / 9;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid #ff6b00;
+  background: #e96700;
+}
+
+canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+#name-box {
+  position: absolute;
+  top: 5%;
+  left: 3%;
+  z-index: 3;
+  width: 180px;
+  font-size: clamp(8px, 1.2vw, 14px);
+  text-shadow: 2px 2px #000;
+}
+
+#name-box label { display: block; margin-bottom: 5px; }
+
+#player-name {
+  width: 100%;
+  background: #160900;
+  border: 2px solid #ffb22c;
+  color: #fff1bc;
+  padding: 7px;
+  font: inherit;
+  outline: none;
+}
+
+#player-name:focus { border-color: white; }
+
+#name-box.hidden { display: none; }
+
+#hint {
+  position: absolute;
+  bottom: 7%;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font: 10px monospace;
+  color: #fff0b0;
+  text-shadow: 2px 2px #000;
+  pointer-events: none;
+}
+
+#mobile-controls {
+  display: none;
+  position: absolute;
+  bottom: 12%;
+  left: 0;
+  width: 100%;
+  justify-content: space-between;
+  padding: 0 8%;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.pad {
+  display: grid;
+  grid-template-columns: repeat(3, 42px);
+  grid-template-rows: repeat(2, 38px);
+  gap: 3px;
+  pointer-events: auto;
+}
+
+.pad button {
+  background: #220c06cc;
+  border: 2px solid #ff9b24;
+  color: #fff1b0;
+  font-size: 18px;
+  touch-action: none;
+}
+
+.pad button:active { background: #c63c09; }
+
+@media (pointer: coarse) {
+  #mobile-controls { display: flex; }
+  #name-box { width: 125px; }
+}
+
+@media (max-width: 550px) {
+  #screen { width: 100vw; }
+  #name-box { top: 3%; }
+}
+</style>
+</head>
+
+<body>
+<div id="game-wrap">
+  <div id="screen">
+    <canvas id="game" width="480" height="270"></canvas>
+
+    <div id="name-box">
+      <label for="player-name">PLAYER NAME:</label>
+      <input id="player-name" maxlength="14"
+             placeholder="ENTER NAME" autocomplete="nickname">
+    </div>
+
+    <div id="mobile-controls">
+      <div class="pad">
+        <button data-key="ArrowLeft" style="grid-column:1;grid-row:2">◀</button>
+        <button data-key="ArrowRight" style="grid-column:3;grid-row:2">▶</button>
+      </div>
+      <div class="pad">
+        <button data-key="ArrowUp" style="grid-column:2;grid-row:1">▲</button>
+        <button data-key="ArrowDown" style="grid-column:2;grid-row:2">▼</button>
+      </div>
+    </div>
+
+    <div id="hint">ARROW KEYS: MOVE · SPACE: START / CONFIRM</div>
+  </div>
+</div>
+
+<script>
+(() => {
+"use strict";
+
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+const nameInput = document.getElementById("player-name");
+const nameBox = document.getElementById("name-box");
+
+const W = 480, H = 270;
+const keys = {};
+const targetDistances = [
+  10, 40, 80, 120, 160, 300, 500, 800, 4000, 9000
+];
+
+let scene = "menu";
+let menuIndex = 0;
+let playerName = "";
+let level = 1;
+let distance = 0;
+let score = 0;
+let lives = 3;
+let health = 100;
+let speed = 0.8;
+let attempts = 0;
+let lastTime = 0;
+let elapsed = 0;
+let invulnerable = 0;
+let enemies = [];
+let particles = [];
+let pickups = [];
+let spawnClock = 0;
+let flash = 0;
+let worldTime = 0;
+let message = "";
+let messageTimer = 0;
+let selectedMode = "campaign";
+let gameOverReason = "";
+let menuOptions = [
+  "START GAME",
+  "PLAY FOR LEADERBOARD",
+  "VIEW LEADERBOARD",
+  "INSTRUCTIONS",
+  "EXIT"
+];
+
+const player = { x: 240, y: 180, w: 23, h: 25 };
+const rand = (a, b) => a + Math.random() * (b - a);
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+function getLeaderboard() {
+  try { return JSON.parse(localStorage.getItem("jetrayScores") || "[]"); }
+  catch { return []; }
+}
+
+function saveScore() {
+  if (!playerName.trim()) return;
+  const board = getLeaderboard();
+  board.push({
+    name: playerName.slice(0, 14),
+    distance: Math.floor(distance),
+    score: Math.floor(score),
+    date: new Date().toLocaleDateString()
+  });
+  board.sort((a, b) => b.distance - a.distance);
+  try { localStorage.setItem("jetrayScores", JSON.stringify(board.slice(0, 20))); }
+  catch {}
+}
+
+function resetRun(mode) {
+  selectedMode = mode;
+  distance = 0;
+  score = 0;
+  lives = 3;
+  health = 100;
+  attempts = 0;
+  elapsed = 0;
+  speed = mode === "campaign" ? 0.65 : 0.8;
+  invulnerable = 0;
+  enemies = [];
+  particles = [];
+  pickups = [];
+  spawnClock = 0;
+  player.x = W / 2;
+  player.y = H * 0.66;
+  level = 1;
+  scene = "intro";
+  nameBox.classList.add("hidden");
+}
+
+function startFlying() {
+  scene = "playing";
+  lastTime = performance.now();
+  spawnClock = 0;
+}
+
+function environment() {
+  if (selectedMode === "campaign") {
+    if (level >= 9) return "space";
+    if (level >= 5) return "night";
+    return "morning";
+  }
+  if (distance >= 10000) return "space";
+  if (distance >= 100) return "night";
+  return "morning";
+}
+
+function skyColor(env) {
+  if (env === "space") return "#05051d";
+  if (env === "night") return "#101735";
+  return "#e96700";
+}
+
+function drawBackground(dt) {
+  const env = environment();
+  const sky = ctx.createLinearGradient(0, 0, 0, H);
+  sky.addColorStop(0, skyColor(env));
+  sky.addColorStop(0.65, env === "morning" ? "#ff9d00" :
+                         env === "night" ? "#202b50" : "#11164a");
+  sky.addColorStop(1, env === "morning" ? "#ffdd36" :
+                       env === "night" ? "#75445b" : "#080b29");
+  ctx.fillStyle = sky;
+  ctx.fillRect(0, 0, W, H);
+
+  worldTime += dt * speed * 16;
+
+  // Stars in night and space.
+  if (env !== "morning") {
+    for (let i = 0; i < 85; i++) {
+      const x = (i * 71 + 13) % W;
+      const y = (i * 43 + 7) % 145;
+      const twinkle = Math.sin(worldTime * 0.03 + i) > 0;
+      ctx.fillStyle = env === "space" ? "#d9e6ff" : "#b8c9ff";
+      if (twinkle) ctx.fillRect(x, y, 1, 1);
+    }
+  } else {
+    // Pixel sun.
+    ctx.fillStyle = "#ffdf2e";
+    ctx.fillRect(346, 157, 14, 14);
+    ctx.fillRect(349, 154, 8, 20);
+    ctx.fillRect(343, 160, 20, 8);
+  }
+
+  // Scrolling clouds.
+  for (let i = 0; i < 9; i++) {
+    let x = ((i * 83 - worldTime * (0.3 + i % 3 * 0.1)) % (W + 55));
+    if (x < -45) x += W + 55;
+    let y = 45 + (i * 31 % 105);
+    drawCloud(x, y, env);
+  }
+
+  // Layered horizon and ground move toward the bottom.
+  const horizon = 191;
+  ctx.fillStyle = env === "space" ? "#17143a" :
+                  env === "night" ? "#29243d" : "#a65a12";
+  ctx.fillRect(0, horizon, W, H - horizon);
+
+  for (let i = 0; i < 44; i++) {
+    const x = (i * 19) % W;
+    const shift = (worldTime * (0.4 + i % 4 * 0.2)) % 20;
+    const y = horizon + ((i * 13 + shift) % 65);
+    const height = 2 + (i % 4) * 2;
+    ctx.fillStyle = env === "space" ?
+      (i % 2 ? "#28205b" : "#16163c") :
+      env === "night" ?
+      (i % 2 ? "#48435c" : "#302e49") :
+      (i % 2 ? "#7b420e" : "#c4770d");
+    ctx.fillRect(x, y, 9 + i % 5, height);
+  }
+
+  // Pixelated foreground streaks create forward movement.
+  for (let i = 0; i < 52; i++) {
+    const x = (i * 37 + (worldTime * (2 + i % 3))) % W;
+    const y = 208 + ((i * 17 + worldTime * (2.4 + i % 4)) % 62);
+    ctx.fillStyle = env === "space" ? "#38336e" :
+                    env === "night" ? "#5c4960" :
+                    (i % 2 ? "#f4a41b" : "#65380e");
+    ctx.fillRect(x, y, 2 + i % 9, 1 + i % 3);
+  }
+
+  if (env === "space") {
+    // Distant planet.
+    ctx.fillStyle = "#5144a5";
+    ctx.fillRect(370, 60, 22, 22);
+    ctx.fillRect(366, 65, 30, 12);
+    ctx.fillStyle = "#8c70d1";
+    ctx.fillRect(373, 62, 12, 3);
+  }
+}
+
+function drawCloud(x, y, env) {
+  const c = env === "morning" ? "#ffac20" :
+            env === "night" ? "#464c75" : "#262c68";
+  ctx.fillStyle = c;
+  ctx.fillRect(x, y + 4, 23, 5);
+  ctx.fillRect(x + 4, y, 11, 8);
+  ctx.fillRect(x + 14, y + 2, 8, 6);
+}
+
+function drawJet(x, y, scale = 1, color = "#f4ead2") {
+  ctx.save();
+  ctx.translate(Math.round(x), Math.round(y));
+  ctx.scale(scale, scale);
+
+  // Rear-facing pixel-art aircraft, pointing toward the horizon.
+  ctx.fillStyle = "#261b20";
+  ctx.fillRect(-3, -14, 6, 24);
+  ctx.fillRect(-10, -5, 20, 8);
+  ctx.fillRect(-18, 1, 13, 4);
+  ctx.fillRect(5, 1, 13, 4);
+  ctx.fillRect(-14, 5, 8, 4);
+  ctx.fillRect(6, 5, 8, 4);
+  ctx.fillRect(-5, 7, 10, 7);
+  ctx.fillRect(-8, 12, 5, 5);
+  ctx.fillRect(3, 12, 5, 5);
+
+  ctx.fillStyle = color;
+  ctx.fillRect(-2, -12, 4, 19);
+  ctx.fillRect(-13, 0, 26, 3);
+  ctx.fillRect(-17, 3, 11, 2);
+  ctx.fillRect(6, 3, 11, 2);
+  ctx.fillRect(-5, 8, 10, 4);
+
+  ctx.fillStyle = "#b9d8dc";
+  ctx.fillRect(-1, -8, 2, 8);
+
+  ctx.fillStyle = "#ff4b13";
+  ctx.fillRect(-7, 12, 4, 4);
+  ctx.fillRect(4, 12, 4, 4);
+  ctx.fillStyle = "#ffdc44";
+  ctx.fillRect(-6, 13, 2, 2);
+  ctx.fillRect(5, 13, 2, 2);
+
+  ctx.restore();
+}
+
+function drawEnemy(e) {
+  ctx.fillStyle = "#211622";
+  ctx.fillRect(e.x - 7, e.y - 3, 14, 8);
+  ctx.fillRect(e.x - 3, e.y - 7, 6, 12);
+  ctx.fillStyle = e.type === "elite" ? "#df4d85" : "#e0b7a1";
+  ctx.fillRect(e.x - 5, e.y - 2, 10, 4);
+  ctx.fillStyle = "#ff3d24";
+  ctx.fillRect(e.x - 3, e.y - 1, 2, 2);
+  ctx.fillRect(e.x + 2, e.y - 1, 2, 2);
+}
+
+function drawPickup(p) {
+  ctx.fillStyle = "#25111a";
+  ctx.fillRect(p.x - 6, p.y - 6, 12, 12);
+  ctx.fillStyle = p.type === "life" ? "#ff4a72" :
+                  p.type === "health" ? "#ff4b35" : "#4bfff0";
+  ctx.fillRect(p.x - 4, p.y - 4, 8, 8);
+  ctx.fillStyle = "#fff4c7";
+  ctx.fillRect(p.x - 1, p.y - 3, 2, 6);
+  ctx.fillRect(p.x - 3, p.y - 1, 6, 2);
+}
+
+function drawHUD() {
+  ctx.fillStyle = "#160800";
+  ctx.fillRect(9, 8, 135, 7);
+  ctx.fillStyle = "#ff3434";
+  ctx.fillRect(10, 9, 133 * health / 100, 5);
+  ctx.strokeStyle = "#ffe0a0";
+  ctx.strokeRect(9, 8, 135, 7);
+
+  ctx.font = "7px monospace";
+  ctx.fillStyle = "#fff1ba";
+  ctx.fillText("HULL", 10, 25);
+
+  for (let i = 0; i < 3; i++) {
+    ctx.fillStyle = i < lives ? "#ff333e" : "#4a242c";
+    ctx.fillRect(155 + i * 13, 8, 7, 6);
+    ctx.fillRect(153 + i * 13, 10, 11, 4);
+    ctx.fillRect(156 + i * 13, 14, 5, 3);
+  }
+
+  ctx.textAlign = "right";
+  ctx.fillStyle = "#fff1ba";
+  ctx.fillText("DIST " + Math.floor(distance) + " KM", 470, 13);
+  ctx.fillText("SCORE " + Math.floor(score), 470, 23);
+
+  if (selectedMode === "campaign") {
+    ctx.textAlign = "left";
+    ctx.fillText("LEVEL " + level + "/11", 10, 37);
+    ctx.textAlign = "right";
+    ctx.fillText(level === 11 ? "ENDLESS" :
+      targetDistances[level - 1] + " KM TARGET", 470, 37);
+  }
+
+  ctx.textAlign = "left";
+}
+
+function drawTitle(text, y, size = 24) {
+  ctx.textAlign = "center";
+  ctx.font = `bold ${size}px Transcorner, monospace`;
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = "#ff0000";
+  ctx.strokeText(text, W / 2, y);
+  ctx.fillStyle = "#fff0b0";
+  ctx.fillText(text, W / 2, y);
+  ctx.fillStyle = "#00ff66";
+  ctx.globalAlpha = 0.5;
+  ctx.fillText(text, W / 2 + 2, y - 1);
+  ctx.globalAlpha = 1;
+  ctx.textAlign = "left";
+}
+
+function panel(x, y, w, h) {
+  ctx.fillStyle = "rgba(20, 7, 0, 0.91)";
+  ctx.fillRect(x, y, w, h);
+  ctx.strokeStyle = "#ff8a22";
+  ctx.lineWidth = 2;
+  ctx.strokeRect(x, y, w, h);
+}
+
+function drawMenu() {
+  drawTitle("JETRAY", 65, 43);
+
+  ctx.fillStyle = "#fff0a9";
+  ctx.font = "9px monospace";
+  ctx.fillText("RETRO FLIGHT SURVIVAL", 16, 14);
+
+  panel(15, 85, 190, 143);
+  menuOptions.forEach((option, i) => {
+    const y = 101 + i * 25;
+    if (i === menuIndex) {
+      ctx.fillStyle = "#a53509";
+      ctx.fillRect(21, y - 11, 178, 20);
+      ctx.fillStyle = "#fff4b4";
+      ctx.fillText("▶", 27, y + 2);
+    } else {
+      ctx.fillStyle = "#f4d9a0";
+    }
+    ctx.font = "bold 9px monospace";
+    ctx.fillText(option, 42, y + 2);
+  });
+
+  // Decorative aircraft and distant formation.
+  drawJet(345, 165, 1.35);
+  for (let i = 0; i < 5; i++) {
+    drawEnemy({x: 292 + i * 14, y: 112 + (i % 2) * 8, type: "normal"});
+  }
+
+  ctx.font = "8px monospace";
+  ctx.fillStyle = "#fff1a4";
+  ctx.textAlign = "center";
+  ctx.fillText("AT THE END YOU WILL FIND THE ACCESS CODE", W / 2, 257);
+  ctx.textAlign = "left";
+}
+
+function drawIntro() {
+  drawTitle("LEVEL " + level, 95, 30);
+  panel(100, 111, 280, 62);
+  ctx.textAlign = "center";
+  ctx.font = "10px monospace";
+  ctx.fillStyle = "#fff1ba";
+
+  if (level === 11) {
+    ctx.fillText("INFINITE FLIGHT", W / 2, 132);
+    ctx.fillText("THIS LEVEL NEVER ENDS", W / 2, 146);
+  } else {
+    ctx.fillText("DISTANCE TARGET", W / 2, 132);
+    ctx.fillText(targetDistances[level - 1] + " KM", W / 2, 146);
+  }
+
+  ctx.fillText("PRESS SPACE TO TAKE OFF", W / 2, 160);
+  ctx.textAlign = "left";
+  drawJet(player.x, player.y, 1.2);
+}
+
+function drawLeaderboard() {
+  drawTitle("LEADERBOARD", 48, 25);
+  panel(70, 61, 340, 157);
+
+  ctx.font = "9px monospace";
+  ctx.fillStyle = "#ffb24b";
+  ctx.fillText("RANK", 86, 78);
+  ctx.fillText("PLAYER", 136, 78);
+  ctx.fillText("DISTANCE", 275, 78);
+
+  const board = getLeaderboard().slice(0, 8);
+  if (!board.length) {
+    ctx.fillStyle = "#fff1ba";
+    ctx.fillText("NO RECORDS YET. BE THE FIRST!", 100, 111);
+  }
+
+  board.forEach((row, i) => {
+    const y = 94 + i * 14;
+    ctx.fillStyle = i === 0 ? "#ffe66a" : "#fff1ba";
+    ctx.fillText(String(i + 1).padStart(2, "0"), 88, y);
+    ctx.fillText(String(row.name).slice(0, 15), 136, y);
+    ctx.fillText(Math.floor(row.distance) + " KM", 275, y);
+  });
+
+  ctx.fillStyle = "#fff1ba";
+  ctx.fillText("PRESS ESC TO RETURN", 157, 207);
+}
+
+function drawInstructions() {
+  drawTitle("INSTRUCTIONS", 55, 22);
+  panel(40, 72, 400, 132);
+
+  const lines = [
+    "ARROW KEYS  - MOVE YOUR AIRCRAFT",
+    "AVOID ENEMIES AND COLLECT PICKUPS",
+    "RED BAR SHOWS YOUR HULL HEALTH",
+    "YOU HAVE THREE LIVES",
+    "SURVIVE TO TRAVEL FARTHER",
+    "LEVEL 5: NIGHT  |  LEVEL 9: SPACE",
+    "LEVEL 11: INFINITE FLIGHT",
+    "SPACE: START     ESC: RETURN"
+  ];
+
+  ctx.font = "9px monospace";
+  ctx.fillStyle = "#fff0b0";
+  lines.forEach((line, i) => ctx.fillText(line, 57, 92 + i * 14));
+}
+
+function drawGameOver() {
+  panel(100, 80, 280, 112);
+  drawTitle("FLIGHT OVER", 103, 20);
+  ctx.font = "10px monospace";
+  ctx.textAlign = "center";
+  ctx.fillStyle = "#fff1ba";
+  ctx.fillText("DISTANCE: " + Math.floor(distance) + " KM", W / 2, 128);
+  ctx.fillText("SCORE: " + Math.floor(score), W / 2, 143);
+  ctx.fillText("R - RESTART", W / 2, 164);
+  ctx.fillText("ESC - EXIT", W / 2, 179);
+  ctx.textAlign = "left";
+}
+
+function draw() {
+  drawBackground(0);
+
+  if (scene === "menu") {
+    drawMenu();
+  } else if (scene === "intro") {
+    drawIntro();
+  } else if (scene === "leaderboard") {
+    drawLeaderboard();
+  } else if (scene === "instructions") {
+    drawInstructions();
+  } else if (scene === "playing") {
+    enemies.forEach(drawEnemy);
+    pickups.forEach(drawPickup);
+    drawJet(player.x, player.y, 1.1);
+    drawHUD();
+
+    if (messageTimer > 0) {
+      drawTitle(message, 83, 17);
+    }
+  } else if (scene === "gameover") {
+    enemies.forEach(drawEnemy);
+    drawJet(player.x, player.y, 1.1);
+    drawGameOver();
+  } else if (scene === "exit") {
+    drawTitle("JETRAY", 100, 36);
+    ctx.textAlign = "center";
+    ctx.font = "10px monospace";
+    ctx.fillStyle = "#fff0b0";
+    ctx.fillText("THANK YOU FOR FLYING", W / 2, 135);
+    ctx.fillText("CLOSE THIS TAB TO EXIT", W / 2, 153);
+    ctx.textAlign = "left";
+  }
+}
+
+function spawnEnemy() {
+  enemies.push({
+    x: rand(18, W - 18),
+    y: -12,
+    w: 14,
+    h: 12,
+    type: Math.random() < 0.18 ? "elite" : "normal",
+    vx: rand(-0.3, 0.3),
+    vy: rand(0.7, 1.4) * speed
+  });
+}
+
+function spawnPickup() {
+  const r = Math.random();
+  pickups.push({
+    x: rand(18, W - 18),
+    y: -10,
+    type: r < 0.16 ? "life" : r < 0.48 ? "health" : "boost"
+  });
+}
+
+function collides(a, b, padding = 0) {
+  return Math.abs(a.x - b.x) < (a.w + (b.w || 10)) / 2 - padding &&
+         Math.abs(a.y - b.y) < (a.h + (b.h || 10)) / 2 - padding;
+}
+
+function hitPlayer() {
+  if (invulnerable > 0) return;
+
+  health -= 30;
+  invulnerable = 1.1;
+  flash = 0.18;
+  attempts++;
+
+  if (health <= 0) {
+    lives--;
+    if (lives <= 0) {
+      finishRun();
+      return;
+    }
+    health = 100;
+    player.x = W / 2;
+    player.y = H * 0.66;
+    invulnerable = 2;
+    message = "AIRCRAFT REPLACED!";
+    messageTimer = 1.5;
+  }
+}
+
+function collectPickup(p) {
+  if (p.type === "life") {
+    lives = Math.min(3, lives + 1);
+    message = "EXTRA LIFE!";
+  } else if (p.type === "health") {
+    health = Math.min(100, health + 35);
+    message = "HULL REPAIRED!";
+  } else {
+    score += 500;
+    speed += 0.1;
+    message = "BOOST!";
+  }
+  messageTimer = 1.4;
+}
+
+function finishRun() {
+  saveScore();
+  scene = "gameover";
+}
+
+function update(dt) {
+  if (scene !== "playing") return;
+
+  elapsed += dt;
+  if (invulnerable > 0) invulnerable -= dt;
+  if (messageTimer > 0) messageTimer -= dt;
+  if (flash > 0) flash -= dt;
+
+  // Only the player's position is controlled by the arrow keys.
+  const movement = 105 * dt * (selectedMode === "campaign" && level === 1 ? 0.85 : 1);
+
+  if (keys.ArrowLeft) player.x -= movement;
+  if (keys.ArrowRight) player.x += movement;
+  if (keys.ArrowUp) player.y -= movement;
+  if (keys.ArrowDown) player.y += movement;
+
+  player.x = clamp(player.x, 13, W - 13);
+  player.y = clamp(player.y, 38, H - 35);
+
+  // Distance and forward motion are simulated arcade measurements.
+  distance += speed * dt * 1.8;
+  score += speed * dt * 10;
+
+  if (selectedMode === "campaign") {
+    const target = targetDistances[level - 1];
+
+    if (level < 11 && distance >= target) {
+      if (level < 10) {
+        distance = target;
+        level++;
+        scene = "intro";
+        player.x = W / 2;
+        player.y = H * 0.66;
+        return;
+      } else if (level === 10) {
+        level = 11;
+        distance = target;
+        scene = "intro";
+        return;
+      }
+    }
+  }
+
+  // Progressive speed increase.
+  if (selectedMode === "campaign") {
+    speed = Math.min(4.3, 0.65 + (level - 1) * 0.29 + elapsed * 0.002);
+  } else {
+    speed = Math.min(4.5, 0.8 + distance * 0.00015);
+  }
+
+  spawnClock += dt;
+  const spawnEvery = Math.max(0.28, 1.15 / speed);
+
+  if (spawnClock >= spawnEvery) {
+    spawnClock = 0;
+    spawnEnemy();
+    if (Math.random() < 0.22) spawnPickup();
+  }
+
+  enemies.forEach(e => {
+    e.y += (e.vy + speed * 1.4) * 36 * dt;
+    e.x += e.vx * 30 * dt;
+  });
+
+  pickups.forEach(p => p.y += speed * 45 * dt);
+
+  for (const e of enemies) {
+    if (!e.dead && collides(player, e, 3)) {
+      e.dead = true;
+      hitPlayer();
+      if (scene !== "playing") return;
+    }
+  }
+
+  for (const p of pickups) {
+    if (!p.dead && collides(player, p, 2)) {
+      p.dead = true;
+      collectPickup(p);
+    }
+  }
+
+  enemies = enemies.filter(e => !e.dead && e.y < H + 20);
+  pickups = pickups.filter(p => !p.dead && p.y < H + 20);
+}
+
+function handleMenu() {
+  const name = nameInput.value.trim();
+  if (!name) {
+    nameInput.focus();
+    nameInput.placeholder = "NAME REQUIRED!";
+    return;
+  }
+
+  playerName = name.slice(0, 14);
+  nameInput.value = playerName;
+
+  switch (menuIndex) {
+    case 0:
+      resetRun("campaign");
+      break;
+    case 1:
+      resetRun("leaderboard");
+      break;
+    case 2:
+      scene = "leaderboard";
+      nameBox.classList.add("hidden");
+      break;
+    case 3:
+      scene = "instructions";
+      nameBox.classList.add("hidden");
+      break;
+    case 4:
+      scene = "exit";
+      nameBox.classList.add("hidden");
+      break;
+  }
+}
+
+function keyDown(e) {
+  const gameKeys = [
+    "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight",
+    " ", "Escape", "Enter", "r", "R"
+  ];
+
+  if (gameKeys.includes(e.key)) e.preventDefault();
+
+  keys[e.key] = true;
+
+  if (scene === "menu") {
+    if (e.key === "ArrowUp") menuIndex = (menuIndex + 4) % 5;
+    if (e.key === "ArrowDown") menuIndex = (menuIndex + 1) % 5;
+    if (e.key === "Enter" || e.key === " ") handleMenu();
+  } else if (scene === "intro") {
+    if (e.key === " ") startFlying();
+    if (e.key === "Escape") returnToMenu();
+  } else if (scene === "leaderboard" || scene === "instructions") {
+    if (e.key === "Escape" || e.key === "Enter") returnToMenu();
+  } else if (scene === "playing") {
+    if (e.key === "Escape") {
+      finishRun();
+    }
+  } else if (scene === "gameover") {
+    if (e.key.toLowerCase() === "r") resetRun(selectedMode);
+    if (e.key === "Escape" || e.key === "Enter") returnToMenu();
+  } else if (scene === "exit") {
+    if (e.key === "Escape" || e.key === "Enter") returnToMenu();
+  }
+}
+
+function keyUp(e) {
+  keys[e.key] = false;
+}
+
+function returnToMenu() {
+  scene = "menu";
+  menuIndex = 0;
+  nameBox.classList.remove("hidden");
+}
+
+window.addEventListener("keydown", keyDown);
+window.addEventListener("keyup", keyUp);
+window.addEventListener("blur", () => {
+  Object.keys(keys).forEach(k => keys[k] = false);
+});
+
+document.querySelectorAll("[data-key]").forEach(button => {
+  const key = button.dataset.key;
+
+  button.addEventListener("pointerdown", e => {
+    e.preventDefault();
+    keys[key] = true;
+    button.setPointerCapture(e.pointerId);
+  });
+
+  const release = e => {
+    e.preventDefault();
+    keys[key] = false;
+  };
+
+  button.addEventListener("pointerup", release);
+  button.addEventListener("pointercancel", release);
+  button.addEventListener("lostpointercapture", () => keys[key] = false);
+});
+
+canvas.addEventListener("click", e => {
+  const rect = canvas.getBoundingClientRect();
+  const x = (e.clientX - rect.left) * W / rect.width;
+  const y = (e.clientY - rect.top) * H / rect.height;
+
+  if (scene === "menu") {
+    if (x >= 15 && x <= 205 && y >= 85 && y <= 228) {
+      const index = Math.floor((y - 85) / 25);
+      menuIndex = clamp(index, 0, 4);
+      handleMenu();
+    }
+  } else if (scene === "intro") {
+    startFlying();
+  } else if (scene === "leaderboard" || scene === "instructions") {
+    returnToMenu();
+  } else if (scene === "gameover") {
+    if (y > 148 && y < 171) resetRun(selectedMode);
+    else if (y >= 171) returnToMenu();
+  }
+});
+
+function frame(now) {
+  const dt = Math.min((now - (lastTime || now)) / 1000, 0.04);
+  lastTime = now;
+
+  if (scene === "playing") update(dt);
+
+  draw();
+
+  if (flash > 0) {
+    ctx.fillStyle = "rgba(255,35,25,0.3)";
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  requestAnimationFrame(frame);
+}
+
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

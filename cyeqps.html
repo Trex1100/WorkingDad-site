@@ -209,7 +209,7 @@
       height: 150px;
       flex: 0 0 auto;
       padding: 12px;
-      border: 5px solid #8e0808;
+      border: 3px solid #550000;
       border-radius: 50%;
       cursor: pointer;
 
@@ -229,7 +229,7 @@
       text-shadow: 0 2px 3px #710000;
 
       box-shadow:
-        0 10px 0 #650000,
+        0 10px 0 #550000,
         0 15px 22px rgba(0, 0, 0, 0.65),
         inset 0 5px 9px rgba(255, 255, 255, 0.28),
         inset 0 -7px 12px rgba(0, 0, 0, 0.25);
@@ -247,7 +247,7 @@
     #start-button:active {
       transform: translateY(8px) scale(0.98);
       box-shadow:
-        0 2px 0 #650000,
+        0 2px 0 #550000,
         0 5px 10px rgba(0, 0, 0, 0.5);
     }
 
@@ -406,12 +406,12 @@
 
       <div id="timer-label">TIME LEFT TO SOLVE</div>
 
-      <div id="status">WAITING FOR YOUR CHALLENGE...</div>
+      <div id="status">WAITING FOR YOUR TURN...</div>
 
     </section>
 
     <footer class="footnote">
-      Once the cube is solved you can proceed to the next page.
+      Once the CUBE is solved you can PROCEED to the next page.
     </footer>
 
   </main>
@@ -760,7 +760,7 @@
         axis,
         targetAngle: direction * Math.PI / 2,
         startTime: now,
-        duration: 420 + Math.random() * 180
+        duration: 180 + Math.random() * 70
       };
     }
 
@@ -809,7 +809,7 @@
         attempts++;
 
         statusElement.textContent = `ATTEMPT ${attempts}`;
-        nextTurnAt = now + 120 + Math.random() * 160;
+        nextTurnAt = now + 30 + Math.random() * 40;
       }
     }
 
